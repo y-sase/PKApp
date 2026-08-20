@@ -36,11 +36,14 @@ import androidx.compose.material3.Icon
 
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import com.example.pkapp.api.Sprites
+import coil.compose.AsyncImage
 
 @Composable
 fun PKThumbnail(
-
-    //photo: Photo,
+    id: Int,
+    name: String,
+    sprites: Sprites,
     // onClick: (Photo) -> Unit//クリックされてUnitをかえす
 ) {
 
@@ -50,76 +53,83 @@ fun PKThumbnail(
         //.clickable { onClick(photo) },//クリックされたときonClickを呼び出す、引数photo
 
     ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(
-                    top = 16.dp,
-                    end = 16.dp
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                modifier = Modifier
-                    .size(34.dp),
-                imageVector = Icons.Default.Favorite,
-                contentDescription = "Favorite",
-                tint = Color(0xFFFF4081)
-            )
-
-            Icon(
-                imageVector = Icons.Outlined.FavoriteBorder,
-                modifier = Modifier
-                    .size(40.dp),
-                contentDescription = "Favorite",
-                tint = Color.Gray
-            )
-
-        }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,//左寄せ(Rowの時)
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                /*
-                AsyncImage(
-                    model = photo.imageUrl,
-                    contentDescription = photo.description,
+                Box(
                     modifier = Modifier
-                        .width(100.dp)
-                        .height(100.dp)
-                        .padding(start = 16.dp),
-                )*/
-                Image(
-                    painter = painterResource(id = R.drawable.monster03),
+                        .align(Alignment.TopEnd)
+                        .padding(
+                            top = 16.dp,
+                            end = 16.dp
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(34.dp),
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = "Favorite",
+                        tint = Color(0xFFFF4081)
+                    )
+
+                    Icon(
+                        imageVector = Icons.Outlined.FavoriteBorder,
+                        modifier = Modifier
+                            .size(40.dp),
+                        contentDescription = "Favorite",
+                        tint = Color.Gray
+                    )
+
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,//左寄せ(Rowの時)
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
+                    model = sprites.front_default,
                     contentDescription = "ポケモン",
                     modifier = Modifier
                         .width(100.dp)
                         .height(100.dp)
                         .padding(start = 16.dp),
                 )
-
-                Spacer(modifier = Modifier.width(50.dp))
-
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "No.",
-                        color = Color.Black,
-                        fontSize = 16.sp,
+                    /*
+                    Image(
+                        painter = painterResource(id = R.drawable.monster03),
+                        contentDescription = "ポケモン",
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(100.dp)
+                            .padding(start = 16.dp),
                     )
-                    Text(
-                        text = "NAME",
-                        color = Color.Black,
-                        fontSize = 26.sp,
-                    )
+
+                    */
+
+
+                        Spacer(modifier = Modifier.width(50.dp))
+
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "No.$id",
+                                color = Color.Black,
+                                fontSize = 16.sp,
+                            )
+                            Text(
+                                text = name,
+                                color = Color.Black,
+                                fontSize = 26.sp,
+                            )
+                        }
+
+
                 }
-
             }
-        }
 
-}
+
+    }
+
 
 /*
 @Composable

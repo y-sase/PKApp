@@ -16,7 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.pkapp.pklist.PKListScreen
 import com.example.pkapp.ui.theme.PKAppTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
+import com.example.pkapp.api.PKViewModel
 
+import com.example.pkapp.api.PKRepositoryImpl
+import com.example.pkapp.api.RetrofitInstance
+import retrofit2.Retrofit
 
 
 class MainActivity : ComponentActivity() {
@@ -29,7 +33,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PKListScreen()
+
+                    val api = RetrofitInstance.providePKApi()
+                    val repository = PKRepositoryImpl(api)
+                    val viewModel = PKViewModel(repository)
+
+                    PKListScreen(
+                        viewModel = viewModel
+                    )
 
                 }
                 /*

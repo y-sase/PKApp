@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -14,14 +15,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.isDebugInspectorInfoEnabled
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import com.example.pkapp.api.PKViewModel
 import com.example.pkapp.pklist.components.PKThumbnail
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 
 
 @Composable
 fun PKListScreen(
-
+    viewModel: PKViewModel
 ) {
+
+    LaunchedEffect(Unit) {
+
+        viewModel.loadPokemonList()
+
+    }
+
 
     Scaffold(
         containerColor = Color.LightGray,
@@ -40,23 +54,9 @@ fun PKListScreen(
             }
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
             //navController: NavController,//画面遷移
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color.White)
-                    .heightIn(100.dp)
-                    .border(
-                        width = 3.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-            ) {
+
                 /*
         when {
             state.isLoading -> {
@@ -75,13 +75,36 @@ fun PKListScreen(
             else -> {
                 PKThumbnail()
             }*/
-                PKThumbnail()
-            }
+                LazyColumn(
+                    modifier = Modifier
+                    .padding(paddingValues)
+                ) {
+                    items(viewModel.pokemonList) { pokemon -> //pokemonListからポケモンを1匹ずつ取り出して、pokemonという名前で使う,for文みたいな
+
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(vertical = 5.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(Color.White)
+                                .heightIn(100.dp)
+                                .border(
+                                    width = 3.dp,
+                                    color = Color.Black,
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                        ) {
+                        PKThumbnail(
+                            id = pokemon.id,
+                            name = pokemon.name,
+                            sprites = pokemon.sprites,
+                        )
+                    }
+
+                }
 
 
-        }
-
-        /*
+                /*
     LazyColumn(modifier = Modifier.padding(paddingValues)) {
         items(state.photos) { photo ->
             PKThumbnail(
@@ -97,5 +120,8 @@ fun PKListScreen(
     }
     */
 
+            }
+        }
     }
 }
+
