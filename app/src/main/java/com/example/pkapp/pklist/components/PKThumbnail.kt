@@ -36,14 +36,19 @@ import androidx.compose.material3.Icon
 
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.ui.layout.ContentScale
 import com.example.pkapp.api.Sprites
 import coil.compose.AsyncImage
+import com.example.pkapp.api.PokemonListItem
+import com.example.pkapp.api.PokemonListResponse
+import kotlin.collections.List
 
 @Composable
 fun PKThumbnail(
     id: Int,
     name: String,
-    sprites: Sprites,
+    pokemonimageinList:PokemonListItem
+    //sprites: Sprites,
     // onClick: (Photo) -> Unit//クリックされてUnitをかえす
 ) {
 
@@ -86,12 +91,12 @@ fun PKThumbnail(
                 ) {
 
                 AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                    model = sprites.front_default,
+                    model = pokemonimageinList.imageUrl,
                     contentDescription = "ポケモン",
                     modifier = Modifier
-                        .width(100.dp)
-                        .height(100.dp)
+                        .size(100.dp)
                         .padding(start = 16.dp),
+                    contentScale = ContentScale.Crop//枠いっぱいに表示
                 )
                     /*
                     Image(
@@ -129,6 +134,7 @@ fun PKThumbnail(
 
 
     }
+
 
 
 /*

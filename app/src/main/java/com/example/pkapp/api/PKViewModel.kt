@@ -18,9 +18,13 @@ class PKViewModel (
     var PKTypes by mutableStateOf("")
     var query by mutableStateOf("")
     var errorMessage by mutableStateOf("")
-    var pokemonList by mutableStateOf<List<PokemonResponse>>(//<List<PokemonResponse>>はPokemonResponseをたくさん入れられるリスト型
+
+
+    var pokemonList by mutableStateOf<List< PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
         emptyList()//空っぽのリストを作る関数
-    )
+            )
+
+
 
 
 
@@ -61,15 +65,20 @@ class PKViewModel (
             try {//エラーが起きるかもしれない処理を開始。
 
                 //isLoading = true
-
-                val list = mutableListOf<PokemonResponse>()//空のリストを作る。
-                for (id in 1..20) {
+/*
+                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
+                for (limit) {
                     list.add(
-                        repository.getPokemon(id)//Repository経由でAPIからポケモンを取得。
+                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
                     )
                 }
                 pokemonList = list
-                errorMessage = "成功 ${list.size}"
+
+ */
+
+                val responselist =repository.getPokemonList()
+                pokemonList = responselist.results
+                errorMessage = "成功 ${pokemonList.size}"
             } catch (e: Exception) {
                 //errorMessage = "エラー: ${e.message}"
                 errorMessage = e.toString()
