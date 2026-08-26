@@ -1,5 +1,9 @@
 package com.example.pkapp.api
 
+import com.example.pkapp.model.PokemonListItem
+import com.example.pkapp.model.Sprites
+import com.example.pkapp.model.TypeSlot
+
 data class PokemonDetailResponse(
     val id: Int,
     val name: String,
