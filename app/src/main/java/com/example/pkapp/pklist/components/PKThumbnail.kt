@@ -23,12 +23,13 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import com.example.pkapp.model.PokemonListItem
+import com.example.pkapp.model.Sprites
 
 @Composable
 fun PKThumbnail(
     id: Int,
     name: String,
-    pokemonimageinList:PokemonListItem
+    pokemonimageinList:PokemonListItem,
     //sprites: Sprites,
     // onClick: (Photo) -> Unit//クリックされてUnitをかえす
 ) {
