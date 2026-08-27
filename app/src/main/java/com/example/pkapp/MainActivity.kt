@@ -5,18 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.pkapp.pklist.PKListScreen
 import com.example.pkapp.ui.theme.PKAppTheme
-import androidx.compose.material3.ExperimentalMaterial3Api
+import com.example.pkapp.viewmodel.PKViewModel
 
+import com.example.pkapp.repository.PKRepositoryImpl
+import com.example.pkapp.api.RetrofitInstance
 
 
 class MainActivity : ComponentActivity() {
@@ -29,7 +26,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PKListScreen()
+
+                    val api = RetrofitInstance.providePKApi()
+                    val repository = PKRepositoryImpl(api)
+                    val viewModel = PKViewModel(repository)
+
+                    PKListScreen(
+                        viewModel = viewModel
+                    )
 
                 }
                 /*
