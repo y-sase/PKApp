@@ -90,8 +90,8 @@ fun PKDetailScreen(
 
 
             Text(
-                text = "高さ：${viewModel.PKHeight}\n" +
-                        "重さ：${viewModel.PKWeight}\n" +
+                text = "高さ：${viewModel.PKHeight* 10}cm\n" +
+                        "重さ：${viewModel.PKWeight* 10}kg\n" +
                         "タイプ：${viewModel.PKTypes}",
                 color = Color.Black,
                 fontSize = 20.sp,
@@ -130,6 +130,10 @@ fun PKDetailScreen(
                     fontWeight = FontWeight.Bold,
                 )
             }
+            Text(
+                text = viewModel.errorMessage,
+                color = Color.Red
+            )
 
         }
 

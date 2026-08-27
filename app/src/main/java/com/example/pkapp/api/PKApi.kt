@@ -17,4 +17,14 @@ interface PKApi {
     suspend fun getPokemonDetail(
         @Path("id") id: Int
     ): PokemonDetailResponse
+
+    @GET("pokemon-species/{name}")
+    suspend fun getPokemonJpName(
+        @Path("name") name: String
+    ): PokemonJpNameResponse
+
+    @GET("type/{id}")
+    suspend fun getPokemonJpType(
+        @Path("id") id: Int
+    ): PokemonJpTypeResponse
 }

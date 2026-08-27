@@ -1,6 +1,7 @@
 package com.example.pkapp.viewmodel
 
-import android.R.attr.id
+
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
-import com.example.pkapp.model.TypeSlot
+
 import com.example.pkapp.repository.PKRepository
 import kotlinx.coroutines.launch
 
@@ -110,17 +111,21 @@ class PKViewModel(
                  */
 
                 val responsedetail = repository.getPokemonDetail(id)
+                val responsejpname = repository.getPokemonJpName(responsedetail.name)
+                val responsejptype = repository.getPokemonJpType(id)
                 PKId = responsedetail.id
-                PKName = responsedetail.name
+                PKName = responsejpname.names
                 PKSprites = responsedetail.sprites
                 PKHeight = responsedetail.height
                 PKWeight = responsedetail.weight
-                PKTypes = responsedetail.types.joinToString(", ") {
-                    it.type.name
+                PKTypes = responsejptype.names.joinToString(", ") {
+                    it.name
                 }
                 errorMessage = "成功 ${pokemonList.size}"
+
             } catch (e: Exception) {
                 //errorMessage = "エラー: ${e.message}"
+
                 errorMessage = e.toString()
             }
         }

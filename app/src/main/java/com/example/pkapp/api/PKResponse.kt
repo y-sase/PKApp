@@ -2,7 +2,8 @@ package com.example.pkapp.api
 
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
-import com.example.pkapp.model.TypeSlot
+import com.example.pkapp.model.TypeName
+
 
 data class PokemonDetailResponse(
     val id: Int,
@@ -17,4 +18,12 @@ data class PokemonDetailResponse(
 data class PokemonListResponse(
     val count: Int,//総件数
     val results: List<PokemonListItem>
+)
+
+data class PokemonJpNameResponse(
+    val names: String
+)
+
+data class  PokemonJpTypeResponse(
+    val names: List<TypeName>
 )
