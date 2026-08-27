@@ -1,11 +1,14 @@
-package com.example.pkapp.api
+package com.example.pkapp.viewmodel
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pkapp.repository.PKRepository
+import com.example.pkapp.model.PokemonListItem
+import com.example.pkapp.model.Sprites
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class PKViewModel(
     private val repository: PKRepository,
@@ -84,4 +87,3 @@ class PKViewModel(
     }
 
 }
-

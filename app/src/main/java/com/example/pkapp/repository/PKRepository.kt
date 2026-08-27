@@ -1,4 +1,7 @@
-package com.example.pkapp.api
+package com.example.pkapp.repository
+
+import com.example.pkapp.api.PokemonDetailResponse
+import com.example.pkapp.api.PokemonListResponse
 
 interface PKRepository {
     suspend fun getPokemonDetail(
