@@ -11,7 +11,7 @@ data class PokemonDetailResponse(
     val height: Int,
     val weight: Int,
     val sprites: Sprites,
-    val types: List<TypeSlot>
+    val types: List<TypeName>
 )
 
 
