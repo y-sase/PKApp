@@ -1,4 +1,4 @@
-package com.example.pkapp.model
+package com.example.pkapp.api
 
 data class PokemonListItem(
     val name: String,
