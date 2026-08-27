@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class PKViewModel (
+class PKViewModel(
     private val repository: PKRepository,
-): ViewModel() {
+) : ViewModel() {
     var PKId by mutableStateOf(0)
     var PKName by mutableStateOf("")
     var PKHeight by mutableStateOf(0)
@@ -20,12 +20,9 @@ class PKViewModel (
     var errorMessage by mutableStateOf("")
 
 
-    var pokemonList by mutableStateOf<List< PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
+    var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
         emptyList()//空っぽのリストを作る関数
-            )
-
-
-
+    )
 
 
     /*
@@ -65,18 +62,18 @@ class PKViewModel (
             try {//エラーが起きるかもしれない処理を開始。
 
                 //isLoading = true
-/*
-                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
-                for (limit) {
-                    list.add(
-                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
-                    )
-                }
-                pokemonList = list
+                /*
+                                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
+                                for (limit) {
+                                    list.add(
+                                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
+                                    )
+                                }
+                                pokemonList = list
 
- */
+                 */
 
-                val responselist =repository.getPokemonList()
+                val responselist = repository.getPokemonList()
                 pokemonList = responselist.results
                 errorMessage = "成功 ${pokemonList.size}"
             } catch (e: Exception) {
