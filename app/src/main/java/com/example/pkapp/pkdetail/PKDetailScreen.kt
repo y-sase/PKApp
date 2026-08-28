@@ -77,7 +77,7 @@ fun PKDetailScreen(
             Text(
                 text = viewModel.PKName,
                 color = Color.Black,
-                fontSize = 60.sp,
+                fontSize = 55.sp,
             )
 
             AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
@@ -90,7 +90,7 @@ fun PKDetailScreen(
 
 
             Text(
-                text = "高さ：${viewModel.PKHeight* 10}cm\n" +
+                text = "高さ：${viewModel.PKHeight/ 10.0}m\n" +
                         "重さ：${viewModel.PKWeight/ 10.0}kg\n" +
                         "タイプ：${viewModel.PKTypes}",
                 color = Color.Black,
