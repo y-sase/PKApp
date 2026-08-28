@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pkapp.model.ChangeLanguageName
+import com.example.pkapp.model.ChangeLanguageType
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
 
@@ -113,14 +115,20 @@ class PKViewModel(
                 val responsedetail = repository.getPokemonDetail(id)
                 val responsejpname = repository.getPokemonJpName(responsedetail.name)
                 val responsejptype = repository.getPokemonJpType(id)
+
+                //println(responsejpname.names)
                 PKId = responsedetail.id
-                PKName = responsejpname.names
+                //PKName = responsejpname.name
                 PKSprites = responsedetail.sprites
                 PKHeight = responsedetail.height
                 PKWeight = responsedetail.weight
+                /*
                 PKTypes = responsejptype.names.joinToString(", ") {
                     it.name
                 }
+                 */
+                PKName = ChangeLanguageName(responsedetail,responsejpname)
+                PKTypes = ChangeLanguageType(responsedetail,responsejptype).joinToString(", ")
                 errorMessage = "成功 ${pokemonList.size}"
 
             } catch (e: Exception) {
@@ -128,6 +136,7 @@ class PKViewModel(
 
                 errorMessage = e.toString()
             }
+
         }
     }
 }

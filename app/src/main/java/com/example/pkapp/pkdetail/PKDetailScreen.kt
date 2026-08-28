@@ -91,7 +91,7 @@ fun PKDetailScreen(
 
             Text(
                 text = "高さ：${viewModel.PKHeight* 10}cm\n" +
-                        "重さ：${viewModel.PKWeight* 10}kg\n" +
+                        "重さ：${viewModel.PKWeight/ 10.0}kg\n" +
                         "タイプ：${viewModel.PKTypes}",
                 color = Color.Black,
                 fontSize = 20.sp,

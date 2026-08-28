@@ -1,8 +1,10 @@
 package com.example.pkapp.api
 
+import com.example.pkapp.model.Language
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
 import com.example.pkapp.model.TypeName
+import com.example.pkapp.model.TypeSlot
 
 
 data class PokemonDetailResponse(
@@ -11,7 +13,7 @@ data class PokemonDetailResponse(
     val height: Int,
     val weight: Int,
     val sprites: Sprites,
-    val types: List<TypeName>
+    val types: List<TypeSlot>
 )
 
 
@@ -21,7 +23,12 @@ data class PokemonListResponse(
 )
 
 data class PokemonJpNameResponse(
-    val names: String
+    val names: List<PokemonName>
+)
+
+data class PokemonName(
+    val name: String,
+    val language: Language
 )
 
 data class  PokemonJpTypeResponse(
