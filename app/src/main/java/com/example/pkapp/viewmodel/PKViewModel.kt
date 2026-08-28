@@ -93,6 +93,11 @@ class PKViewModel(
         }
 
     }
+
+    /*
+    詳細画面部分
+
+
     fun loadPokemonDetail(id: Int) {
         errorMessage = "開始"
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
@@ -130,4 +135,6 @@ class PKViewModel(
             }
         }
     }
+
+     */
 }

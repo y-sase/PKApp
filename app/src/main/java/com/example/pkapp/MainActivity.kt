@@ -16,7 +16,7 @@ import com.example.pkapp.viewmodel.PKViewModel
 
 import com.example.pkapp.repository.PKRepositoryImpl
 import com.example.pkapp.api.RetrofitInstance
-import com.example.pkapp.pkdetail.PKDetailScreen
+//import com.example.pkapp.pkdetail.PKDetailScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -33,15 +33,19 @@ class MainActivity : ComponentActivity() {
                     val api = RetrofitInstance.providePKApi()
                     val repository = PKRepositoryImpl(api)
                     val viewModel = PKViewModel(repository)
-/*
+
                     PKListScreen(
                         viewModel = viewModel
-                    )*/
+                    )
 
+                    /*
+                    //詳細画面部分
                     PKDetailScreen(
                         viewModel = viewModel,
 
                     )
+
+                     */
 
                 }
                 /*
