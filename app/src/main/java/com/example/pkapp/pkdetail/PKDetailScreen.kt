@@ -56,6 +56,7 @@ fun PKDetailScreen(
     ) {
         Spacer(modifier = Modifier.height(200.dp))
         Favorite(
+            viewModel = viewModel,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(vertical = 70.dp)

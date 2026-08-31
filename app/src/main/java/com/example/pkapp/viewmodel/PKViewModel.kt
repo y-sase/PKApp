@@ -27,6 +27,8 @@ class PKViewModel(
     var query by mutableStateOf("")
     var errorMessage by mutableStateOf("")
 
+    var favoriteIds by mutableStateOf<List<Int>>(emptyList())
+
 
     var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
         emptyList()//空っぽのリストを作る関数
@@ -149,5 +151,14 @@ class PKViewModel(
             }
 
         }
+    }
+
+    fun toggleFavorite(id: Int) {
+        favoriteIds =
+            if (id in favoriteIds) {
+                favoriteIds - id
+            } else {
+                favoriteIds + id
+            }
     }
 }

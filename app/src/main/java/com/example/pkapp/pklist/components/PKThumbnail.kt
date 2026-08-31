@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.model.PokemonListItem
+import com.example.pkapp.viewmodel.PKViewModel
 
 @Composable
 fun PKThumbnail(
@@ -26,11 +27,13 @@ fun PKThumbnail(
     name: String,
     pokemonimageinList: PokemonListItem,
     // onClick: (Photo) -> Unit//クリックされてUnitをかえす
+    viewModel: PKViewModel
 ) {
 
 
     Box {
         Favorite(
+            viewModel = viewModel,
             modifier = Modifier
                 .align(Alignment.TopEnd),
         )
