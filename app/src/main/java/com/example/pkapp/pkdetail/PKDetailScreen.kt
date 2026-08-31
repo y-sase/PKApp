@@ -1,14 +1,9 @@
 package com.example.pkapp.pkdetail
 
-import android.R.attr.id
-import android.R.attr.name
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -65,8 +60,7 @@ fun PKDetailScreen(
 
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(100.dp))
 
@@ -84,16 +78,13 @@ fun PKDetailScreen(
             AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
                 model = viewModel.PKSprites.front_default,
                 contentDescription = "ポケモン",
-                modifier = Modifier
-                    .size(300.dp),
+                modifier = Modifier.size(300.dp),
                 contentScale = ContentScale.Crop//枠いっぱいに表示
             )
 
 
             Text(
-                text = "高さ：${viewModel.PKHeight/ 10.0}m\n" +
-                        "重さ：${viewModel.PKWeight/ 10.0}kg\n" +
-                        "タイプ：${viewModel.PKTypes}",
+                text = "高さ：${viewModel.PKHeight / 10.0}m\n" + "重さ：${viewModel.PKWeight / 10.0}kg\n" + "タイプ：${viewModel.PKTypes}",
                 color = Color.Black,
                 fontSize = 20.sp,
                 lineHeight = 43.sp
@@ -122,8 +113,7 @@ fun PKDetailScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFB3E5FC)
                 )
-            )
-            {
+            ) {
                 Text(
                     text = "Back",
                     color = Color.White,
@@ -132,8 +122,7 @@ fun PKDetailScreen(
                 )
             }
             Text(
-                text = viewModel.errorMessage,
-                color = Color.Red
+                text = viewModel.errorMessage, color = Color.Red
             )
 
         }

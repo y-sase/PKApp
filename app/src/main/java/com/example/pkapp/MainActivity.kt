@@ -16,6 +16,7 @@ import com.example.pkapp.viewmodel.PKViewModel
 
 import com.example.pkapp.repository.PKRepositoryImpl
 import com.example.pkapp.api.RetrofitInstance
+import com.example.pkapp.loading.LoadingScreen
 import com.example.pkapp.pkdetail.PKDetailScreen
 
 
@@ -36,12 +37,16 @@ class MainActivity : ComponentActivity() {
 /*
                     PKListScreen(
                         viewModel = viewModel
-                    )*/
+                    )
 
                     PKDetailScreen(
                         viewModel = viewModel,
 
                     )
+
+ */
+
+                    LoadingScreen()
 
                 }
                 /*

@@ -39,7 +39,7 @@ fun Favorite(
             imageVector = Icons.Default.Favorite,
             contentDescription = "Favorite",
             tint =
-                if (isFavorite)Color(0xFFFF4081)
+                if (isFavorite)Color(0xFFFF80AB)
                 else Color.White
 
 
