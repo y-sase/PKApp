@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.pkapp.Error.ErrorScreen
 import com.example.pkapp.pklist.PKListScreen
 import com.example.pkapp.ui.theme.PKAppTheme
 import com.example.pkapp.viewmodel.PKViewModel
@@ -44,9 +45,12 @@ class MainActivity : ComponentActivity() {
 
                     )
 
- */
+
 
                     LoadingScreen()
+
+ */
+                    ErrorScreen()
 
                 }
                 /*
