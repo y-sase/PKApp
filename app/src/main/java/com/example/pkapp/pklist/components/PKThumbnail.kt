@@ -25,7 +25,7 @@ import com.example.pkapp.model.PokemonListItem
 fun PKThumbnail(
     id: Int,
     name: String,
-    pokemonimageinList: PokemonListItem,
+   pokemonImageInList: PokemonListItem,
     // onClick: (Photo) -> Unit//クリックされてUnitをかえす
 ) {
 
@@ -46,7 +46,7 @@ fun PKThumbnail(
         ) {
 
             AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                model = pokemonimageinList.imageUrl,
+                model =pokemonImageInList.imageUrl,
                 contentDescription = "ポケモン",
                 modifier = Modifier
                     .size(100.dp)

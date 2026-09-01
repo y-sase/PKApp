@@ -85,7 +85,7 @@ fun PKListScreen(
 
                             id = pokemon.id,
                             name = pokemon.name,
-                            pokemonimageinList = pokemon,
+                           pokemonImageInList = pokemon,
 
 
                             )
