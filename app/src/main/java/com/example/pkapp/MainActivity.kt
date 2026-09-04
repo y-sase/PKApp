@@ -1,6 +1,7 @@
 package com.example.pkapp
 
 import android.R.attr.id
+import android.R.attr.mode
 import android.R.attr.name
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.pkapp.Error.ErrorScreen
 import com.example.pkapp.pklist.PKListScreen
 import com.example.pkapp.ui.theme.PKAppTheme
@@ -17,8 +21,10 @@ import com.example.pkapp.viewmodel.PKViewModel
 
 import com.example.pkapp.repository.PKRepositoryImpl
 import com.example.pkapp.api.RetrofitInstance
+import com.example.pkapp.loading.LoadingMode
 import com.example.pkapp.loading.LoadingScreen
 import com.example.pkapp.pkdetail.PKDetailScreen
+import com.example.pkapp.ui.theme.ScreenRoute
 
 
 class MainActivity : ComponentActivity() {
@@ -35,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     val api = RetrofitInstance.providePKApi()
                     val repository = PKRepositoryImpl(api)
                     val viewModel = PKViewModel(repository)
-/*
+                    /*
                     PKListScreen(
                         viewModel = viewModel
                     )
@@ -50,11 +56,11 @@ class MainActivity : ComponentActivity() {
                     LoadingScreen()
 
  */
-                    ErrorScreen()
+                    //ErrorScreen()
 
-                }
-                /*
-                val navController = rememberNavController()//画面遷移を管理するオブジェクト
+
+
+                val navController = rememberNavController()//navControllerをインスタンスで保持できる。画面遷移を管理するオブジェクト
 
 
                 NavHost(
@@ -63,28 +69,57 @@ class MainActivity : ComponentActivity() {
                     startDestination = ScreenRoute.PKListScreen.route,
 
                     ) {
+
                     //ポケモン一覧画面
                     composable(route = ScreenRoute.PKListScreen.route) {
                         PKListScreen(
+                            viewModel = viewModel,
                             navController = navController,
-                            viewModel = pkViewModel
+                                    onClick = {}
                         )
                     }
 
-                    /*
+                    //ポケモン詳細画面
+                    composable(route = ScreenRoute.PKDetailScreen.route + "/{pkId}") {
+                        PKDetailScreen(
+                            viewModel = viewModel,
+                            navController = navController,
+                            onClick = {}
+                        )
+                    }
+
+
                     //Loading画面
-                    composable(ScreenRoute.LoadingScreen.route) {
+                    composable("loading_detail") {
                         LoadingScreen(
-                            viewModel = pkViewModel,
-                            navController = navController
+                            viewModel = viewModel,
+                            navController = navController,
+                           mode = LoadingMode.DETAIL
+                        )
+                    }
+                    composable("loading_list") {
+                        LoadingScreen(
+                            viewModel = viewModel,
+                            navController = navController,
+                            mode = LoadingMode.LIST
                         )
                     }
 
-                     */*/
+                    //Error画面
+                    composable(ScreenRoute.ErrorScreen.route) {
+                        ErrorScreen(
+                            viewModel = viewModel,
+                            navController = navController,
+                            onClick = {}
+                        )
+                    }
+                }
+
 
                 }
             }
         }
     }
+}
 
 

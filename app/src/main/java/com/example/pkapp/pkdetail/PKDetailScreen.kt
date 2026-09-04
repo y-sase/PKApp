@@ -25,17 +25,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
+import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
 
 @Composable
 fun PKDetailScreen(
     viewModel: PKViewModel,
+    navController: NavController,
+    onClick: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
 
-        viewModel.loadPokemonDetail(1)
+        viewModel.loadPokemonDetail(viewModel.PKId, onSuccess = {}, onError = {})
 
     }
     Box(
@@ -52,6 +56,7 @@ fun PKDetailScreen(
         Spacer(modifier = Modifier.height(200.dp))
         Favorite(
             viewModel = viewModel,
+            pokemonId = viewModel.PKId,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(vertical = 70.dp)
@@ -96,12 +101,12 @@ fun PKDetailScreen(
 
                 onClick = {
 
-                    /*
+
                     navController.navigate(
-                        ScreenRoute.LoadingScreen.route
+                        "loading_list"
                     )
 
-                     */
+
 
                 },
 

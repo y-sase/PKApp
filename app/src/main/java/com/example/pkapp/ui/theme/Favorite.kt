@@ -18,6 +18,7 @@ import com.example.pkapp.viewmodel.PKViewModel
 @Composable
 fun Favorite(
     viewModel: PKViewModel,
+    pokemonId: Int,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -30,10 +31,10 @@ fun Favorite(
 
         IconButton(
             onClick = {
-                viewModel.toggleFavorite(viewModel.PKId)
+                viewModel.toggleFavorite(pokemonId)
             }
         ) {
-            val isFavorite = viewModel.PKId in viewModel.favoriteIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
+            val isFavorite = pokemonId in viewModel.favoriteIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
         Icon(
             modifier = Modifier.size(34.dp),
             imageVector = Icons.Default.Favorite,

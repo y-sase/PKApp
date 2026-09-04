@@ -66,7 +66,10 @@ class PKViewModel(
     }
 
      */
-    fun loadPokemonList() {
+    fun loadPokemonList(
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
         errorMessage = "開始"
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
@@ -86,9 +89,10 @@ class PKViewModel(
                 val responselist = repository.getPokemonList()
                 pokemonList = responselist.results
                 errorMessage = "成功 ${pokemonList.size}"
+                onSuccess()//取得成功後に画面遷移する
             } catch (e: Exception) {
-                //errorMessage = "エラー: ${e.message}"
-                errorMessage = e.toString()
+
+                onError()
             }
 
 
@@ -97,7 +101,11 @@ class PKViewModel(
         }
 
     }
-    fun loadPokemonDetail(id: Int) {
+    fun loadPokemonDetail(
+        id: Int,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
         //errorMessage = "開始"
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
@@ -140,16 +148,15 @@ class PKViewModel(
                     it.name
                 }
                  */
-                PKName = ChangeLanguageName(responsedetail,responsejpname)
+                PKName = ChangeLanguageName(responsedetail, responsejpname)
                 PKTypes = typeNames.joinToString(" / ")
                 //errorMessage = "成功 ${pokemonList.size}"
+                onSuccess()//取得成功後に画面遷移する
 
             } catch (e: Exception) {
-                //errorMessage = "エラー: ${e.message}"
+                onError()
 
-                errorMessage = e.toString()
             }
-
         }
     }
 
@@ -161,4 +168,6 @@ class PKViewModel(
                 favoriteIds + id
             }
     }
+
+
 }

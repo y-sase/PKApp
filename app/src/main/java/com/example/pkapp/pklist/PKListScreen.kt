@@ -16,18 +16,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.pkapp.api.PokemonDetailResponse
 import com.example.pkapp.pklist.components.PKThumbnail
+import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
 
 
 @Composable
 fun PKListScreen(
-    viewModel: PKViewModel
+    viewModel: PKViewModel,
+    navController: NavController,
+    onClick: () -> Unit
 ) {
 
     LaunchedEffect(Unit) {
 
-        viewModel.loadPokemonList()
+        viewModel.loadPokemonList(onSuccess = {}, onError = {})
 
     }
 
@@ -87,8 +92,14 @@ fun PKListScreen(
                             name = pokemon.name,
                             pokemonimageinList = pokemon,
 
-                            viewModel = viewModel
+                            viewModel = viewModel,
 
+                            onClick = {//画面遷移
+                                viewModel.PKId = pokemon.id
+                                navController.navigate(
+                                    "loading_detail"
+                                )
+                            }
                             )
                     }
 

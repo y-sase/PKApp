@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    //id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -46,6 +47,10 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)
+    //implementation(libs.androidx.navigation.compose.android)
+    //implementation(libs.androidx.navigation.compose.jvmstubs)
+    implementation(libs.androidx.navigation.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -64,5 +69,7 @@ dependencies {
     //coil
     implementation("io.coil-kt:coil-compose:2.7.0")
 
-
+    //NavController
+    //implementation("androidx.navigation:navigation-compose:2.10.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 }

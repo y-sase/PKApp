@@ -1,5 +1,6 @@
 package com.example.pkapp.pklist.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,19 +27,25 @@ fun PKThumbnail(
     id: Int,
     name: String,
     pokemonimageinList: PokemonListItem,
-    // onClick: (Photo) -> Unit//クリックされてUnitをかえす
+    onClick: () -> Unit,//クリックされてUnitをかえす
     viewModel: PKViewModel
 ) {
 
 
-    Box {
+    Box (
+        modifier = Modifier
+        .clickable {
+            onClick()
+        }
+
+    ){
         Favorite(
             viewModel = viewModel,
+            pokemonId = id,
             modifier = Modifier
                 .align(Alignment.TopEnd),
         )
 
-        }
 
         Row(
             verticalAlignment = Alignment.CenterVertically,//左寄せ(Rowの時)
@@ -85,6 +92,7 @@ fun PKThumbnail(
 
         }
     }
+}
 
 
 
