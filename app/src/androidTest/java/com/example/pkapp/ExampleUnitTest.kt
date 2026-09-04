@@ -1,4 +1,4 @@
-package com.example.dailyadviceapp
+package com.example.pkapp
 
 import org.junit.Test
 
