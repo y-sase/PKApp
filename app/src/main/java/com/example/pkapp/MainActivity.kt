@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                     //ポケモン一覧画面
-                    composable(route = ScreenRoute.PKListScreen.route) {
+                    composable("pklist_screen") {
                         PKListScreen(
                             viewModel = viewModel,
                             navController = navController,
@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     //ポケモン詳細画面
-                    composable(route = ScreenRoute.PKDetailScreen.route + "/{pkId}") {
+                    composable("pkdetail_screen" + "/{pkId}") {
                         PKDetailScreen(
                             viewModel = viewModel,
                             navController = navController,
@@ -106,7 +106,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     //Error画面
-                    composable(ScreenRoute.ErrorScreen.route) {
+                    composable("error_screen") {
                         ErrorScreen(
                             viewModel = viewModel,
                             navController = navController,

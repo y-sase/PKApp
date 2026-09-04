@@ -69,7 +69,7 @@ fun ErrorScreen(
 
 
                     navController.navigate(
-                        ScreenRoute.LoadingScreen.route
+                        "loading_detail"
                     )
 
 
@@ -98,7 +98,7 @@ fun ErrorScreen(
 
 
                     navController.navigate(
-                        ScreenRoute.LoadingScreen.route
+                        "loading_list"
                     )
 
 

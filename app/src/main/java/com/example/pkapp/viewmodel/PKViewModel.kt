@@ -1,6 +1,7 @@
 package com.example.pkapp.viewmodel
 
 
+import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -92,6 +93,7 @@ class PKViewModel(
                 onSuccess()//取得成功後に画面遷移する
             } catch (e: Exception) {
 
+
                 onError()
             }
 
@@ -154,6 +156,7 @@ class PKViewModel(
                 onSuccess()//取得成功後に画面遷移する
 
             } catch (e: Exception) {
+                Log.e("TEST", "DETAIL EXCEPTION", e)
                 onError()
 
             }

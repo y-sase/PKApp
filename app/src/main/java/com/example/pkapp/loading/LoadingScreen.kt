@@ -45,13 +45,13 @@ fun LoadingScreen(
                         onSuccess = {
                             Log.d("TEST", "SUCCESS")
                         navController.navigate(
-                            ScreenRoute.PKDetailScreen.route
+                            "pkdetail_screen" + "/{pkId}"
                         )
                     }, onError = {
                             Log.d("TEST", "DETAIL ERROR")
                         navController.navigate(
 
-                            ScreenRoute.ErrorScreen.route
+                            "error_screen"
                         )
                     }
                     )
@@ -63,12 +63,12 @@ fun LoadingScreen(
                             Log.d("TEST", "LIST SUCCESS")
 
                         navController.navigate(
-                            ScreenRoute.PKListScreen.route
+                            "pklist_screen"
                         )
                     }, onError = {
                             Log.d("TEST", "LIST ERROR")
                         navController.navigate(
-                            ScreenRoute.ErrorScreen.route
+                            "error_screen"
 
                         )
                     }
