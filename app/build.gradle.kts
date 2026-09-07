@@ -51,6 +51,7 @@ dependencies {
     //implementation(libs.androidx.navigation.compose.android)
     //implementation(libs.androidx.navigation.compose.jvmstubs)
     implementation(libs.androidx.navigation.runtime.ktx)
+    //implementation(libs.mediation.test.suite)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

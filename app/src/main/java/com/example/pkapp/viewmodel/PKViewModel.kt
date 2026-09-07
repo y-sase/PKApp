@@ -3,17 +3,21 @@ package com.example.pkapp.viewmodel
 
 import android.util.Log
 import androidx.compose.material3.Text
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.util.CoilUtils.result
 import com.example.pkapp.model.ChangeLanguageName
 import com.example.pkapp.model.ChangeLanguageType
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
+import com.example.pkapp.pklist.PKListState
 
 import com.example.pkapp.repository.PKRepository
+//import com.google.android.ads.mediationtestsuite.dataobjects.NetworkResponse
 import kotlinx.coroutines.launch
 
 class PKViewModel(
@@ -34,6 +38,12 @@ class PKViewModel(
     var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
         emptyList()//空っぽのリストを作る関数
     )
+
+    private val _state = mutableStateOf(PKListState())
+
+    val state: State<PKListState> = _state
+    var isLoading by mutableStateOf(false)
+
 
 
     /*
@@ -71,11 +81,13 @@ class PKViewModel(
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
-        errorMessage = "開始"
+        //errorMessage = "開始"
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
 
-                //isLoading = true
+
+
+                isLoading = true
                 /*
                                 val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
                                 for (limit) {
@@ -90,10 +102,11 @@ class PKViewModel(
                 val responselist = repository.getPokemonList()
                 pokemonList = responselist.results
                 errorMessage = "成功 ${pokemonList.size}"
+                isLoading = false
                 onSuccess()//取得成功後に画面遷移する
             } catch (e: Exception) {
 
-
+                isLoading = false
                 onError()
             }
 
