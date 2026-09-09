@@ -2,22 +2,20 @@ package com.example.pkapp.viewmodel
 
 
 import android.util.Log
-import androidx.compose.material3.Text
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.util.CoilUtils.result
+import com.example.pkapp.common.NetworkResponse
 import com.example.pkapp.model.ChangeLanguageName
 import com.example.pkapp.model.ChangeLanguageType
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
 import com.example.pkapp.pklist.PKListState
-
 import com.example.pkapp.repository.PKRepository
-//import com.google.android.ads.mediationtestsuite.dataobjects.NetworkResponse
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PKViewModel(
@@ -45,127 +43,82 @@ class PKViewModel(
     var isLoading by mutableStateOf(false)
 
 
-
-    /*
-    //詳細画面の際に使用（一匹ずつの情報）
-    fun loadPKById(
-        id: Int,
-        onSuccess: () -> Unit
+    fun loadPokemonList(
+        onSuccess: () -> Unit, onError: () -> Unit
     ) {
-        viewModelScope.launch {
-            try {
-                PKId = 0
+        //errorMessage = "開始"
+        viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
 
-                val response = repository.getPokemon(id)
+            _state.value = PKListState(isLoading = true)
 
-                PKId = response.id// ViewModelに保存
-                PKName = response.name
-                PKHeight = response.height
-                PKWeight = response.weight
-                PKSprites = response.sprites
-                PKTypes = response.types.joinToString(", ") {//joinToString() は,リストの要素をつなげて、1つの文字列(String)にする関数
-                    it.type.name
+
+            when (val result = repository.getPokemonList()) {
+                is NetworkResponse.Loading -> {
+                    Log.d("TEST", "LOADING")
+                    isLoading = true
+                    _state.value = PKListState(isLoading = true)
                 }
 
 
-                onSuccess()
+                is NetworkResponse.Success -> {
+                    Log.d("TEST", "SUCCESS")
+                    pokemonList = result.data?.results ?: emptyList()
+                    isLoading = false
+                    _state.value = PKListState(
+                        // data = result.data,
+                        isLoading = false
+                    )
+                    onSuccess()
+                }
 
-            } catch (e: Exception) {
-                errorMessage = "エラー: ${e.message}"
+                is NetworkResponse.Failure -> {
+                    Log.d("TEST", "FAILURE")
+                    delay(2000)
+                    Log.d("TEST", "BEFORE ONERROR")
+                    isLoading = false
+                    _state.value = PKListState(
+                        error = result.error, isLoading = false
+                    )
+                    Log.d("TEST", "CALL ONERROR")
+                    onError()
+                    Log.d("TEST", "AFTER ONERROR")
+
+                }
+
             }
+
         }
     }
 
-     */
-    fun loadPokemonList(
-        onSuccess: () -> Unit,
-        onError: () -> Unit
-    ) {
-        //errorMessage = "開始"
-        viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
-            try {//エラーが起きるかもしれない処理を開始。
 
-
-
-                isLoading = true
-                /*
-                                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
-                                for (limit) {
-                                    list.add(
-                                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
-                                    )
-                                }
-                                pokemonList = list
-
-                 */
-
-                val responselist = repository.getPokemonList()
-                pokemonList = responselist.results
-                errorMessage = "成功 ${pokemonList.size}"
-                isLoading = false
-                onSuccess()//取得成功後に画面遷移する
-            } catch (e: Exception) {
-
-                isLoading = false
-                onError()
-            }
-
-
-
-
-        }
-
-    }
     fun loadPokemonDetail(
-        id: Int,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
+        id: Int, onSuccess: () -> Unit, onError: () -> Unit
     ) {
         //errorMessage = "開始"
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
 
-                //isLoading = true
-                /*
-                                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
-                                for (limit) {
-                                    list.add(
-                                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
-                                    )
-                                }
-                                pokemonList = list
-
-                 */
 
                 val responsedetail = repository.getPokemonDetail(id)
                 val responsejpname = repository.getPokemonJpName(responsedetail.name)
                 val typeNames = responsedetail.types.map { typeInfo ->//typeInfoは今処理中の1件
-                    val typeId = typeInfo
-                        .type.url
-                        .trimEnd('/')
-                        .substringAfterLast('/')//最後の / より後ろだけ取得
-                        .toInt()//文字列を数値に変換 String->Int
+                    val typeId =
+                        typeInfo.type.url.trimEnd('/').substringAfterLast('/')//最後の / より後ろだけ取得
+                            .toInt()//文字列を数値に変換 String->Int
 
                     val responsejptype = repository.getPokemonJpType(typeId)
                     ChangeLanguageType(
-                        responsedetail,
-                        responsejptype
+                        responsedetail, responsejptype
                     ).first()
                 }
-                //println(responsejpname.names)
                 PKId = responsedetail.id
                 //PKName = responsejpname.name
                 PKSprites = responsedetail.sprites
                 PKHeight = responsedetail.height
                 PKWeight = responsedetail.weight
-                /*
-                PKTypes = responsejptype.names.joinToString(", ") {
-                    it.name
-                }
-                 */
                 PKName = ChangeLanguageName(responsedetail, responsejpname)
                 PKTypes = typeNames.joinToString(" / ")
-                //errorMessage = "成功 ${pokemonList.size}"
+
                 onSuccess()//取得成功後に画面遷移する
 
             } catch (e: Exception) {
@@ -177,12 +130,11 @@ class PKViewModel(
     }
 
     fun toggleFavorite(id: Int) {
-        favoriteIds =
-            if (id in favoriteIds) {
-                favoriteIds - id
-            } else {
-                favoriteIds + id
-            }
+        favoriteIds = if (id in favoriteIds) {
+            favoriteIds - id
+        } else {
+            favoriteIds + id
+        }
     }
 
 

@@ -126,12 +126,6 @@ fun PKDetailScreen(
                     fontWeight = FontWeight.Bold,
                 )
             }
-            /*
-            Text(
-                text = viewModel.errorMessage, color = Color.Red
-            )
-
-             */
 
         }
 

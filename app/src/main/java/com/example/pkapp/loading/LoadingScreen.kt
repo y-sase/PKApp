@@ -71,6 +71,7 @@ fun LoadingScreen(
                             "error_screen"
 
                         )
+                            Log.d("TEST", "AFTER NAVIGATE")
                     }
                     )
                 }

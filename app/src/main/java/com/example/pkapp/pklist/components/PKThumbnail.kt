@@ -18,8 +18,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.model.PokemonListItem
+import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
 
 @Composable
@@ -32,18 +32,16 @@ fun PKThumbnail(
 ) {
 
 
-    Box (
-        modifier = Modifier
-        .clickable {
-            onClick()
-        }
+    Box(
+        modifier = Modifier.clickable {
+                onClick()
+            }
 
-    ){
+    ) {
         Favorite(
             viewModel = viewModel,
             pokemonId = id,
-            modifier = Modifier
-                .align(Alignment.TopEnd),
+            modifier = Modifier.align(Alignment.TopEnd),
         )
 
 
@@ -59,17 +57,7 @@ fun PKThumbnail(
                     .size(100.dp)
                     .padding(start = 16.dp),
                 contentScale = ContentScale.Crop//枠いっぱいに表示
-            )/*
-                    Image(
-                        painter = painterResource(id = R.drawable.monster03),
-                        contentDescription = "ポケモン",
-                        modifier = Modifier
-                            .width(100.dp)
-                            .height(100.dp)
-                            .padding(start = 16.dp),
-                    )
-
-                    */
+            )
 
 
             Spacer(modifier = Modifier.width(50.dp))
@@ -93,9 +81,6 @@ fun PKThumbnail(
         }
     }
 }
-
-
-
 
 
 /*
