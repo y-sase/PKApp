@@ -1,24 +1,23 @@
 package com.example.pkapp.viewmodel
 
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pkapp.model.ChangeLanguageName
-import com.example.pkapp.model.ChangeLanguageType
+import com.example.pkapp.model.getJapaneseName
+import com.example.pkapp.model.changeLanguageType
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
 
-import com.example.pkapp.repository.PKRepository
+import com.example.pkapp.data.api.repository.PKRepository
 import kotlinx.coroutines.launch
 
 class PKViewModel(
     private val repository: PKRepository,
 ) : ViewModel() {
-    var PKId by mutableStateOf(0)
+    var pokemonId by mutableStateOf(0)
     var PKName by mutableStateOf("")
     var PKHeight by mutableStateOf(0)
     var PKWeight by mutableStateOf(0)
@@ -43,11 +42,11 @@ class PKViewModel(
     ) {
         viewModelScope.launch {
             try {
-                PKId = 0
+                pokemonId = 0
 
                 val response = repository.getPokemon(id)
 
-                PKId = response.id// ViewModelに保存
+                pokemonId = response.id// ViewModelに保存
                 PKName = response.name
                 PKHeight = response.height
                 PKWeight = response.weight
@@ -124,13 +123,12 @@ class PKViewModel(
                         .toInt()//文字列を数値に変換 String->Int
 
                     val responsejptype = repository.getPokemonJpType(typeId)
-                    ChangeLanguageType(
-                        responsedetail,
+                    changeLanguageType(
                         responsejptype
                     ).first()
                 }
                 //println(responsejpname.names)
-                PKId = responsedetail.id
+                pokemonId = responsedetail.id
                 //PKName = responsejpname.name
                 PKSprites = responsedetail.sprites
                 PKHeight = responsedetail.height
@@ -140,7 +138,7 @@ class PKViewModel(
                     it.name
                 }
                  */
-                PKName = ChangeLanguageName(responsedetail,responsejpname)
+                PKName = getJapaneseName(responsejpname)
                 PKTypes = typeNames.joinToString(" / ")
                 //errorMessage = "成功 ${pokemonList.size}"
 

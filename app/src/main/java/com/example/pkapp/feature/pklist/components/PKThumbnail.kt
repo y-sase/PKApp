@@ -1,4 +1,4 @@
-package com.example.pkapp.pklist.components
+package com.example.pkapp.feature.pklist.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,8 +25,8 @@ import com.example.pkapp.viewmodel.PKViewModel
 fun PKThumbnail(
     id: Int,
     name: String,
-    pokemonimageinList: PokemonListItem,
-    // onClick: (Photo) -> Unit//クリックされてUnitをかえす
+    pokemonimageInList: PokemonListItem,
+
     viewModel: PKViewModel
 ) {
 
@@ -46,23 +46,13 @@ fun PKThumbnail(
         ) {
 
             AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                model = pokemonimageinList.imageUrl,
+                model = pokemonimageInList.imageUrl,
                 contentDescription = "ポケモン",
                 modifier = Modifier
                     .size(100.dp)
                     .padding(start = 16.dp),
                 contentScale = ContentScale.Crop//枠いっぱいに表示
-            )/*
-                    Image(
-                        painter = painterResource(id = R.drawable.monster03),
-                        contentDescription = "ポケモン",
-                        modifier = Modifier
-                            .width(100.dp)
-                            .height(100.dp)
-                            .padding(start = 16.dp),
-                    )
-
-                    */
+            )
 
 
             Spacer(modifier = Modifier.width(50.dp))
@@ -90,10 +80,3 @@ fun PKThumbnail(
 
 
 
-/*
-@Composable
-fun AsyncImage(model: imageUrl, contentDescription: description, modifier: Modifier) {
-    TODO("Not yet implemented")
-}
-
- */

@@ -1,4 +1,4 @@
-package com.example.pkapp.api
+package com.example.pkapp.data.api
 
 import retrofit2.http.GET
 import retrofit2.http.Path

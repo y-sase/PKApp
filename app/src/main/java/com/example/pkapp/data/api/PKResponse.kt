@@ -1,4 +1,4 @@
-package com.example.pkapp.api
+package com.example.pkapp.data.api
 
 import com.example.pkapp.model.Language
 import com.example.pkapp.model.PokemonListItem

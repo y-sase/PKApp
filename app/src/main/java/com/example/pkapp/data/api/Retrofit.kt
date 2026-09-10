@@ -1,6 +1,6 @@
-package com.example.pkapp.api
+package com.example.pkapp.data.api
 
-import com.example.pkapp.api.Base_Api_url.BASE_URL
+import com.example.pkapp.data.api.Base_Api_url.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
