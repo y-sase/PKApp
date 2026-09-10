@@ -26,9 +26,9 @@ import com.example.pkapp.viewmodel.PKViewModel
 fun PKThumbnail(
     id: Int,
     name: String,
-    pokemonimageInList: PokemonListItem,
 
-    viewModel: PKViewModel
+
+    viewModel: PKViewModel,
    pokemonImageInList: PokemonListItem,
     // onClick: (Photo) -> Unit//クリックされてUnitをかえす
 ) {
@@ -51,7 +51,7 @@ fun PKThumbnail(
         ) {
 
             AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                model = pokemonimageInList.imageUrl,
+                //model = pokemonImageInList.imageUrl,
                 model =pokemonImageInList.imageUrl,
                 contentDescription = "ポケモン",
                 modifier = Modifier
