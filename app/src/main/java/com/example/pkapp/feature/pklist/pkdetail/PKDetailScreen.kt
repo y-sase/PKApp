@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
+/*
+詳細画面部分
 
 @Composable
 fun PKDetailScreen(
@@ -129,3 +131,5 @@ fun PKDetailScreen(
 
     }
 }
+
+ */

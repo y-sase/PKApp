@@ -66,6 +66,9 @@ fun PKListScreen(
                         PKThumbnail(
 
                             id = pokemon.id, name = pokemon.name, pokemonimageInList = pokemon,
+                            id = pokemon.id,
+                            name = pokemon.name,
+                           pokemonImageInList = pokemon,
 
                             viewModel = viewModel
 
