@@ -6,12 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pkapp.model.getJapaneseName
-import com.example.pkapp.model.getTypeList
+import com.example.pkapp.data.api.repository.PKRepository
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
-
-import com.example.pkapp.data.api.repository.PKRepository
+import com.example.pkapp.model.getJapaneseName
+import com.example.pkapp.model.getTypeList
 import kotlinx.coroutines.launch
 
 class PKViewModel(
@@ -38,17 +37,6 @@ class PKViewModel(
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
 
-                //isLoading = true
-                /*
-                                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
-                                for (limit) {
-                                    list.add(
-                                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
-                                    )
-                                }
-                                pokemonList = list
-
-                 */
 
                 val responselist = repository.getPokemonList()
                 pokemonList = responselist.results
@@ -57,8 +45,6 @@ class PKViewModel(
                 //errorMessage = "エラー: ${e.message}"
                 errorMessage = e.toString()
             }
-
-
 
 
         }
@@ -78,7 +64,7 @@ class PKViewModel(
                 PKHeight = responsedetail.height
                 PKWeight = responsedetail.weight
                 PKName = getJapaneseName(responsejpname)
-                PKTypes = getTypeList(repository,id).joinToString(" / ")
+                PKTypes = getTypeList(repository, id).joinToString(" / ")
 
 
             } catch (e: Exception) {
@@ -89,12 +75,11 @@ class PKViewModel(
     }
 
     fun toggleFavorite(id: Int) {
-        favoriteIds =
-            if (id in favoriteIds) {
-                favoriteIds - id
-            } else {
-                favoriteIds + id
-            }
+        favoriteIds = if (id in favoriteIds) {
+            favoriteIds - id
+        } else {
+            favoriteIds + id
+        }
     }
 
 }

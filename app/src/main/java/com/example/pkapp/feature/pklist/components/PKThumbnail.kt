@@ -18,8 +18,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.model.PokemonListItem
+import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
 
 @Composable
@@ -29,58 +29,57 @@ fun PKThumbnail(
 
 
     viewModel: PKViewModel,
-   pokemonImageInList: PokemonListItem,
-    // onClick: (Photo) -> Unit//クリックされてUnitをかえす
-) {
+    pokemonImageInList: PokemonListItem,
+
+    ) {
 
 
-    Box (
+    Box(
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         Favorite(
             viewModel = viewModel,
-            modifier = Modifier
-                .align(Alignment.TopEnd),
+            modifier = Modifier.align(Alignment.TopEnd),
         )
 
-        }
+    }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,//左寄せ(Rowの時)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,//左寄せ(Rowの時)
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
+            //model = pokemonImageInList.imageUrl,
+            model = pokemonImageInList.imageUrl,
+            contentDescription = "ポケモン",
+            modifier = Modifier
+                .size(100.dp)
+                .padding(start = 16.dp),
+            contentScale = ContentScale.Crop//枠いっぱいに表示
+        )
+
+
+        Spacer(modifier = Modifier.width(50.dp))
+
+        Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-
-            AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                //model = pokemonImageInList.imageUrl,
-                model =pokemonImageInList.imageUrl,
-                contentDescription = "ポケモン",
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(start = 16.dp),
-                contentScale = ContentScale.Crop//枠いっぱいに表示
+            Text(
+                text = "No.$id",
+                color = Color.Black,
+                fontSize = 16.sp,
             )
-
-
-            Spacer(modifier = Modifier.width(50.dp))
-
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "No.$id",
-                    color = Color.Black,
-                    fontSize = 16.sp,
-                )
-                Text(
-                    text = name,
-                    color = Color.Black,
-                    fontSize = 26.sp,
-                )
-            }
-
-
+            Text(
+                text = name,
+                color = Color.Black,
+                fontSize = 26.sp,
+            )
         }
+
+
     }
+}
 
 
 
