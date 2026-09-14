@@ -1,7 +1,6 @@
 package com.example.pkapp.viewmodel
 
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,7 +14,6 @@ import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
 import com.example.pkapp.pklist.PKListState
 import com.example.pkapp.repository.PKRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PKViewModel(
@@ -37,8 +35,7 @@ class PKViewModel(
         emptyList()//空っぽのリストを作る関数
     )
 
-    private val _state = mutableStateOf(PKListState())
-
+    private val _state = mutableStateOf(PKListState())//mutableStateOfとvalueはセットで値が随時変わるときに使う
     val state: State<PKListState> = _state
     var isLoading by mutableStateOf(false)
 
@@ -46,7 +43,6 @@ class PKViewModel(
     fun loadPokemonList(
         onSuccess: () -> Unit, onError: () -> Unit
     ) {
-        //errorMessage = "開始"
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
 
             _state.value = PKListState(isLoading = true)
@@ -86,7 +82,6 @@ class PKViewModel(
     fun loadPokemonDetail(
         id: Int, onSuccess: () -> Unit, onError: () -> Unit
     ) {
-        //errorMessage = "開始"
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
 
@@ -114,7 +109,7 @@ class PKViewModel(
                 onSuccess()//取得成功後に画面遷移する
 
             } catch (e: Exception) {
-                Log.e("TEST", "DETAIL EXCEPTION", e)
+
                 onError()
 
             }

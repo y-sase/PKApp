@@ -82,11 +82,3 @@ fun PKThumbnail(
     }
 }
 
-
-/*
-@Composable
-fun AsyncImage(model: imageUrl, contentDescription: description, modifier: Modifier) {
-    TODO("Not yet implemented")
-}
-
- */
