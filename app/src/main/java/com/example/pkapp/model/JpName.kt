@@ -1,5 +1,6 @@
 package com.example.pkapp.model
 
+import androidx.compose.remote.creation.dsl.first
 import com.example.pkapp.data.api.PokemonJpNameResponse
 import com.example.pkapp.data.api.PokemonJpTypeResponse
 
@@ -20,9 +21,11 @@ fun getJapaneseName(
 fun changeLanguageType(
 
     jptypeResponse: PokemonJpTypeResponse
-): List<String> {  //最終的にStringを返す。
+): String {  //最終的にStringを返す。
 
 
-    return jptypeResponse.names.filter { it.language.name == "ja-hrkt" }//filter:条件に合うものだけ残す
-        .map { it.name }//map:必要な項目だけ取り出す
+    return jptypeResponse
+        .first { it.language.name == "ja-hrkt" }//filter:条件に合うものだけ残す
+        .name
+       // .map { it.name }//map:必要な項目だけ取り出す
 }

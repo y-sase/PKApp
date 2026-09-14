@@ -127,7 +127,7 @@ class PKViewModel(
                     val responsejptype = repository.getPokemonJpType(typeId)
                     changeLanguageType(
                         responsejptype
-                    ).first()
+                    )
                 }
                 //println(responsejpname.names)
                 pokemonId = responsedetail.id
