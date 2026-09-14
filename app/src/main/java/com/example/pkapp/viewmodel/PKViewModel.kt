@@ -54,34 +54,26 @@ class PKViewModel(
 
             when (val result = repository.getPokemonList()) {
                 is NetworkResponse.Loading -> {
-                    Log.d("TEST", "LOADING")
                     isLoading = true
                     _state.value = PKListState(isLoading = true)
                 }
 
 
                 is NetworkResponse.Success -> {
-                    Log.d("TEST", "SUCCESS")
                     pokemonList = result.data?.results ?: emptyList()
                     isLoading = false
                     _state.value = PKListState(
-                        // data = result.data,
                         isLoading = false
                     )
                     onSuccess()
                 }
 
                 is NetworkResponse.Failure -> {
-                    Log.d("TEST", "FAILURE")
-                    delay(2000)
-                    Log.d("TEST", "BEFORE ONERROR")
                     isLoading = false
                     _state.value = PKListState(
                         error = result.error, isLoading = false
                     )
-                    Log.d("TEST", "CALL ONERROR")
                     onError()
-                    Log.d("TEST", "AFTER ONERROR")
 
                 }
 

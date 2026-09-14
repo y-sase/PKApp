@@ -38,17 +38,16 @@ fun LoadingScreen(
 
             when (mode) {
                 LoadingMode.DETAIL -> {
-                    Log.d("TEST", "DETAIL SUCCESS")
 
                     viewModel.loadPokemonDetail(
                         id = viewModel.PKId,
                         onSuccess = {
-                            Log.d("TEST", "SUCCESS")
+
                         navController.navigate(
                             "pkdetail_screen" + "/{pkId}"
                         )
                     }, onError = {
-                            Log.d("TEST", "DETAIL ERROR")
+
                         navController.navigate(
 
                             "error_screen"
@@ -60,18 +59,18 @@ fun LoadingScreen(
                 LoadingMode.LIST -> {
                     viewModel.loadPokemonList(
                         onSuccess = {
-                            Log.d("TEST", "LIST SUCCESS")
+
 
                         navController.navigate(
                             "pklist_screen"
                         )
                     }, onError = {
-                            Log.d("TEST", "LIST ERROR")
+
                         navController.navigate(
                             "error_screen"
 
                         )
-                            Log.d("TEST", "AFTER NAVIGATE")
+
                     }
                     )
                 }
@@ -79,59 +78,7 @@ fun LoadingScreen(
         }
     }
 }
-/*
-            if (viewModel.query.isBlank()) {
 
-                // 一覧画面 → Loading画面 → 詳細画面
-
-                viewModel.loadPokemonList(
-                    onSuccess = {
-
-
-
-                        val intent = Intent(//Intentオブジェクト作成
-                            context,//今いるActivityの情報、「どこから起動するのか」を指定
-                            PokemonDetailActivity::class.java
-                        )
-
-
-
-                        intent.putExtra(//取得したnameをIntentに入れる
-                            "name",
-                            viewModel.PKName
-                        )
-
-                        intent.putExtra(//取得したアドバイスIDをIntentに入れる
-                            "id",
-                            viewModel.PKId
-                        )
-
-                        intent.putExtra(//取得したアドバイスIDをIntentに入れる
-                            "height",
-                            viewModel.PKHeight
-                        )
-
-                        intent.putExtra(//取得したアドバイスIDをIntentに入れる
-                            "weight",
-                            viewModel.PKWeight
-                        )
-
-                        intent.putExtra(//取得したアドバイスIDをIntentに入れる
-                            "types",
-                            viewModel.PKTypes
-                        )
-
-
-
-                        context.startActivity(intent)//実際に画面遷移
-
-
-
-                        navController.navigate(ScreenRoute.PKDetailScreen.route)
-
-
-
-             */
 
 
 
