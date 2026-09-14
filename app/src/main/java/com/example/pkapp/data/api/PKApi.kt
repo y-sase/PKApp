@@ -15,8 +15,8 @@ interface PKApi {
         @Path("id") id: Int
     ): PokemonDetailResponse
 
-    /*
-    詳細画面部分
+
+    //詳細画面部分
 
     @GET("pokemon-species/{name}")
     suspend fun getPokemonJpName(
@@ -28,5 +28,5 @@ interface PKApi {
         @Path("id") id: Int
     ): PokemonJpTypeResponse
 
-     */
+
 }

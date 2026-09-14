@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
-/*
-詳細画面部分
+
+//詳細画面部分
 
 @Composable
 fun PKDetailScreen(
@@ -78,7 +78,7 @@ fun PKDetailScreen(
             )
 
             AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                model = viewModel.PKSprites.front_default,
+                model = viewModel.PKSprites.frontDefault,
                 contentDescription = "ポケモン",
                 modifier = Modifier.size(300.dp),
                 contentScale = ContentScale.Crop//枠いっぱいに表示
@@ -132,4 +132,3 @@ fun PKDetailScreen(
     }
 }
 
- */
