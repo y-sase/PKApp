@@ -3,6 +3,7 @@ package com.example.pkapp.model
 import androidx.compose.remote.creation.dsl.first
 import com.example.pkapp.data.api.PokemonJpNameResponse
 import com.example.pkapp.data.api.PokemonJpTypeResponse
+import com.example.pkapp.data.api.repository.PKRepository
 
 
 fun getJapaneseName(
@@ -18,14 +19,25 @@ fun getJapaneseName(
     return jpName
 }
 
-fun changeLanguageType(
+suspend fun getTypeList(
+    repository: PKRepository,
+    id: Int,
+): List<String> {  //最終的にStringを返す。
 
-    jptypeResponse: PokemonJpTypeResponse
-): String {  //最終的にStringを返す。
+    val responsedetail = repository.getPokemonDetail(id)
 
+    return responsedetail.types.map { typeInfo ->//typeInfoは今処理中の1件
+        val typeId = typeInfo
+            .type.url
+            .trimEnd('/')
+            .substringAfterLast('/')//最後の / より後ろだけ取得
+            .toInt()//文字列を数値に変換 String->Int
 
-    return jptypeResponse.names
-        .first { it.language.name == "ja-hrkt" }//filter:条件に合うものだけ残す
-        .name
-       // .map { it.name }//map:必要な項目だけ取り出す
+        val responsejptype = repository.getPokemonJpType(typeId)
+
+        responsejptype.names
+            .first { it.language.name == "ja-hrkt" }//filter:条件に合うものだけ残す
+            .name
+
+    }
 }
