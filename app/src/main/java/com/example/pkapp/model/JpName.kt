@@ -24,7 +24,7 @@ fun changeLanguageType(
 ): String {  //最終的にStringを返す。
 
 
-    return jptypeResponse
+    return jptypeResponse.names
         .first { it.language.name == "ja-hrkt" }//filter:条件に合うものだけ残す
         .name
        // .map { it.name }//map:必要な項目だけ取り出す
