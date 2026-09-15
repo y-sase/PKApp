@@ -4,14 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -19,8 +22,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.pkapp.SearchBar.TypeFilterBar
 import com.example.pkapp.pklist.components.PKThumbnail
 import com.example.pkapp.viewmodel.PKViewModel
+import kotlin.text.toIntOrNull
 
 
 @Composable
@@ -40,17 +45,37 @@ fun PKListScreen(
 
     Scaffold(
         containerColor = Color.LightGray, topBar = {
-            /*{
-    SearchBar(
 
-        searchText = viewModel.query,
-        onSearchPKChanged = { viewModel.query = it },
-        onDone = { viewModel.searchPK() },
+            Row() {
+
+                Button(
+                    onclick = {
+                    TypeFilterBar()
+                    }
+                )
+
+                /*
+                SearchBar(
 
 
-    )*/
+                    searchText = viewModel.query,
+                    onSearchPKChanged = {
+                        viewModel.query = it
+                                        },
+                    onDone = {
+                        val id = viewModel.PKName
+                        val name = viewModel.PKId.toIntOrNull()//.toIntOrNull():文字列を Int に変換する。変換できなかったら null を返す
 
-        }) { paddingValues ->
+                        if(id == null || name == null) {
+                            viewModel.errorMessage = "エラー：数字もしくは文字を入力してください"
+                        } else {
+                            viewModel.errorMessage = ""
+                            viewModel.query = id.toString()
+                        }
+                    }
+                )*/
+                }
+        }){ paddingValues ->
         Column {
 
 
