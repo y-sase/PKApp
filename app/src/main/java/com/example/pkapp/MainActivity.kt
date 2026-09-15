@@ -35,11 +35,13 @@ class MainActivity : ComponentActivity() {
                     val api = RetrofitInstance.providePKApi()
                     val repository = PKRepositoryImpl(api)
                     val viewModel = PKViewModel(repository)
-/*
+
                     PKListScreen(
                         viewModel = viewModel
                     )
 
+                    /*
+                    //詳細画面部分
                     PKDetailScreen(
                         viewModel = viewModel,
 
