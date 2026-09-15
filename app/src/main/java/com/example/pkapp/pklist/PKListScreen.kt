@@ -87,6 +87,7 @@ fun PKListScreen(
                             name = pokemon.name,
                            pokemonImageInList = pokemon,
 
+                            viewModel = viewModel
 
                             )
                     }
