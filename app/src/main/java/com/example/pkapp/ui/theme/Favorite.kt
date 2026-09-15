@@ -30,7 +30,7 @@ fun Favorite(
 
         IconButton(
             onClick = {
-                viewModel.toggleFavorite(viewModel.PKId)
+                //viewModel.toggleFavorite(viewModel.PKId)
             }
         ) {
             val isFavorite = viewModel.PKId in viewModel.favoriteIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
