@@ -12,6 +12,7 @@ interface PKRepository {
     suspend fun getPokemonList(
     ): PokemonListResponse
 
+    /*詳細画面部分
     suspend fun getPokemonJpName(
         name: String
     ):PokemonJpNameResponse
@@ -19,4 +20,6 @@ interface PKRepository {
     suspend fun getPokemonJpType(
         id: Int
     ): PokemonJpTypeResponse
+
+     */
 }
