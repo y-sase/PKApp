@@ -49,7 +49,7 @@ fun PKListScreen(
             Row() {
 
                 Button(
-                    onclick = {
+                    onClick = {
                     TypeFilterBar()
                     }
                 )

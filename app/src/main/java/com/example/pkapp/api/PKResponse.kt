@@ -1,12 +1,11 @@
 package com.example.pkapp.api
 
+import com.example.pkapp.SearchBar.TypeListItem
 import com.example.pkapp.model.Language
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
 import com.example.pkapp.model.TypeName
 import com.example.pkapp.model.TypeSlot
-
-
 data class PokemonDetailResponse(
     val id: Int,
     val name: String,
@@ -15,8 +14,6 @@ data class PokemonDetailResponse(
     val sprites: Sprites,
     val types: List<TypeSlot>
 )
-
-
 data class PokemonListResponse(
     val count: Int,//総件数
     val results: List<PokemonListItem>
@@ -33,4 +30,8 @@ data class PokemonName(
 
 data class  PokemonJpTypeResponse(
     val names: List<TypeName>
+)
+data class TypeListResponse(
+    val count: Int,//総件数
+    val results: List<TypeListItem>
 )

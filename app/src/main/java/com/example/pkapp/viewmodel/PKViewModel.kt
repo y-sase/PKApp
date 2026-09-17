@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pkapp.SearchBar.TypeListItem
+import com.example.pkapp.api.TypeListResponse
 import com.example.pkapp.common.NetworkResponse
 import com.example.pkapp.model.ChangeLanguageName
 import com.example.pkapp.model.ChangeLanguageType
@@ -29,6 +31,9 @@ class PKViewModel(
     var errorMessage by mutableStateOf("")
 
     var favoriteIds by mutableStateOf<List<Int>>(emptyList())
+    var typeIds by mutableStateOf<List<Int>>(emptyList())
+    var typeList by mutableStateOf<List<TypeListItem>>(emptyList())
+
 
 
     var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
@@ -109,9 +114,7 @@ class PKViewModel(
                 onSuccess()//取得成功後に画面遷移する
 
             } catch (e: Exception) {
-
                 onError()
-
             }
         }
     }
@@ -123,6 +126,30 @@ class PKViewModel(
             favoriteIds + id
         }
     }
+
+    //APIで取得したタイプ一覧リスト
+    fun loadTypeList(){
+        viewModelScope.launch {
+            val responsetypelist = repository.getTypeList()
+            typeList = responsetypelist.results
+        }
+    }
+
+
+    //絞り込んだタイプのIDを保持するリスト
+    fun toggletype(id: Int){
+        typeIds = if (id in typeIds) {
+            typeIds - id
+        } else {
+            typeIds + id
+        }
+    }
+
+    //タイプリセット
+    fun resettype(){
+        typeIds = emptyList()
+    }
+
 
 
 }

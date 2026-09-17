@@ -23,6 +23,11 @@ interface PKApi {
         @Path("name") name: String
     ): PokemonJpNameResponse
 
+    @GET("type")
+    suspend fun getTypeList(
+        @Query("limit") limit: Int = 1351,
+        @Query("offset") offset: Int = 0
+    ): TypeListResponse
     @GET("type/{id}")
     suspend fun getPokemonJpType(
         @Path("id") id: Int

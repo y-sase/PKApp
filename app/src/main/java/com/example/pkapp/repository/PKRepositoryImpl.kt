@@ -5,6 +5,7 @@ import com.example.pkapp.api.PokemonDetailResponse
 import com.example.pkapp.api.PokemonJpNameResponse
 import com.example.pkapp.api.PokemonJpTypeResponse
 import com.example.pkapp.api.PokemonListResponse
+import com.example.pkapp.api.TypeListResponse
 import com.example.pkapp.common.NetworkResponse
 
 class PKRepositoryImpl(
@@ -29,6 +30,10 @@ class PKRepositoryImpl(
                 e.message ?: "通信エラー"
             )
         }
+    }
+    override suspend fun getTypeList(
+    ): TypeListResponse {//Interfaceで約束した  実装します
+        return api.getTypeList()//APIを呼ぶ
     }
 
     override suspend fun getPokemonJpName(
