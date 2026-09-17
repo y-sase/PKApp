@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -35,27 +36,28 @@ import com.example.pkapp.viewmodel.PKViewModel
 
 @Composable
 fun TypeFilterBar(
-    viewModel: PKViewModel,
-    typelist :  TypeListItem
+    viewModel: PKViewModel
     ){
     Box(
+
         modifier = Modifier
-           // .padding(horizontal = 16.dp)
-            .padding(vertical = 5.dp)
+            .padding(horizontal = 5.dp)
+            .padding(vertical =5.dp)
+            .fillMaxWidth()
             .background(Color.White)
-            .heightIn(200.dp)
-            .border(
-                width = 3.dp,
-                color = Color.Black,
-                //shape = RoundedCornerShape(10.dp)
-            )
-    ){
+            .border(2.dp, Color.Black)
+            .padding(horizontal = 15.dp)
+            .padding(vertical =15.dp)
+            .background(Color.White)
+            //.heightIn(100.dp)
+    )
+    {
         Row() {
 
             Column() {
 
 
-                var typeid = viewModel.
+                var typeid = 1
 
                 repeat(10) {
                     Row() {
@@ -86,7 +88,7 @@ fun TypeFilterBar(
                             tint = Color.Black
                         )
                         Text(
-                            text = TypeListItem(typeid).name,
+                            text = viewModel.typeList[typeid - 1].name,
                             color = Color.Black,
                             fontSize = 20.sp,
                         )
@@ -131,7 +133,7 @@ fun TypeFilterBar(
                             tint = Color.Black
                         )
                         Text(
-                            text = TypeListItem(typeid2).name,
+                            text = viewModel.typeList[typeid2 - 1].name,
                             color = Color.Black,
                             fontSize = 20.sp,
                         )
@@ -146,9 +148,10 @@ fun TypeFilterBar(
                             viewModel.resettype()
                         },
                         modifier = Modifier
-                            .height(25.dp)
-                            .width(75.dp)
-                            .clip(RoundedCornerShape(10.dp)),
+                            .height(35.dp)
+                            .width(95.dp)
+                            //.border(2.dp, Color.Black,shape = RoundedCornerShape(3.dp))
+                            .clip(RoundedCornerShape(3.dp)),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFFB3E5FC)
                         )
@@ -156,7 +159,7 @@ fun TypeFilterBar(
                         Text(
                             text = "リセット",
                             color = Color.White,
-                            fontSize = 23.sp,
+                            fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                         )
                 }
@@ -167,9 +170,10 @@ fun TypeFilterBar(
                             println(viewModel.typeIds)
                         },
                         modifier = Modifier
-                            .height(25.dp)
-                            .width(75.dp)
-                            .clip(RoundedCornerShape(10.dp)),
+                            .height(35.dp)
+                            .width(95.dp)
+                            //.border(2.dp, Color.Black,shape = RoundedCornerShape(3.dp))
+                            .clip(RoundedCornerShape(3.dp)),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFFE57373)
                         )
@@ -177,7 +181,7 @@ fun TypeFilterBar(
                         Text(
                             text = "検索",
                             color = Color.White,
-                            fontSize = 23.sp,
+                            fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                         )
                     }
