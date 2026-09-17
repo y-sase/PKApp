@@ -1,5 +1,6 @@
 package com.example.pkapp.pklist
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -33,7 +34,7 @@ fun PKListScreen(
 
         viewModel.loadPokemonList(
             onSuccess = {},
-            onError = { navController.navigate("error_screen") })
+            onError = { navController.navigate("errorlist_screen") })
 
     }
 
@@ -103,10 +104,11 @@ fun PKListScreen(
                                 viewModel = viewModel,
 
                                 onClick = {//画面遷移
-                                    viewModel.PKId = pokemon.id
+
+                                    Log.d("TEST", "pokemonId=${pokemon.id}")
                                     navController.navigate(
-                                        "loading_detail"
-                                    )
+                                        "loading_detail/${pokemon.id}")
+
                                 })
                         }
                     }

@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import com.example.pkapp.pklist.PKListScreen
+import com.example.pkapp.pklist.components.PKThumbnail
 import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
 
@@ -19,7 +21,8 @@ import com.example.pkapp.viewmodel.PKViewModel
 fun LoadingScreen(
     viewModel: PKViewModel,
     navController: NavController,
-    mode: LoadingMode
+    mode: LoadingMode,
+    id: Int
 ) {
     val context = LocalContext.current
     Column(
@@ -36,21 +39,23 @@ fun LoadingScreen(
 
         LaunchedEffect(Unit) {//画面が表示された瞬間に中の処理を1回だけ実行
 
+            Log.d("TEST","LoadingScreen id=$id")
             when (mode) {
                 LoadingMode.DETAIL -> {
 
                     viewModel.loadPokemonDetail(
-                        id = viewModel.PKId,
+                        id = id,
                         onSuccess = {
-
                         navController.navigate(
-                            "pkdetail_screen" + "/{pkId}"
-                        )
+                            "pkdetail_screen" + "/$id"
+                        ){
+                            popUpTo("loading_detail") { inclusive = true }
+                            launchSingleTop = true
+                        }
                     }, onError = {
-
                         navController.navigate(
 
-                            "error_screen"
+                            "errordetail_screen"
                         )
                     }
                     )
@@ -67,7 +72,7 @@ fun LoadingScreen(
                     }, onError = {
 
                         navController.navigate(
-                            "error_screen"
+                            "errorlist_screen"
 
                         )
 

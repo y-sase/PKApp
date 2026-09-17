@@ -28,7 +28,7 @@ import com.example.pkapp.viewmodel.PKViewModel
 
 @Composable
 fun ErrorScreen(
-    navController: NavController, viewModel: PKViewModel, onClick: () -> Unit
+    navController: NavController, viewModel: PKViewModel, onClick: () -> Unit, from: String?
 
 ) {
 
@@ -57,11 +57,15 @@ fun ErrorScreen(
             Button(
 
                 onClick = {
+                    when (from) {
+                        "list" -> {
+                            navController.navigate("loading_list")
+                        }
 
-
-                    navController.navigate(
-                        "loading_detail"
-                    )
+                        "detail" -> {
+                            navController.navigate("loading_detail")
+                        }
+                    }
 
 
                 },

@@ -24,6 +24,7 @@ import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
 
 
+
 class MainActivity : ComponentActivity() {
     @SuppressLint("ViewModelConstructorInComposable")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,25 +66,42 @@ class MainActivity : ComponentActivity() {
 
 
                         //Loading画面
-                        composable("loading_detail") {
+                        composable("loading_detail/{id}") {backStackEntry -> //backStackEntry:この画面に渡された情報が入っている箱
+                            val id =backStackEntry.arguments?.getString("id")?.toInt() ?: 0//画面遷移で渡された情報が入っている箱.箱の中の「引数一覧」?（nullでもエラーにしない）引数一覧の中からidを取り出す.文字列(String)をInt型に変換する
                             LoadingScreen(
                                 viewModel = viewModel,
                                 navController = navController,
-                                mode = LoadingMode.DETAIL
+                                mode = LoadingMode.DETAIL,
+                                id=id
                             )
                         }
                         composable("loading_list") {
                             LoadingScreen(
                                 viewModel = viewModel,
                                 navController = navController,
-                                mode = LoadingMode.LIST
+                                mode = LoadingMode.LIST,
+                                id=0
                             )
                         }
 
                         //Error画面
-                        composable("error_screen") {
+                        composable("errorlist_screen") {
                             ErrorScreen(
-                                viewModel = viewModel, navController = navController, onClick = {})
+                                viewModel = viewModel,
+                                navController = navController,
+                                from = "list",
+                                onClick = {},
+
+                            )
+                        }
+
+                        composable("errordetail_screen") {
+                            ErrorScreen(
+                                viewModel = viewModel,
+                                navController = navController,
+                                from = "detail",
+                                onClick = {}
+                            )
                         }
                     }
 
