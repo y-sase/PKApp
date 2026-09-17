@@ -1,10 +1,18 @@
 package com.example.pkapp.model
 
 import org.intellij.lang.annotations.Language
+data class TypeSlot(
+    val slot: Int,
+    val type: Type
+)
+data class Type(
+    val name: String,
+    val url: String
+)
 //詳細画面部分
 data class TypeName(
     val name: String,
-    val language: Language
+    val language: com.example.pkapp.model.Language
 )
 
 data class Language(

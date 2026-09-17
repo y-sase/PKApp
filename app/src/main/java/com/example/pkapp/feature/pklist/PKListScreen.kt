@@ -1,4 +1,4 @@
-package com.example.pkapp.pklist
+package com.example.pkapp.feature.pklist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.pkapp.pklist.components.PKThumbnail
+import com.example.pkapp.feature.pklist.components.PKThumbnail
 import com.example.pkapp.viewmodel.PKViewModel
 
 
@@ -47,24 +47,6 @@ fun PKListScreen(
         }) { paddingValues ->
         Column {
 
-            /*
-    when {
-        state.isLoading -> {
-            //ローディング
-            CircularProgressIndicator(modifier = Modifier.align(androidx.compose.ui.Alignment.Center))
-        }
-
-        !state.error.isNullOrBlank() -> {
-            Text(
-                text = state.error,
-                modifier = Modifier.align(androidx.compose.ui.Alignment.Center),
-                color = MaterialTheme.colorScheme.error,
-            )
-
-        }
-        else -> {
-            PKThumbnail()
-        }*/
             LazyColumn(
                 modifier = Modifier.padding(paddingValues)
             ) {
@@ -83,32 +65,20 @@ fun PKListScreen(
                     ) {
                         PKThumbnail(
 
+
                             id = pokemon.id,
                             name = pokemon.name,
                            pokemonImageInList = pokemon,
 
+                            viewModel = viewModel
 
-                            )
+                        )
                     }
 
                 }
 
 
-                /*
-    LazyColumn(modifier = Modifier.padding(paddingValues)) {
-        items(state.photos) { photo ->
-            PKThumbnail(
-                photo = photo,
-                /*
-                onClick = {//画面遷移
-                    navController.navigate(ScreenRoute.PkDetailScreen.route + "/${photo.photoId}")
-                }*/
-                )
 
-
-        }
-    }
-    */
 
             }
         }

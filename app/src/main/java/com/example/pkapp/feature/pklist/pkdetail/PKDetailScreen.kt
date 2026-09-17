@@ -1,14 +1,9 @@
-package com.example.pkapp.pkdetail
-
-import android.R.attr.id
-import android.R.attr.name
+package com.example.pkapp.feature.pklist.pkdetail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
-/*
-詳細画面部分
+
+//詳細画面部分
 
 @Composable
 fun PKDetailScreen(
@@ -58,6 +53,7 @@ fun PKDetailScreen(
     ) {
         Spacer(modifier = Modifier.height(200.dp))
         Favorite(
+            viewModel = viewModel,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(vertical = 70.dp)
@@ -66,35 +62,31 @@ fun PKDetailScreen(
 
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(100.dp))
 
             Text(
-                text = "No.${viewModel.PKId}",
+                text = "No.${viewModel.pokemonId}",
                 color = Color.Black,
                 fontSize = 30.sp,
             )
             Text(
                 text = viewModel.PKName,
                 color = Color.Black,
-                fontSize = 60.sp,
+                fontSize = 55.sp,
             )
 
             AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                model = viewModel.PKSprites.front_default,
+                model = viewModel.PKSprites.frontDefault,
                 contentDescription = "ポケモン",
-                modifier = Modifier
-                    .size(300.dp),
+                modifier = Modifier.size(300.dp),
                 contentScale = ContentScale.Crop//枠いっぱいに表示
             )
 
 
             Text(
-                text = "高さ：${viewModel.PKHeight* 10}cm\n" +
-                        "重さ：${viewModel.PKWeight* 10}kg\n" +
-                        "タイプ：${viewModel.PKTypes}",
+                text = "高さ：${viewModel.PKHeight / 10.0}m\n" + "重さ：${viewModel.PKWeight / 10.0}kg\n" + "タイプ：${viewModel.PKTypes}",
                 color = Color.Black,
                 fontSize = 20.sp,
                 lineHeight = 43.sp
@@ -123,8 +115,7 @@ fun PKDetailScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFB3E5FC)
                 )
-            )
-            {
+            ) {
                 Text(
                     text = "Back",
                     color = Color.White,
@@ -133,8 +124,7 @@ fun PKDetailScreen(
                 )
             }
             Text(
-                text = viewModel.errorMessage,
-                color = Color.Red
+                text = viewModel.errorMessage, color = Color.Red
             )
 
         }
@@ -142,4 +132,3 @@ fun PKDetailScreen(
     }
 }
 
- */
