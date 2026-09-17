@@ -132,6 +132,9 @@ class PKViewModel(
         viewModelScope.launch {
             val responsetypelist = repository.getTypeList()
             typeList = responsetypelist.results
+
+            println(typeList)
+            println(typeList.size)
         }
     }
 

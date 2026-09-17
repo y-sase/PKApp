@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -60,8 +61,11 @@ fun TypeFilterBar(
                 var typeid = 1
 
                 repeat(10) {
-                    Row() {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
 
+                        Box(contentAlignment = Alignment.Center){
                         IconButton(
                             onClick = {
                                 viewModel.toggletype(typeid)
@@ -86,7 +90,7 @@ fun TypeFilterBar(
                             modifier = Modifier.size(25.dp),
                             contentDescription = "TypeFilter",
                             tint = Color.Black
-                        )
+                        )}
                         Text(
                             text = viewModel.typeList[typeid - 1].name,
                             color = Color.Black,
@@ -99,49 +103,59 @@ fun TypeFilterBar(
                 }
             }
 
+            Spacer(modifier = Modifier.width(40.dp))
+
             Column() {
 
 
                 var typeid2 = 11
 
                 repeat(9) {
-                    Row() {
-
-                        IconButton(
-                            onClick = {
-                                viewModel.toggletype(typeid2)
-                            }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center
                         ) {
-                            val TypeSet =
-                                typeid2 in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
+
+                            IconButton(
+                                onClick = {
+                                    viewModel.toggletype(typeid2)
+                                }
+                            ) {
+                                val TypeSet =
+                                    typeid2 in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
+                                Icon(
+                                    modifier = Modifier.size(20.dp),
+                                    imageVector = Icons.Default.Done,
+                                    contentDescription = "TypeFilter",
+                                    tint =
+                                        if (TypeSet) Color.Black
+                                        else Color.White
+
+
+                                )
+
+                            }
+
                             Icon(
-                                modifier = Modifier.size(20.dp),
-                                imageVector = Icons.Default.Done,
+                                imageVector = Icons.Default.CropSquare,
+                                modifier = Modifier.size(25.dp),
                                 contentDescription = "TypeFilter",
-                                tint =
-                                    if (TypeSet) Color.Black
-                                    else Color.White
-
-
+                                tint = Color.Black
+                            )}
+                            Text(
+                                text = viewModel.typeList[typeid2 - 1].name,
+                                color = Color.Black,
+                                fontSize = 20.sp,
                             )
-
                         }
-                        Icon(
-                            imageVector = Icons.Default.CropSquare,
-                            modifier = Modifier.size(25.dp),
-                            contentDescription = "TypeFilter",
-                            tint = Color.Black
-                        )
-                        Text(
-                            text = viewModel.typeList[typeid2 - 1].name,
-                            color = Color.Black,
-                            fontSize = 20.sp,
-                        )
-                    }
-                    typeid2++
+                        typeid2++
+
 
 
                 }
+                Spacer(modifier = Modifier.height(10.dp))
                 Row() {
                     Button(
                         onClick = {
@@ -163,7 +177,7 @@ fun TypeFilterBar(
                             fontWeight = FontWeight.Bold,
                         )
                 }
-                    Spacer(modifier = Modifier.width(20.dp))
+                    Spacer(modifier = Modifier.width(5.dp))
 
                     Button(
                         onClick = {
