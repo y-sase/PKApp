@@ -11,3 +11,4 @@ class TypeListItem (
             .toInt(//文字列を Int に変換
             )
 }
+

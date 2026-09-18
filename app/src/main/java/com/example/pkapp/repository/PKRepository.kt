@@ -4,6 +4,7 @@ import com.example.pkapp.api.PokemonDetailResponse
 import com.example.pkapp.api.PokemonJpNameResponse
 import com.example.pkapp.api.PokemonJpTypeResponse
 import com.example.pkapp.api.PokemonListResponse
+import com.example.pkapp.api.PokemonListbyTypeResponse
 import com.example.pkapp.api.TypeListResponse
 import com.example.pkapp.common.NetworkResponse
 
@@ -16,6 +17,9 @@ interface PKRepository {
 
     suspend fun getTypeList(
     ):TypeListResponse
+    suspend fun getPokemonListbyType(
+        id: Int
+    ):  NetworkResponse<PokemonListbyTypeResponse>
     suspend fun getPokemonJpName(
         name: String
     ):PokemonJpNameResponse

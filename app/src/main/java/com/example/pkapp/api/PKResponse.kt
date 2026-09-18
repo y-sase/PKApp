@@ -1,5 +1,6 @@
 package com.example.pkapp.api
 
+
 import com.example.pkapp.SearchBar.TypeListItem
 import com.example.pkapp.model.Language
 import com.example.pkapp.model.PokemonListItem
@@ -18,7 +19,13 @@ data class PokemonListResponse(
     val count: Int,//総件数
     val results: List<PokemonListItem>
 )
+data class PokemonListbyTypeResponse(
+    val pokemon: List<TypePokemonItem>
+)
 
+data class TypePokemonItem(
+    val pokemon: PokemonListItem
+)
 data class PokemonJpNameResponse(
     val names: List<PokemonName>
 )

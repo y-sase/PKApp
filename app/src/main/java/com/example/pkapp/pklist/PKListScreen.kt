@@ -56,9 +56,15 @@ fun PKListScreen(
             onError = { navController.navigate("error_screen") })
 
     }
+    LaunchedEffect(Unit) {
+        viewModel.loadTypesList()
+    }
+
 
     LaunchedEffect(Unit) {
-        viewModel.loadTypeList()
+        viewModel.loadPokemonByTypes(
+            onSuccess = {},
+           onError = { navController.navigate("error_screen") })
     }
 
 
@@ -135,7 +141,7 @@ fun PKListScreen(
                     if (showTypeFilter) {
 
                             TypeFilterBar(
-                                viewModel = viewModel,
+                                viewModel = viewModel,navController = navController,
                             )
 
                     }

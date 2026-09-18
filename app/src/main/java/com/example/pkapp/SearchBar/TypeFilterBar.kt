@@ -1,5 +1,6 @@
 package com.example.pkapp.SearchBar
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,13 +37,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.example.pkapp.pklist.PKListScreen
 import com.example.pkapp.viewmodel.PKViewModel
 
+fun changeTypeName(typeName: String): String {
+    return when (typeName) {
+        "normal" -> "ノーマル"
+        "fighting" -> "かくとう"
+        "flying" -> "ひこう"
+        "poison" -> "どく"
+        "ground" -> "じめん"
+        "rock" -> "いわ"
+        "bug" -> "むし"
+        "ghost" -> "ゴースト"
+        "steel" -> "はがね"
+        "fire" -> "ほのお"
+        "water" -> "みず"
+        "grass" -> "くさ"
+        "electric" -> "でんき"
+        "psychic" -> "エスパー"
+        "ice" -> "こおり"
+        "dragon" -> "ドラゴン"
+        "dark" -> "あく"
+        "fairy" -> "フェアリー"
+        "stellar" -> "ステラー"
+        else -> typeName
+    }
+}
 @Composable
 fun TypeFilterBar(
-    viewModel: PKViewModel
+    viewModel: PKViewModel,navController: NavController,
     ){
+    //var showTypeFilter by remember { mutableStateOf(false) }
     Box(
 
         modifier = Modifier
@@ -58,9 +89,11 @@ fun TypeFilterBar(
             Column() {
 
 
-                var typeid = 1
+                var typeid = 0
 
                 repeat(10) {
+                    typeid++
+                    val currentTypeId = typeid
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -68,11 +101,12 @@ fun TypeFilterBar(
                         Box(contentAlignment = Alignment.Center){
                         IconButton(
                             onClick = {
-                                viewModel.toggletype(typeid)
+                                viewModel.toggletype(currentTypeId)
                             }
                         ) {
                             val TypeSet =
-                                typeid in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
+                                currentTypeId in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
+
                             Icon(
                                 modifier = Modifier.size(20.dp),
                                 imageVector = Icons.Default.Done,
@@ -92,12 +126,14 @@ fun TypeFilterBar(
                             tint = Color.Black
                         )}
                         Text(
-                            text = viewModel.typeList[typeid - 1].name,
+                            text = changeTypeName(
+                                viewModel.typeList[currentTypeId - 1].name
+                            ),
                             color = Color.Black,
                             fontSize = 20.sp,
                         )
                     }
-                    typeid++
+
 
 
                 }
@@ -108,9 +144,12 @@ fun TypeFilterBar(
             Column() {
 
 
-                var typeid2 = 11
+                var typeid2 = 10
 
                 repeat(9) {
+                    typeid2++
+
+                    val currentTypeId2 = typeid2
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -120,11 +159,11 @@ fun TypeFilterBar(
 
                             IconButton(
                                 onClick = {
-                                    viewModel.toggletype(typeid2)
+                                    viewModel.toggletype(currentTypeId2)
                                 }
                             ) {
                                 val TypeSet =
-                                    typeid2 in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
+                                    currentTypeId2 in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
                                 Icon(
                                     modifier = Modifier.size(20.dp),
                                     imageVector = Icons.Default.Done,
@@ -145,12 +184,14 @@ fun TypeFilterBar(
                                 tint = Color.Black
                             )}
                             Text(
-                                text = viewModel.typeList[typeid2 - 1].name,
+                                text = changeTypeName(
+                                    viewModel.typeList[currentTypeId2 - 1].name
+                                ),
                                 color = Color.Black,
                                 fontSize = 20.sp,
                             )
                         }
-                        typeid2++
+
 
 
 
@@ -181,7 +222,12 @@ fun TypeFilterBar(
 
                     Button(
                         onClick = {
-                            println(viewModel.typeIds)
+                            //showTypeFilter = !showTypeFilter
+                            //viewModel.loadTypesList()
+                            viewModel.loadPokemonByTypes(
+                                onSuccess = {},
+                                onError = { navController.navigate("error_screen") })
+
                         },
                         modifier = Modifier
                             .height(35.dp)
@@ -200,7 +246,9 @@ fun TypeFilterBar(
                         )
                     }
             }
+               // if (showTypeFilter) { TypeFilterBar(viewModel = viewModel) }
             }
+
         }
     }
 }

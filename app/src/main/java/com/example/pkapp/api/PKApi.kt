@@ -32,4 +32,10 @@ interface PKApi {
     suspend fun getPokemonJpType(
         @Path("id") id: Int
     ): PokemonJpTypeResponse
+
+    @GET("type/{id}/")
+    suspend fun getPokemonListbyType(
+        @Path("id") id: Int
+    ): PokemonListbyTypeResponse
+
 }
