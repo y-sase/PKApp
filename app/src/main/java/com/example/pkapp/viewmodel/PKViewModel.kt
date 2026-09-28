@@ -8,9 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pkapp.SearchBar.TypeListItem
-import com.example.pkapp.api.TypeListResponse
 import com.example.pkapp.common.NetworkResponse
 import com.example.pkapp.model.ChangeLanguageName
 import com.example.pkapp.model.ChangeLanguageType
@@ -35,7 +33,6 @@ class PKViewModel(
     var favoriteIds by mutableStateOf<List<Int>>(emptyList())
     var typeIds by mutableStateOf<List<Int>>(emptyList())
     var typeList by mutableStateOf<List<TypeListItem>>(emptyList())
-
 
 
     var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
@@ -93,22 +90,6 @@ class PKViewModel(
             try {//エラーが起きるかもしれない処理を開始。
 
 
-                val responselist = repository.getPokemonList()
-                pokemonList = responselist.results
-                errorMessage = "成功 ${pokemonList.size}"
-            } catch (e: Exception) {
-                //errorMessage = "エラー: ${e.message}"
-                errorMessage = e.toString()
-            }
-
-
-
-
-        }
-
-    }
-
-
                 val responsedetail = repository.getPokemonDetail(id)
                 val responsejpname = repository.getPokemonJpName(responsedetail.name)
                 val typeNames = responsedetail.types.map { typeInfo ->//typeInfoは今処理中の1件
@@ -152,56 +133,54 @@ class PKViewModel(
         viewModelScope.launch {
             _state.value = PKListState(isLoading = true)
 
-            if (typeIds.isEmpty()){
+            if (typeIds.isEmpty()) {
                 loadPokemonList(
-                    onSuccess = onSuccess,
-                    onError = onError
+                    onSuccess = onSuccess, onError = onError
                 )
                 return@launch
             }
 
             for (typeId in typeIds) {
-            when (val result = repository.getPokemonListbyType(typeId)) {
-                is NetworkResponse.Loading -> {
-                    isLoading = true
-                    _state.value = PKListState(isLoading = true)
-                }
+                when (val result = repository.getPokemonListbyType(typeId)) {
+                    is NetworkResponse.Loading -> {
+                        isLoading = true
+                        _state.value = PKListState(isLoading = true)
+                    }
 
 
-                is NetworkResponse.Success -> {
-                    Log.d(
-                        "TYPE_SEARCH",
-                        "count=${result.data?.pokemon?.size}"
-                    )
-                    pokemonList = result.data?.pokemon?.map{//map：リストの中身を1個ずつ別の形に変換する
-                        it.pokemon
-                    }?: emptyList()
-                    isLoading = false
-                    _state.value = PKListState(
+                    is NetworkResponse.Success -> {
+                        Log.d(
+                            "TYPE_SEARCH", "count=${result.data?.pokemon?.size}"
+                        )
+                        pokemonList = result.data?.pokemon?.map {//map：リストの中身を1個ずつ別の形に変換する
+                            it.pokemon
+                        } ?: emptyList()
                         isLoading = false
-                    )
-                    onSuccess()
+                        _state.value = PKListState(
+                            isLoading = false
+                        )
+                        onSuccess()
+                    }
+
+                    is NetworkResponse.Failure -> {
+                        Log.d("TYPE_SEARCH", "error=${result.error}")
+                        isLoading = false
+                        _state.value = PKListState(
+                            error = result.error, isLoading = false
+                        )
+                        onError()
+
+                    }
+
+
                 }
-
-                is NetworkResponse.Failure -> {
-                    Log.d("TYPE_SEARCH", "error=${result.error}")
-                    isLoading = false
-                    _state.value = PKListState(
-                        error = result.error, isLoading = false
-                    )
-                    onError()
-
-                }
-
-
             }
-        }
         }
     }
 
 
     //絞り込んだタイプのIDを保持するリスト
-    fun toggletype(id: Int){
+    fun toggletype(id: Int) {
         typeIds = if (id in typeIds) {
             typeIds - id
         } else {
@@ -211,13 +190,13 @@ class PKViewModel(
     }
 
     //タイプリセット
-    fun resettype(){
+    fun resettype() {
         typeIds = emptyList()
     }
 
 
     //APIで取得したタイプ一覧リスト
-    fun loadTypesList(){
+    fun loadTypesList() {
 
         viewModelScope.launch {
             val responseTypeList = repository.getTypeList()
@@ -225,9 +204,6 @@ class PKViewModel(
 
         }
     }
-
-
-
 
 
 }
