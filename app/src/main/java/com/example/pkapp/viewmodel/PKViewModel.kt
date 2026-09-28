@@ -93,6 +93,22 @@ class PKViewModel(
             try {//エラーが起きるかもしれない処理を開始。
 
 
+                val responselist = repository.getPokemonList()
+                pokemonList = responselist.results
+                errorMessage = "成功 ${pokemonList.size}"
+            } catch (e: Exception) {
+                //errorMessage = "エラー: ${e.message}"
+                errorMessage = e.toString()
+            }
+
+
+
+
+        }
+
+    }
+
+
                 val responsedetail = repository.getPokemonDetail(id)
                 val responsejpname = repository.getPokemonJpName(responsedetail.name)
                 val typeNames = responsedetail.types.map { typeInfo ->//typeInfoは今処理中の1件
