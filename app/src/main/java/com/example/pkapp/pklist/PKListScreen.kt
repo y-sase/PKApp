@@ -89,13 +89,13 @@ fun PKListScreen(
                             .padding(vertical =16.dp)
                             .height(48.dp)
                             .width(90.dp)
-                            .border(2.dp, Color.Black)
+                            //.border(1.dp, Color(0xFF90A4AE))
 
                     )
                     {
                         Text(
                             text = "タイプ",
-                            color = Color.Black,
+                            color = Color(0xFF546E7A),
                         )
                     }
 
@@ -108,13 +108,13 @@ fun PKListScreen(
                             .padding(vertical =16.dp)
                             .height(48.dp)
                             .width(450.dp)
-                            .border(2.dp, Color.Black)
+                            //.border(2.dp, Color.Black)
                             .background(Color.White)
                 ){
                         Text(
                             text = "Search",
-                            color = Color.Black,
-                            fontSize = 25.sp,
+                            color = Color(0xFF546E7A),
+                            fontSize = 20.sp,
                         )
                     }
                     /*
@@ -161,14 +161,14 @@ fun PKListScreen(
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp)
                                     .padding(vertical = 5.dp)
-                                    .clip(RoundedCornerShape(10.dp))
+                                    .clip(RoundedCornerShape(30.dp))
                                     .background(Color.White)
                                     .heightIn(100.dp)
                                     .fillMaxWidth()
                                     .border(
                                         width = 3.dp,
-                                        color = Color.Black,
-                                        shape = RoundedCornerShape(10.dp)
+                                        Color(0xFF90A4AE),
+                                        shape = RoundedCornerShape(20.dp)
                                     )
                             ) {
                                 //ローディング
@@ -184,13 +184,13 @@ fun PKListScreen(
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp)
                                     .padding(vertical = 5.dp)
-                                    .clip(RoundedCornerShape(10.dp))
+                                    .clip(RoundedCornerShape(20.dp))
                                     .background(Color.White)
                                     .heightIn(100.dp)
                                     .border(
                                         width = 3.dp,
-                                        color = Color.Black,
-                                        shape = RoundedCornerShape(10.dp)
+                                        Color(0xFF90A4AE),
+                                        shape = RoundedCornerShape(20.dp)
                                     )
                             ) {
                                 PKThumbnail(

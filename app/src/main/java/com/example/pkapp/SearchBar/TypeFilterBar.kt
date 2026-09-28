@@ -77,7 +77,7 @@ fun TypeFilterBar(
             .padding(vertical =5.dp)
             .fillMaxWidth()
             .background(Color.White)
-            .border(2.dp, Color.Black)
+            .border(2.dp, Color(0xFF90A4AE))
             .padding(horizontal = 15.dp)
             .padding(vertical =15.dp)
             .background(Color.White)
