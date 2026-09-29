@@ -1,7 +1,6 @@
 package com.example.pkapp.pkdetail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,8 +30,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
-/*
-詳細画面部分
+
+//詳細画面部分
 
 @Composable
 fun PKDetailScreen(
@@ -55,11 +54,12 @@ fun PKDetailScreen(
                 .padding(vertical = 40.dp)
                 .clip(RoundedCornerShape(30.dp))
                 .background(Color.White)
-                .heightIn(100.dp)
+                .heightIn(100.dp)/*
                 .border(
                     width = 3.dp, color = Color(0xFF90A4AE), shape = RoundedCornerShape(30.dp)
                 )
-                .padding(innerPadding)
+
+                 */.padding(innerPadding)
 
         ) {
             Spacer(modifier = Modifier.height(200.dp))
@@ -68,7 +68,7 @@ fun PKDetailScreen(
                 pokemonId = viewModel.PKId,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(vertical = 70.dp)
+                    .padding(vertical = 30.dp)
                     .padding(horizontal = 16.dp)
             )
 
@@ -77,13 +77,14 @@ fun PKDetailScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(60.dp))
 
                 Text(
                     text = "No.${viewModel.PKId}",
                     color = Color.Black,
                     fontSize = 30.sp,
                 )
+                Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = viewModel.PKName,
                     color = Color.Black,
@@ -91,7 +92,7 @@ fun PKDetailScreen(
                 )
 
                 AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                    model = viewModel.PKSprites.front_default,
+                    model = viewModel.PKSprites.frontDefault,
                     contentDescription = "ポケモン",
                     modifier = Modifier.size(300.dp),
                     contentScale = ContentScale.Crop//枠いっぱいに表示
@@ -142,4 +143,3 @@ fun PKDetailScreen(
     }
 }
 
- */

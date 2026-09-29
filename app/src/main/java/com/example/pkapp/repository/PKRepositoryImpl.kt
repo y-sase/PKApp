@@ -53,7 +53,7 @@ class PKRepositoryImpl(
     ): TypeListResponse {//Interfaceで約束した  実装します
         return api.getTypeList()//APIを呼ぶ
     }
-/*詳細画面部分
+//詳細画面部分
     override suspend fun getPokemonJpName(
         name: String
     ): PokemonJpNameResponse {//Interfaceで約束した  実装します
@@ -66,6 +66,6 @@ class PKRepositoryImpl(
         return api.getPokemonJpType(id)//APIを呼ぶ
     }
 
- */
+
 }
 

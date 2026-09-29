@@ -35,6 +35,7 @@ class PKViewModel(
     var typeList by mutableStateOf<List<TypeListItem>>(emptyList())
 
 
+    var searchId by mutableStateOf(0)
     var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
         emptyList()//空っぽのリストを作る関数
     )
@@ -42,6 +43,7 @@ class PKViewModel(
     private val _state = mutableStateOf(PKListState())//mutableStateOfとvalueはセットで値が随時変わるときに使う
     val state: State<PKListState> = _state
     var isLoading by mutableStateOf(false)
+    // var count by mutableStateOf(0)
 
 
     fun loadPokemonList(
@@ -139,6 +141,7 @@ class PKViewModel(
                 )
                 return@launch
             }
+            var filteredList: List<PokemonListItem>? = null
 
             for (typeId in typeIds) {
                 when (val result = repository.getPokemonListbyType(typeId)) {
@@ -149,17 +152,23 @@ class PKViewModel(
 
 
                     is NetworkResponse.Success -> {
-                        Log.d(
-                            "TYPE_SEARCH", "count=${result.data?.pokemon?.size}"
-                        )
-                        pokemonList = result.data?.pokemon?.map {//map：リストの中身を1個ずつ別の形に変換する
+                        val currentList = result.data?.pokemon?.map {//map：リストの中身を1個ずつ別の形に変換する
                             it.pokemon
                         } ?: emptyList()
+
+                        filteredList = if (filteredList == null) {
+                            currentList
+                        } else {
+                            filteredList?.filter {
+                                it in currentList
+                            }
+                        }
+
                         isLoading = false
                         _state.value = PKListState(
                             isLoading = false
                         )
-                        onSuccess()
+
                     }
 
                     is NetworkResponse.Failure -> {
@@ -175,6 +184,8 @@ class PKViewModel(
 
                 }
             }
+            pokemonList = filteredList ?: emptyList()
+            onSuccess()
         }
     }
 
@@ -188,6 +199,18 @@ class PKViewModel(
         }
 
     }
+
+    fun favoritePokemon(
+        onSuccess: () -> Unit, onError: () -> Unit
+    ) {
+
+        pokemonList = pokemonList.filter { pokemon ->
+            //idのポケモン入れる処理
+            pokemon.id in favoriteIds
+        }
+        onSuccess()
+    }
+
 
     //タイプリセット
     fun resettype() {
@@ -205,5 +228,41 @@ class PKViewModel(
         }
     }
 
+    //
+    fun searchPokemon(
+        id: Int?, name: String, onSuccess: () -> Unit, onError: () -> Unit
+    ) {
 
+
+        when {
+            id != null -> {
+                pokemonList = pokemonList.filter { pokemon ->
+                    //idのポケモン入れる処理
+                    pokemon.id == id
+                }
+                onSuccess()
+            }
+
+            name != "" -> {
+                pokemonList = pokemonList.filter { pokemon ->
+                    //nameのポケモン入れる処理
+                    pokemon.name.contains(
+                        name, ignoreCase = true
+                    )//contains():文字列の中に指定した文字が含まれているか調べる  ignoreCase = true:大文字小文字を無視する
+                }
+                onSuccess()
+
+
+            }
+
+
+        }
+        if (pokemonList.isEmpty()) {
+            errorMessage = "エラー：IDもしくはポケモン名を入力してください"
+        } else {
+            errorMessage = ""
+        }
+
+
+    }
 }
