@@ -1,15 +1,20 @@
 package com.example.pkapp.viewmodel
 
 
-import androidx.compose.material3.Text
+import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pkapp.SearchBar.TypeListItem
+import com.example.pkapp.common.NetworkResponse
+import com.example.pkapp.model.ChangeLanguageName
+import com.example.pkapp.model.ChangeLanguageType
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
-
+import com.example.pkapp.pklist.PKListState
 import com.example.pkapp.repository.PKRepository
 import kotlinx.coroutines.launch
 
@@ -25,116 +30,239 @@ class PKViewModel(
     var query by mutableStateOf("")
     var errorMessage by mutableStateOf("")
 
+    var favoriteIds by mutableStateOf<List<Int>>(emptyList())
+    var typeIds by mutableStateOf<List<Int>>(emptyList())
+    var typeList by mutableStateOf<List<TypeListItem>>(emptyList())
 
+
+    var searchId by mutableStateOf(0)
     var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
         emptyList()//空っぽのリストを作る関数
     )
 
+    private val _state = mutableStateOf(PKListState())//mutableStateOfとvalueはセットで値が随時変わるときに使う
+    val state: State<PKListState> = _state
+    var isLoading by mutableStateOf(false)
+    // var count by mutableStateOf(0)
 
-    /*
-    //詳細画面の際に使用（一匹ずつの情報）
-    fun loadPKById(
-        id: Int,
-        onSuccess: () -> Unit
+
+    fun loadPokemonList(
+        onSuccess: () -> Unit, onError: () -> Unit
     ) {
-        viewModelScope.launch {
-            try {
-                PKId = 0
+        viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
 
-                val response = repository.getPokemon(id)
+            _state.value = PKListState(isLoading = true)
 
-                PKId = response.id// ViewModelに保存
-                PKName = response.name
-                PKHeight = response.height
-                PKWeight = response.weight
-                PKSprites = response.sprites
-                PKTypes = response.types.joinToString(", ") {//joinToString() は,リストの要素をつなげて、1つの文字列(String)にする関数
-                    it.type.name
+
+            when (val result = repository.getPokemonList()) {
+                is NetworkResponse.Loading -> {
+                    isLoading = true
+                    _state.value = PKListState(isLoading = true)
                 }
 
 
-                onSuccess()
+                is NetworkResponse.Success -> {
+                    pokemonList = result.data?.results ?: emptyList()
+                    isLoading = false
+                    _state.value = PKListState(
+                        isLoading = false
+                    )
+                    onSuccess()
+                }
 
-            } catch (e: Exception) {
-                errorMessage = "エラー: ${e.message}"
+                is NetworkResponse.Failure -> {
+                    isLoading = false
+                    _state.value = PKListState(
+                        error = result.error, isLoading = false
+                    )
+                    onError()
+
+                }
+
             }
+
         }
     }
 
-     */
-    fun loadPokemonList() {
-        errorMessage = "開始"
+
+    fun loadPokemonDetail(
+        id: Int, onSuccess: () -> Unit, onError: () -> Unit
+    ) {
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
 
-                //isLoading = true
-                /*
-                                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
-                                for (limit) {
-                                    list.add(
-                                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
-                                    )
-                                }
-                                pokemonList = list
-
-                 */
-
-                val responselist = repository.getPokemonList()
-                pokemonList = responselist.results
-                errorMessage = "成功 ${pokemonList.size}"
-            } catch (e: Exception) {
-                //errorMessage = "エラー: ${e.message}"
-                errorMessage = e.toString()
-            }
-
-
-
-
-        }
-
-    }
-
-    /*
-    詳細画面部分
-
-
-    fun loadPokemonDetail(id: Int) {
-        errorMessage = "開始"
-        viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
-            try {//エラーが起きるかもしれない処理を開始。
-
-                //isLoading = true
-                /*
-                                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
-                                for (limit) {
-                                    list.add(
-                                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
-                                    )
-                                }
-                                pokemonList = list
-
-                 */
 
                 val responsedetail = repository.getPokemonDetail(id)
                 val responsejpname = repository.getPokemonJpName(responsedetail.name)
-                val responsejptype = repository.getPokemonJpType(id)
+                val typeNames = responsedetail.types.map { typeInfo ->//typeInfoは今処理中の1件
+                    val typeId =
+                        typeInfo.type.url.trimEnd('/').substringAfterLast('/')//最後の / より後ろだけ取得
+                            .toInt()//文字列を数値に変換 String->Int
+
+                    val responsejptype = repository.getPokemonJpType(typeId)
+                    ChangeLanguageType(
+                        responsedetail, responsejptype
+                    ).first()
+                }
                 PKId = responsedetail.id
-                PKName = responsejpname.names
+                //PKName = responsejpname.name
                 PKSprites = responsedetail.sprites
                 PKHeight = responsedetail.height
                 PKWeight = responsedetail.weight
-                PKTypes = responsejptype.names.joinToString(", ") {
-                    it.name
-                }
-                errorMessage = "成功 ${pokemonList.size}"
+                PKName = ChangeLanguageName(responsedetail, responsejpname)
+                PKTypes = typeNames.joinToString(" / ")
+
+                onSuccess()//取得成功後に画面遷移する
 
             } catch (e: Exception) {
-                //errorMessage = "エラー: ${e.message}"
-
-                errorMessage = e.toString()
+                onError()
             }
         }
     }
 
-     */
+    fun toggleFavorite(id: Int) {
+        favoriteIds = if (id in favoriteIds) {
+            favoriteIds - id
+        } else {
+            favoriteIds + id
+        }
+    }
+
+    //APIで取得したタイプ一覧リスト
+    fun loadPokemonByTypes(
+        onSuccess: () -> Unit, onError: () -> Unit
+    ) {
+        viewModelScope.launch {
+            _state.value = PKListState(isLoading = true)
+
+            if (typeIds.isEmpty()) {
+                loadPokemonList(
+                    onSuccess = onSuccess, onError = onError
+                )
+                return@launch
+            }
+            var filteredList: List<PokemonListItem>? = null
+
+            for (typeId in typeIds) {
+                when (val result = repository.getPokemonListbyType(typeId)) {
+                    is NetworkResponse.Loading -> {
+                        isLoading = true
+                        _state.value = PKListState(isLoading = true)
+                    }
+
+
+                    is NetworkResponse.Success -> {
+                        val currentList = result.data?.pokemon?.map {//map：リストの中身を1個ずつ別の形に変換する
+                            it.pokemon
+                        } ?: emptyList()
+
+                        filteredList = if (filteredList == null) {
+                            currentList
+                        } else {
+                            filteredList?.filter {
+                                it in currentList
+                            }
+                        }
+
+                        isLoading = false
+                        _state.value = PKListState(
+                            isLoading = false
+                        )
+
+                    }
+
+                    is NetworkResponse.Failure -> {
+                        Log.d("TYPE_SEARCH", "error=${result.error}")
+                        isLoading = false
+                        _state.value = PKListState(
+                            error = result.error, isLoading = false
+                        )
+                        onError()
+
+                    }
+
+
+                }
+            }
+            pokemonList = filteredList ?: emptyList()
+            onSuccess()
+        }
+    }
+
+
+    //絞り込んだタイプのIDを保持するリスト
+    fun toggletype(id: Int) {
+        typeIds = if (id in typeIds) {
+            typeIds - id
+        } else {
+            typeIds + id
+        }
+
+    }
+
+    fun favoritePokemon(
+        onSuccess: () -> Unit, onError: () -> Unit
+    ) {
+
+        pokemonList = pokemonList.filter { pokemon ->
+            //idのポケモン入れる処理
+            pokemon.id in favoriteIds
+        }
+        onSuccess()
+    }
+
+
+    //タイプリセット
+    fun resettype() {
+        typeIds = emptyList()
+    }
+
+
+    //APIで取得したタイプ一覧リスト
+    fun loadTypesList() {
+
+        viewModelScope.launch {
+            val responseTypeList = repository.getTypeList()
+            typeList = responseTypeList.results
+
+        }
+    }
+
+    //
+    fun searchPokemon(
+        id: Int?, name: String, onSuccess: () -> Unit, onError: () -> Unit
+    ) {
+
+
+        when {
+            id != null -> {
+                pokemonList = pokemonList.filter { pokemon ->
+                    //idのポケモン入れる処理
+                    pokemon.id == id
+                }
+                onSuccess()
+            }
+
+            name != "" -> {
+                pokemonList = pokemonList.filter { pokemon ->
+                    //nameのポケモン入れる処理
+                    pokemon.name.contains(
+                        name, ignoreCase = true
+                    )//contains():文字列の中に指定した文字が含まれているか調べる  ignoreCase = true:大文字小文字を無視する
+                }
+                onSuccess()
+
+
+            }
+
+
+        }
+        if (pokemonList.isEmpty()) {
+            errorMessage = "エラー：IDもしくはポケモン名を入力してください"
+        } else {
+            errorMessage = ""
+        }
+
+
+    }
 }

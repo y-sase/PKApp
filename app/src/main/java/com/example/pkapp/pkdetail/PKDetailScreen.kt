@@ -1,15 +1,10 @@
 package com.example.pkapp.pkdetail
 
-import android.R.attr.id
-import android.R.attr.name
-
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -19,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,116 +26,120 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
-/*
-詳細画面部分
+
+//詳細画面部分
 
 @Composable
 fun PKDetailScreen(
     viewModel: PKViewModel,
+    navController: NavController,
+    onClick: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
 
-        viewModel.loadPokemonDetail(1)
+        viewModel.loadPokemonDetail(viewModel.PKId, onSuccess = {}, onError = {})
 
     }
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .padding(vertical = 20.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(Color.White)
-            .heightIn(100.dp)
-            .border(
-                width = 3.dp, color = Color.Black, shape = RoundedCornerShape(10.dp)
-            )
-    ) {
-        Spacer(modifier = Modifier.height(200.dp))
-        Favorite(
+    Scaffold(
+        containerColor = Color.LightGray
+    ) { innerPadding -> //Scaffoldとセット
+        Box(
             modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(vertical = 70.dp)
+                .fillMaxSize()
                 .padding(horizontal = 16.dp)
-        )
+                .padding(vertical = 40.dp)
+                .clip(RoundedCornerShape(30.dp))
+                .background(Color.White)
+                .heightIn(100.dp)/*
+                .border(
+                    width = 3.dp, color = Color(0xFF90A4AE), shape = RoundedCornerShape(30.dp)
+                )
 
+                 */.padding(innerPadding)
 
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(100.dp))
-
-            Text(
-                text = "No.${viewModel.PKId}",
-                color = Color.Black,
-                fontSize = 30.sp,
-            )
-            Text(
-                text = viewModel.PKName,
-                color = Color.Black,
-                fontSize = 60.sp,
-            )
-
-            AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                model = viewModel.PKSprites.front_default,
-                contentDescription = "ポケモン",
+            Spacer(modifier = Modifier.height(200.dp))
+            Favorite(
+                viewModel = viewModel,
+                pokemonId = viewModel.PKId,
                 modifier = Modifier
-                    .size(300.dp),
-                contentScale = ContentScale.Crop//枠いっぱいに表示
+                    .align(Alignment.TopEnd)
+                    .padding(vertical = 30.dp)
+                    .padding(horizontal = 16.dp)
             )
 
 
-            Text(
-                text = "高さ：${viewModel.PKHeight* 10}cm\n" +
-                        "重さ：${viewModel.PKWeight* 10}kg\n" +
-                        "タイプ：${viewModel.PKTypes}",
-                color = Color.Black,
-                fontSize = 20.sp,
-                lineHeight = 43.sp
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(60.dp))
 
-            )
-
-            Spacer(modifier = Modifier.height(50.dp))
-            Button(
-
-                onClick = {
-
-                    /*
-                    navController.navigate(
-                        ScreenRoute.LoadingScreen.route
-                    )
-
-                     */
-
-                },
-
-
-                modifier = Modifier
-                    .height(50.dp)
-                    .width(150.dp)
-                    .clip(RoundedCornerShape(10.dp)),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB3E5FC)
-                )
-            )
-            {
                 Text(
-                    text = "Back",
-                    color = Color.White,
-                    fontSize = 23.sp,
-                    fontWeight = FontWeight.Bold,
+                    text = "No.${viewModel.PKId}",
+                    color = Color.Black,
+                    fontSize = 30.sp,
                 )
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = viewModel.PKName,
+                    color = Color.Black,
+                    fontSize = 55.sp,
+                )
+
+                AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
+                    model = viewModel.PKSprites.frontDefault,
+                    contentDescription = "ポケモン",
+                    modifier = Modifier.size(300.dp),
+                    contentScale = ContentScale.Crop//枠いっぱいに表示
+                )
+
+
+                Text(
+                    text = "高さ：${viewModel.PKHeight / 10.0}m\n" + "重さ：${viewModel.PKWeight / 10.0}kg\n" + "タイプ：${viewModel.PKTypes}",
+                    color = Color.Black,
+                    fontSize = 20.sp,
+                    lineHeight = 43.sp
+
+                )
+
+                Spacer(modifier = Modifier.height(50.dp))
+                Button(
+
+                    onClick = {
+
+
+                        navController.navigate(
+                            "loading_list"
+                        )
+
+
+                    },
+
+
+                    modifier = Modifier
+                        .height(50.dp)
+                        .width(150.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB3E5FC)
+                    )
+                ) {
+                    Text(
+                        text = "Back",
+                        color = Color.White,
+                        fontSize = 23.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+
             }
-            Text(
-                text = viewModel.errorMessage,
-                color = Color.Red
-            )
 
         }
-
     }
 }
 
- */
