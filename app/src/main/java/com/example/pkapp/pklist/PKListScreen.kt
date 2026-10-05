@@ -70,6 +70,7 @@ fun PKListScreen(
     }
 
 
+
     Scaffold(
         containerColor = Color.LightGray, topBar = {
             Column(
@@ -258,6 +259,7 @@ fun PKListScreen(
                 } else {
 
                     items(viewModel.pokemonList) { pokemon ->
+
                         Box(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)

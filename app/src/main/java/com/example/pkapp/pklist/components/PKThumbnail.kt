@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +24,8 @@ import coil.compose.AsyncImage
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun PKThumbnail(
@@ -31,6 +36,12 @@ fun PKThumbnail(
     viewModel: PKViewModel
 ) {
 
+    var jpName by remember {
+        mutableStateOf("")
+    }
+    LaunchedEffect(name) {
+        jpName = viewModel.getJpName(name)
+    }
 
     Box(
         modifier = Modifier.clickable {
@@ -65,13 +76,19 @@ fun PKThumbnail(
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
+
+
                 Text(
                     text = "No.$id",
                     color = Color.Black,
                     fontSize = 16.sp,
                 )
                 Text(
-                    text = name,
+                    text = if (jpName.isNotEmpty()) {
+                        jpName
+                    } else {
+                        name
+                    },
                     color = Color.Black,
                     fontSize = 26.sp,
                 )

@@ -39,6 +39,9 @@ class PKViewModel(
     var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
         emptyList()//空っぽのリストを作る関数
     )
+    var allPokemonList by mutableStateOf<List<PokemonListItem>>(
+        emptyList()
+    )
 
     private val _state = mutableStateOf(PKListState())//mutableStateOfとvalueはセットで値が随時変わるときに使う
     val state: State<PKListState> = _state
@@ -49,6 +52,7 @@ class PKViewModel(
     fun loadPokemonList(
         onSuccess: () -> Unit, onError: () -> Unit
     ) {
+        Log.d("LIST", "success start")
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
 
             _state.value = PKListState(isLoading = true)
@@ -62,8 +66,24 @@ class PKViewModel(
 
 
                 is NetworkResponse.Success -> {
-                    pokemonList = result.data?.results ?: emptyList()
+
+                    //val responsedetail = repository.getPokemonDetail(id)
+                    //val responsejpname = repository.getPokemonJpName(PokemonListItem.name)
+                    Log.d("LIST", "success")
+                    val pokemonListJpName =
+                        result.data?.results?.map { pokemon ->
+
+                            PokemonListItem(
+                                name = pokemon.name,
+                                jpName = "",
+                                url = pokemon.url
+                            )
+                        } ?: emptyList()
+                    Log.d("LIST", "finish map")
+                    allPokemonList = pokemonListJpName
+                    pokemonList = pokemonListJpName
                     isLoading = false
+
                     _state.value = PKListState(
                         isLoading = false
                     )
@@ -71,6 +91,7 @@ class PKViewModel(
                 }
 
                 is NetworkResponse.Failure -> {
+                    Log.d("LIST", "failure=${result.error}")
                     isLoading = false
                     _state.value = PKListState(
                         error = result.error, isLoading = false
@@ -109,7 +130,7 @@ class PKViewModel(
                 PKSprites = responsedetail.sprites
                 PKHeight = responsedetail.height
                 PKWeight = responsedetail.weight
-                PKName = ChangeLanguageName(responsedetail, responsejpname)
+                PKName = ChangeLanguageName(responsejpname)
                 PKTypes = typeNames.joinToString(" / ")
 
                 onSuccess()//取得成功後に画面遷移する
@@ -187,6 +208,10 @@ class PKViewModel(
             pokemonList = filteredList ?: emptyList()
             onSuccess()
         }
+    }
+    suspend fun getJpName(name: String): String {
+        val response = repository.getPokemonJpName(name)
+        return ChangeLanguageName(response)
     }
 
 

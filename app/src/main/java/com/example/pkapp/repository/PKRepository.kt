@@ -20,9 +20,11 @@ interface PKRepository {
     suspend fun getPokemonListbyType(
         id: Int
     ):  NetworkResponse<PokemonListbyTypeResponse>
+
     suspend fun getPokemonJpName(
         name: String
-    ):PokemonJpNameResponse
+    ): PokemonJpNameResponse
+
 
     suspend fun getPokemonJpType(
         id: Int
