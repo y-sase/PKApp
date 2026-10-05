@@ -1,5 +1,6 @@
 package com.example.pkapp.pklist
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,13 +37,27 @@ import com.example.pkapp.SearchBar.SimpleSearchBar
 import com.example.pkapp.SearchBar.TypeFilterBar
 import com.example.pkapp.pklist.components.PKThumbnail
 import com.example.pkapp.viewmodel.PKViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.rememberLazyListState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PKListScreen(
     viewModel: PKViewModel, navController: NavController, onClick: () -> Unit
 ) {
-    val state = viewModel.state.value
+    var visibleCount by remember {
+        mutableStateOf(100)
+    }
+    val displayList =
+        if (viewModel.query.isNotBlank()) {
+        viewModel.pokemonList
+    } else {
+        viewModel.pokemonList.take(visibleCount)
+    }
+
+    val listState = rememberLazyListState()
+    //val state = viewModel.state.value
+    val state by viewModel.state
     var showTypeFilter by remember {
         mutableStateOf(false)
     }
@@ -50,7 +65,7 @@ fun PKListScreen(
         mutableStateOf(true)
     }
 
-
+/*
     LaunchedEffect(Unit) {
 
         viewModel.loadPokemonList(
@@ -58,16 +73,47 @@ fun PKListScreen(
             onError = { navController.navigate("error_screen") })
 
     }
+
+ */
+    LaunchedEffect(
+        listState.firstVisibleItemIndex,
+        viewModel.pokemonList.size
+    ) {
+        val totalItems = displayList.size
+        val lastVisible =
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+
+        if (
+            lastVisible >= totalItems - 10 &&
+            visibleCount < viewModel.pokemonList.size
+        ) {
+            visibleCount += 100
+        }
+    }
+    LaunchedEffect(Unit) {
+        Log.d(
+            "CHECK_LIST",
+            "size=${viewModel.pokemonList.size}"
+        )
+        if (viewModel.pokemonList.isEmpty()) {
+            viewModel.loadPokemonList(
+                onSuccess = {},
+                onError = {}
+            )
+        }
+    }
     LaunchedEffect(Unit) {
         viewModel.loadTypesList()
     }
-
+/*
 
     LaunchedEffect(Unit) {
         viewModel.loadPokemonByTypes(
             onSuccess = {},
             onError = { navController.navigate("error_screen") })
     }
+
+ */
 
 
     Scaffold(
@@ -80,7 +126,10 @@ fun PKListScreen(
 
 
                     Button(
+                        enabled = viewModel.allPokemonList.isNotEmpty(),
                         onClick = {
+
+
                             showTypeFilter = !showTypeFilter
                         },
                         shape = RoundedCornerShape(0.dp),
@@ -109,12 +158,19 @@ fun PKListScreen(
                         onSearchPKChanged = {
                             viewModel.query = it
                         }, onDone = {
+                            if (viewModel.allPokemonList.isEmpty()) {
+                                viewModel.errorMessage =
+                                    "データ読込中です"
+                                return@SimpleSearchBar
+                            }
+
                             val id =
                                 viewModel.query.toIntOrNull()//.toIntOrNull():文字列を Int に変換する。変換できなかったら null を返す
                             val name = viewModel.query
 
                             if (viewModel.query == "") {
-                                viewModel.loadPokemonList(onSuccess = {}, onError = {})
+                                viewModel.pokemonList =
+                                    viewModel.allPokemonList
 
                                 viewModel.errorMessage = ""
                             } else {
@@ -226,10 +282,14 @@ fun PKListScreen(
         }) { paddingValues ->
         Column {
 
-
+            Text(
+                text = "size=${viewModel.pokemonList.size}"
+            )
             LazyColumn(
+                state = listState,
                 modifier = Modifier.padding(paddingValues)
             ) {
+
                 if (state.isLoading) {
                     items(10) {//(viewModel.pokemonList) { pokemon -> //pokemonListからポケモンを1匹ずつ取り出して、pokemonという名前で使う,for文みたいな
 
@@ -256,8 +316,20 @@ fun PKListScreen(
                     }
 
                 } else {
+                    Log.d(
+                        "AFTER_LOAD",
+                        "size=${viewModel.pokemonList.size}"
+                    )
 
-                    items(viewModel.pokemonList) { pokemon ->
+                    items(
+                        items = displayList,
+                        key = { it.id }
+                    ) { pokemon ->
+
+                        Log.d(
+                            "ITEMS",
+                            "${pokemon.name} jp=${pokemon.listJpName}"
+                        )
                         Box(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)
@@ -273,7 +345,8 @@ fun PKListScreen(
                         ) {
                             PKThumbnail(
 
-                                id = pokemon.id, name = pokemon.name, pokemonimageinList = pokemon,
+                                id = pokemon.id, //name = pokemon.name,
+                                pokemonimageinList = pokemon,
 
                                 viewModel = viewModel,
 

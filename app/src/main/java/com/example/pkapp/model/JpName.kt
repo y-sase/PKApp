@@ -6,17 +6,12 @@ import com.example.pkapp.api.PokemonJpTypeResponse
 
 
 fun ChangeLanguageName(
-    detail: PokemonDetailResponse,
     jpnameResponse: PokemonJpNameResponse,
 ): String {  //最終的にStringを返す。
-    var jpName = detail.name
 
 
-    jpName =
-        jpnameResponse.names.first { it.language.name == "ja-hrkt" }//first: 条件に一致した最初の1件を返す（Listから１件とるからstringで返せる）
-            .name
-
-    return jpName
+    return jpnameResponse.names.first { it.language.name == "ja-hrkt" }//first: 条件に一致した最初の1件を返す（Listから１件とるからstringで返せる）
+        .name
 }
 
 fun ChangeLanguageType(

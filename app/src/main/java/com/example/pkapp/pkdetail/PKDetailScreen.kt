@@ -111,11 +111,19 @@ fun PKDetailScreen(
                 Button(
 
                     onClick = {
-
-
+                        navController.navigate("pklist_screen") {
+                            popUpTo("pklist_screen") {
+                                inclusive = false
+                            }
+                        }
+/*
                         navController.navigate(
                             "loading_list"
                         )
+
+
+ */
+
 
 
                     },

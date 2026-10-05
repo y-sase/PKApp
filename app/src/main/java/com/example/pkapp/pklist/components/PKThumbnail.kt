@@ -1,5 +1,6 @@
 package com.example.pkapp.pklist.components
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,12 +27,13 @@ import com.example.pkapp.viewmodel.PKViewModel
 @Composable
 fun PKThumbnail(
     id: Int,
-    name: String,
+    //name: String,
     pokemonimageinList: PokemonListItem,
     onClick: () -> Unit,//クリックされてUnitをかえす
     viewModel: PKViewModel
 ) {
 
+    Log.d("THUMB", "PKThumbnail開始")
 
     Box(
         modifier = Modifier.clickable {
@@ -65,11 +68,18 @@ fun PKThumbnail(
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
+                Log.d(
+                    "THUMB",
+                    pokemonimageinList.listJpName
+                )
+
+                var name = pokemonimageinList.listJpName
                 Text(
                     text = "No.$id",
                     color = Color.Black,
                     fontSize = 16.sp,
                 )
+
                 Text(
                     text = name,
                     color = Color.Black,
@@ -80,5 +90,9 @@ fun PKThumbnail(
 
         }
     }
+    Log.d(
+        "THUMB",
+        "name=${pokemonimageinList.name}, jp=${pokemonimageinList.listJpName}"
+    )
 }
 
