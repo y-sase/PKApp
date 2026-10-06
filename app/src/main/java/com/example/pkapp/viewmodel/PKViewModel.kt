@@ -64,7 +64,7 @@ class PKViewModel(
                 PKHeight = responsedetail.height
                 PKWeight = responsedetail.weight
                 PKName = getJapaneseName(responsejpname)
-                PKTypes = getTypeList(repository, id).joinToString(" / ")
+                PKTypes = getTypeList(repository, responsedetail).joinToString(" / ")
 
 
             } catch (e: Exception) {

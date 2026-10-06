@@ -19,11 +19,13 @@ fun getJapaneseName(
 
 suspend fun getTypeList(
     repository: PKRepository,
-    id: Int,
+    responsedetail: PokemonDetailResponse,
 ): List<String> {  //最終的にStringを返す。
 
-    val responsedetail = repository.getPokemonDetail(id)
+   // val responsedetail = repository.getPokemonDetail(id)
 
+// TODO: getTypeList() の責務を Repository に移動し、
+// Repository を引数で受け取らない構成へリファクタリングする
     return responsedetail.types.map { typeInfo ->//typeInfoは今処理中の1件
         val typeId = typeInfo.type.url.trimEnd('/').substringAfterLast('/')//最後の / より後ろだけ取得
             .toInt()//文字列を数値に変換 String->Int
