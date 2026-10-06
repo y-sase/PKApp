@@ -72,10 +72,10 @@ class PKViewModel(
                     Log.d("LIST", "success")
                     val pokemonListJpName =
                         result.data?.results?.map { pokemon ->
-
+                            val response = repository.getPokemonJpName(pokemon.name)
                             PokemonListItem(
                                 name = pokemon.name,
-                                jpName = "",
+                                jpName = ChangeLanguageName(response),
                                 url = pokemon.url
                             )
                         } ?: emptyList()
@@ -229,7 +229,7 @@ class PKViewModel(
         onSuccess: () -> Unit, onError: () -> Unit
     ) {
 
-        pokemonList = pokemonList.filter { pokemon ->
+        pokemonList = allPokemonList.filter { pokemon ->
             //idのポケモン入れる処理
             pokemon.id in favoriteIds
         }
@@ -261,7 +261,7 @@ class PKViewModel(
 
         when {
             id != null -> {
-                pokemonList = pokemonList.filter { pokemon ->
+                pokemonList = allPokemonList.filter { pokemon ->
                     //idのポケモン入れる処理
                     pokemon.id == id
                 }
@@ -269,11 +269,21 @@ class PKViewModel(
             }
 
             name != "" -> {
-                pokemonList = pokemonList.filter { pokemon ->
+                pokemonList = allPokemonList.filter { pokemon ->
+                    Log.d(
+                        "SEARCH",
+                        "${pokemon.name} / ${pokemon.jpName}"
+                    )
                     //nameのポケモン入れる処理
                     pokemon.name.contains(
                         name, ignoreCase = true
                     )//contains():文字列の中に指定した文字が含まれているか調べる  ignoreCase = true:大文字小文字を無視する
+                            ||
+
+                    pokemon.jpName.contains(
+                        name,
+                        ignoreCase = true
+                    )
                 }
                 onSuccess()
 
