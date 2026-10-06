@@ -60,7 +60,12 @@ class PKViewModel(
     fun loadPokemonList(
         onSuccess: () -> Unit, onError: () -> Unit
     ) {
-        if (pokemonList.isNotEmpty()) return
+        Log.d("LOAD_LIST", "enter")
+        Log.d("LOAD_LIST", "pokemonList=${pokemonList.size}")
+        if (pokemonList.isNotEmpty()) {
+            Log.d("LOAD_LIST", "return")
+            return
+        }
 
         Log.d(
             "BEFORE_LOAD",
@@ -89,125 +94,8 @@ class PKViewModel(
                             "LIST_SIZE",
                             "size=${pokemonList.size}"
                         )
-                        //pokemonList = result.data?.results ?: emptyList()
-
-                        /*
-                    isLoading = false
-
-                    _state.value = PKListState(
-                        isLoading = false
-                    )
-                    */
 
 
-                        /*
-                    pokemonList = pokemonList.map {pokemon ->
-
-
-                        val responsedetail = repository.getPokemonDetail(pokemon.id)
-                        val responsejpname = repository.getPokemonJpName(pokemon.name)
-                        Log.d("JP_NAME", ChangeLanguageName(
-                            responsedetail,
-                            responsejpname
-                        ))
-                        pokemon.copy(
-                            listJpName = ChangeLanguageName(
-                                responsedetail,
-                                responsejpname)
-                        )
-
-
-                    }
-
-
-                    val list = result.data?.results ?: emptyList()
-                    pokemonList = pokemonList.map { pokemon ->
-
-
-
-                    val list = result.data?.results ?: emptyList()
-                    pokemonList = list.map { pokemon ->
-                    //pokemonList = pokemonList.map { pokemon ->
-                       // val responsedetail = repository.getPokemonDetail(pokemon.id)
-                        //val responsejpname = repository.getPokemonJpName(pokemon.name)
-
-                        val responsejpname = try {
-                            repository.getPokemonJpName(pokemon.name)
-
-                        val speciesName =
-                            pokemon.name.substringBefore("-")
-
-                        val responsejpname =try {
-                            repository.getPokemonJpName(speciesName)
-                        } catch (e: Exception) {
-
-
-                            Log.e(
-                                "JP_ERROR",
-                                "name=${pokemon.name}",
-                                e
-                            )
-
-                            return@map PokemonListItem(
-                                name = pokemon.name,
-                                url = pokemon.url,
-                                listJpName = pokemon.name
-                            )
-                        }
-
-                        val jpName = ChangeLanguageName(
-                            responsejpname
-                        )
-
-                        Log.d("JP_NAME", jpName)
-
-                        Log.d(
-                            "POKEMON_LIST",
-                            "name=${pokemon.name}, jp=$jpName"
-                        )
-                        PokemonListItem(
-                            name = pokemon.name,
-                            url = pokemon.url,
-                            listJpName = jpName
-                        )
-
-
-
-                    }*/
-
-
-                        /*Aパターン
-
-                        val list = result.data?.results ?: emptyList()
-
-                        pokemonList = list.map { pokemon ->
-
-                            val speciesName =
-                                if (pokemon.name.startsWith("nidoran-"))
-                                    pokemon.name
-                                else
-                                    pokemon.name.substringBefore("-")
-
-                            val responsejpname = try {
-                                repository.getPokemonJpName(speciesName)
-                            } catch (e: Exception) {
-                                return@map PokemonListItem(
-                                    name = pokemon.name,
-                                    url = pokemon.url,
-                                    listJpName = pokemon.name
-                                )
-                            }
-
-                            PokemonListItem(
-                                name = pokemon.name,
-                                url = pokemon.url,
-                                listJpName = ChangeLanguageName(responsejpname)
-                            )
-                        }
-
-
- */
-                        //Bパターん
                         val list = result.data?.results ?: emptyList()
 
                         pokemonList = emptyList()
@@ -274,7 +162,7 @@ class PKViewModel(
                         _state.value = PKListState(
                             isLoading = false
                         )
-
+                        errorMessage = ""
                         onSuccess(
 
                         )
@@ -354,9 +242,19 @@ class PKViewModel(
             _state.value = PKListState(isLoading = true)
 
             if (typeIds.isEmpty()) {
+                /*
                 loadPokemonList(
+
                     onSuccess = onSuccess, onError = onError
                 )
+
+                 */
+                pokemonList = allPokemonList
+                isLoading = false
+                _state.value = PKListState(
+                    isLoading = false
+                )
+                onSuccess()
                 return@launch
             }
             var filteredList: List<PokemonListItem>? = null
@@ -402,11 +300,27 @@ class PKViewModel(
 
                 }
             }
-            pokemonList = filteredList ?: emptyList()
+            //pokemonList = filteredList ?: emptyList()
+            val typePokemonNames =
+                filteredList?.map { it.name }?.toSet() ?: emptySet()
+
+            pokemonList = allPokemonList.filter {
+                it.name in typePokemonNames
+            }
             Log.d(
                 "TYPE_SIZE",
                 "pokemonList=${pokemonList.size} all=${allPokemonList.size}"
             )
+            isLoading = false
+            _state.value = PKListState(
+                isLoading = false
+            )
+            pokemonList.take(10).forEach {
+                Log.d(
+                    "TYPE_RESULT",
+                    "name=${it.name} jp=${it.listJpName}"
+                )
+            }
             onSuccess()
         }
     }
@@ -425,6 +339,7 @@ class PKViewModel(
     fun favoritePokemon(
         onSuccess: () -> Unit, onError: () -> Unit
     ) {
+
 
         pokemonList = pokemonList.filter { pokemon ->
             //idのポケモン入れる処理
@@ -498,7 +413,7 @@ class PKViewModel(
             errorMessage = "エラー：IDもしくはポケモン名を入力してください"
         } else {
             errorMessage = ""
-            pokemonList = allPokemonList
+            //iinepokemonList = allPokemonList
         }
 
 

@@ -65,16 +65,6 @@ fun PKListScreen(
         mutableStateOf(true)
     }
 
-/*
-    LaunchedEffect(Unit) {
-
-        viewModel.loadPokemonList(
-            onSuccess = {},
-            onError = { navController.navigate("error_screen") })
-
-    }
-
- */
     LaunchedEffect(
         listState.firstVisibleItemIndex,
         viewModel.pokemonList.size
@@ -105,15 +95,6 @@ fun PKListScreen(
     LaunchedEffect(Unit) {
         viewModel.loadTypesList()
     }
-/*
-
-    LaunchedEffect(Unit) {
-        viewModel.loadPokemonByTypes(
-            onSuccess = {},
-            onError = { navController.navigate("error_screen") })
-    }
-
- */
 
 
     Scaffold(
@@ -163,6 +144,9 @@ fun PKListScreen(
                                     "データ読込中です"
                                 return@SimpleSearchBar
                             }
+                            viewModel.errorMessage =
+                                ""
+
 
                             val id =
                                 viewModel.query.toIntOrNull()//.toIntOrNull():文字列を Int に変換する。変換できなかったら null を返す
@@ -182,30 +166,7 @@ fun PKListScreen(
                                     onError = {})
                             }
 
-                            /*
 
-                            if (id == null) {
-                                if (name == "") {
-                                    viewModel.errorMessage =
-                                        "エラー：数字もしくは文字を入力してください"
-                                } else {
-                                    viewModel.errorMessage = ""
-                                    viewModel.searchPokemon(
-                                        onSuccess = {},
-                                        onError = { navController.navigate("error_screen") }
-
-                                    )
-                                }
-                            } else {
-                                viewModel.errorMessage = ""
-                                viewModel.searchPokemon(
-                                    onSuccess = {},
-                                    onError = { navController.navigate("error_screen") })
-
-                            }
-
-
-                             */
                         }
 
                     )
@@ -224,6 +185,7 @@ fun PKListScreen(
 
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
+                        enabled = viewModel.allPokemonList.isNotEmpty(),
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .height(35.dp)
@@ -231,7 +193,8 @@ fun PKListScreen(
                             .clip(RoundedCornerShape(10.dp)), onClick = {
                             showFavoriteOnly = !showFavoriteOnly
                             if (showFavoriteOnly) {
-                                viewModel.loadPokemonList(onSuccess = {}, onError = {})
+                                viewModel.pokemonList =
+                                viewModel.allPokemonList
 
                             } else {
                                 viewModel.favoritePokemon(onSuccess = {}, onError = {})
@@ -331,6 +294,7 @@ fun PKListScreen(
                             "${pokemon.name} jp=${pokemon.listJpName}"
                         )
                         Box(
+
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)
                                 .padding(vertical = 5.dp)
@@ -342,6 +306,7 @@ fun PKListScreen(
                             )
 
                              */
+
                         ) {
                             PKThumbnail(
 
@@ -351,6 +316,7 @@ fun PKListScreen(
                                 viewModel = viewModel,
 
                                 onClick = {//画面遷移
+
                                     viewModel.PKId = pokemon.id
                                     navController.navigate(
                                         "loading_detail"
