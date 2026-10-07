@@ -1,5 +1,6 @@
 package com.example.pkapp.pkdetail
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -32,13 +33,15 @@ import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
-
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PKDetailScreen(
     viewModel: PKViewModel,
     navController: NavController,
     onClick: () -> Unit,
 ) {
+    // TODO: Navigation引数のpkIdを利用するように修正する
+// 現状はViewModel保持値を参照して表示している
     Scaffold(
         containerColor = Color.LightGray
     ) {

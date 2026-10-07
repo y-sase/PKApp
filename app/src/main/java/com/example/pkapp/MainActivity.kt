@@ -59,9 +59,12 @@ class MainActivity : ComponentActivity() {
                         }
 
                         //ポケモン詳細画面
-                        composable("pkdetail_screen" + "/{pkId}") {
+                        composable("pkdetail_screen" + "/{pkId}") {backStackEntry ->
+                            val pkId = backStackEntry.arguments?.getString("pkId")?.toIntOrNull() ?: 0
                             PKDetailScreen(
-                                viewModel = viewModel, navController = navController, onClick = {})
+                                viewModel = viewModel, navController = navController,
+                                //pkId = pkId,
+                        onClick = {})
                         }
 
 
@@ -90,16 +93,20 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel,
                                 navController = navController,
                                 from = "list",
+                                retryId = null,
                                 onClick = {},
 
                             )
                         }
 
-                        composable("errordetail_screen") {
+
+                            composable("errordetail_screen/{id}") { backStackEntry ->
+                                val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
                             ErrorScreen(
                                 viewModel = viewModel,
                                 navController = navController,
                                 from = "detail",
+                                retryId = id,
                                 onClick = {}
                             )
                         }
