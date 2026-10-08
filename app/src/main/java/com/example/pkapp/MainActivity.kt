@@ -23,6 +23,10 @@ import com.example.pkapp.ui.theme.PKAppTheme
 import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
 
+import com.example.pkapp.data.api.repository.PKRepositoryImpl
+import com.example.pkapp.data.api.RetrofitInstance
+import com.example.pkapp.feature.pklist.pkdetail.PKDetailScreen
+import com.example.pkapp.feature.pklist.PKListScreen
 
 
 class MainActivity : ComponentActivity() {

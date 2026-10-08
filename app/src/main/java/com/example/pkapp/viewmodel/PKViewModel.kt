@@ -1,12 +1,15 @@
 package com.example.pkapp.viewmodel
 
 
+
 import androidx.compose.runtime.State
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
 import com.example.pkapp.common.NetworkResponse
 import com.example.pkapp.model.ChangeLanguageName
 import com.example.pkapp.model.ChangeLanguageType
@@ -14,12 +17,13 @@ import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
 import com.example.pkapp.pklist.PKListState
 import com.example.pkapp.repository.PKRepository
+
 import kotlinx.coroutines.launch
 
 class PKViewModel(
     private val repository: PKRepository,
 ) : ViewModel() {
-    var PKId by mutableStateOf(0)
+    var pokemonId by mutableStateOf(0)
     var PKName by mutableStateOf("")
     var PKHeight by mutableStateOf(0)
     var PKWeight by mutableStateOf(0)
@@ -34,6 +38,7 @@ class PKViewModel(
     var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
         emptyList()//空っぽのリストを作る関数
     )
+
 
     private val _state = mutableStateOf(PKListState())//mutableStateOfとvalueはセットで値が随時変わるときに使う
     val state: State<PKListState> = _state
@@ -82,8 +87,10 @@ class PKViewModel(
     fun loadPokemonDetail(
         id: Int, onSuccess: () -> Unit, onError: () -> Unit
     ) {
+
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
+
 
 
                 val responsedetail = repository.getPokemonDetail(id)
@@ -112,7 +119,6 @@ class PKViewModel(
 
                 onError()
 
-            }
         }
     }
 
@@ -123,6 +129,5 @@ class PKViewModel(
             favoriteIds + id
         }
     }
-
 
 }

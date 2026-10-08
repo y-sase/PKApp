@@ -33,7 +33,9 @@ import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
 @Composable
 fun PKDetailScreen(
     viewModel: PKViewModel,
@@ -49,31 +51,65 @@ fun PKDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(vertical = 40.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(Color.White)
-                .heightIn(100.dp)
-                .border(
-                    width = 3.dp, color = Color.Black, shape = RoundedCornerShape(10.dp)
-                )
+
+        )
+
+
+        Column(
+            modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(200.dp))
-            Favorite(
-                viewModel = viewModel,
-                pokemonId = viewModel.PKId,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(vertical = 70.dp)
-                    .padding(horizontal = 16.dp)
+            Spacer(modifier = Modifier.height(100.dp))
+
+            Text(
+                text = "No.${viewModel.pokemonId}",
+                color = Color.Black,
+                fontSize = 30.sp,
+            )
+            Text(
+                text = viewModel.PKName,
+                color = Color.Black,
+                fontSize = 55.sp,
+            )
+
+            AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
+                model = viewModel.PKSprites.frontDefault,
+                contentDescription = "ポケモン",
+                modifier = Modifier.size(300.dp),
+                contentScale = ContentScale.Crop//枠いっぱいに表示
             )
 
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.height(100.dp))
+            Text(
+                text = "高さ：${viewModel.PKHeight / 10.0}m\n" + "重さ：${viewModel.PKWeight / 10.0}kg\n" + "タイプ：${viewModel.PKTypes}",
+                color = Color.Black,
+                fontSize = 20.sp,
+                lineHeight = 43.sp
 
+            )
+
+            Spacer(modifier = Modifier.height(50.dp))
+            Button(
+
+                onClick = {
+
+                    /*
+                    navController.navigate(
+                        ScreenRoute.LoadingScreen.route
+                    )
+
+                     */
+
+                },
+
+
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(150.dp)
+                    .clip(RoundedCornerShape(10.dp)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFB3E5FC)
+                )
+            ) {
                 Text(
                     text = "No.${viewModel.PKId}",
                     color = Color.Black,
@@ -132,7 +168,11 @@ fun PKDetailScreen(
                 }
 
             }
+            Text(
+                text = viewModel.errorMessage, color = Color.Red
+            )
 
         }
     }
 }
+

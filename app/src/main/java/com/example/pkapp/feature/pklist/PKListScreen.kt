@@ -1,4 +1,4 @@
-package com.example.pkapp.pklist
+package com.example.pkapp.feature.pklist
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -19,8 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+
 import androidx.navigation.NavController
 import com.example.pkapp.pklist.components.PKThumbnail
+
 import com.example.pkapp.viewmodel.PKViewModel
 
 
@@ -54,7 +56,6 @@ fun PKListScreen(
         }) { paddingValues ->
         Column {
 
-
             LazyColumn(
                 modifier = Modifier.padding(paddingValues)
             ) {
@@ -79,6 +80,15 @@ fun PKListScreen(
                             CircularProgressIndicator(modifier = Modifier.align(androidx.compose.ui.Alignment.Center))
                         }
 
+
+
+                            id = pokemon.id,
+                            name = pokemon.name,
+                           pokemonImageInList = pokemon,
+
+                            viewModel = viewModel
+
+                        )
                     }
 
                 } else {
