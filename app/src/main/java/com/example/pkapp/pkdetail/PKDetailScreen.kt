@@ -57,7 +57,7 @@ fun PKDetailScreen(
 
     }
     Scaffold(
-        containerColor = Color.LightGray
+        containerColor = Color(0xFF9E9E9E)
     ) { innerPadding -> //Scaffoldとセット
         Box(
             modifier = Modifier
@@ -65,7 +65,7 @@ fun PKDetailScreen(
                 .padding(horizontal = 10.dp)
                 .padding(top = 200.dp)
                 .clip(RoundedCornerShape(70.dp))
-                .background(Color(0xFF9E9E9E))
+                .background(Color.LightGray)
                 //.heightIn(100.dp)
                 /*
                 .border(
@@ -164,7 +164,7 @@ fun PKDetailScreen(
                             )
                             Text(
                                 modifier = Modifier
-                                    .offset(y = (-20).dp)
+                                    .offset(y = (-10).dp)
                                 ,text = "${viewModel.PKHeight / 10.0}m",
                                 color = Color.Black,
                                 fontSize = 30.sp,
@@ -185,7 +185,11 @@ fun PKDetailScreen(
                             .size(width = 160.dp, height = 80.dp)
                     ) {
 
-                        Row() {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
 
                             Icon(
                                 modifier = Modifier
@@ -195,7 +199,7 @@ fun PKDetailScreen(
                                 tint = Color(0xFFF50057)
                             )
 
-
+                            Spacer(modifier = Modifier.width(8.dp))
                             Column() {
                                 Text(
                                     text = "高さ",
@@ -205,8 +209,9 @@ fun PKDetailScreen(
 
                                 )
                                 Text(
-
-                                    text = "${viewModel.PKHeight / 10.0}m",
+                                    modifier = Modifier
+                                        .offset(y = (-10).dp)
+                                    ,text = "${viewModel.PKHeight / 10.0}m",
                                     color = Color.Black,
                                     fontSize = 30.sp,
                                     // lineHeight = 50.sp,
@@ -214,6 +219,7 @@ fun PKDetailScreen(
                                     letterSpacing = 4.sp
 
                                 )
+
                             }
 
                         }
@@ -221,7 +227,9 @@ fun PKDetailScreen(
                 }
                 Spacer(modifier = Modifier.height(-30.dp))
                 Row(
-                    modifier = Modifier
+
+                            modifier = Modifier
+                            .offset(y = (-20).dp)
 
                 ) {
                     Box(
@@ -231,14 +239,93 @@ fun PKDetailScreen(
                             .background(Color.White)
                             .size(width = 160.dp, height = 80.dp)
 
-                    ) {}
+                    ) {
+
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+
+                            Icon(
+                                modifier = Modifier
+                                    .size(60.dp),
+                                imageVector = Icons.Default.Height,
+                                contentDescription = "Height",
+                                tint = Color(0xFFF50057)
+                            )
+
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column() {
+                                Text(
+                                    text = "高さ",
+                                    color = Color.Black,
+                                    fontSize = 15.sp,
+                                    lineHeight = 43.sp
+
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .offset(y = (-10).dp)
+                                    ,text = "${viewModel.PKHeight / 10.0}m",
+                                    color = Color.Black,
+                                    fontSize = 30.sp,
+                                    // lineHeight = 50.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 4.sp
+
+                                )
+
+                            }
+
+                        }
+                    }
                     Box(
                         modifier = Modifier
                             .padding(horizontal = 10.dp)
                             .clip(RoundedCornerShape(10.dp))
                             .background(Color.White)
                             .size(width = 160.dp, height = 80.dp)
-                    ) {}
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+
+                            Icon(
+                                modifier = Modifier
+                                    .size(60.dp),
+                                imageVector = Icons.Default.Height,
+                                contentDescription = "Height",
+                                tint = Color(0xFFF50057)
+                            )
+
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column() {
+                                Text(
+                                    text = "高さ",
+                                    color = Color.Black,
+                                    fontSize = 15.sp,
+                                    lineHeight = 43.sp
+
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .offset(y = (-10).dp)
+                                    ,text = "${viewModel.PKHeight / 10.0}m",
+                                    color = Color.Black,
+                                    fontSize = 30.sp,
+                                    // lineHeight = 50.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 4.sp
+
+                                )
+
+                            }
+
+                        }
+                    }
                 }
 
                 Text(
