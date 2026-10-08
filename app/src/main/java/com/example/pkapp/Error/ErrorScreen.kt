@@ -32,7 +32,7 @@ fun ErrorScreen(
     viewModel: PKViewModel,
     onClick: () -> Unit,
     from: String?,
-    retryId: Int?
+    retryId: Int? = null
 ) {
 
 

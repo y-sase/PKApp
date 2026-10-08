@@ -12,17 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.example.pkapp.pklist.PKListScreen
-import com.example.pkapp.pklist.components.PKThumbnail
-import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
 
 @Composable
 fun LoadingScreen(
-    viewModel: PKViewModel,
-    navController: NavController,
-    mode: LoadingMode,
-    id: Int
+    viewModel: PKViewModel, navController: NavController, mode: LoadingMode, id: Int
 ) {
     val context = LocalContext.current
     Column(
@@ -39,49 +33,44 @@ fun LoadingScreen(
 
         LaunchedEffect(Unit) {//画面が表示された瞬間に中の処理を1回だけ実行
 
-            Log.d("TEST","LoadingScreen id=$id")
+
             when (mode) {
                 LoadingMode.DETAIL -> {
-
-                    viewModel.loadPokemonDetail(
-                        id = id,
-                        onSuccess = {
-                        navController.navigate(
-                            "pkdetail_screen" + "/$id"
-                        ){
-                            popUpTo("loading_detail") { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    }, onError = {
-                        navController.navigate(
-
-                            "errordetail_screen"
-                        )
-                    }
-                    )
+                viewModel.loadPokemonDetail(
+                    id = id,
+                    onSuccess = {
+                navController.navigate("pkdetail_screen/$id") {
+                    popUpTo("loading_detail/{id}") { inclusive = true }
+                    launchSingleTop = true
                 }
-
-                LoadingMode.LIST -> {
-                    viewModel.loadPokemonList(
-                        onSuccess = {
-
-
-                        navController.navigate(
-                            "pklist_screen"
-                        )
-                    }, onError = {
-
-                        navController.navigate(
-                            "errorlist_screen"
-
-                        )
-
-                    }
-                    )
-                }
+            },
+            onError = {
+                navController.navigate("errordetail_screen/$id")
             }
+            )
         }
+
+
+
+    LoadingMode.LIST -> {
+        viewModel.loadPokemonList(onSuccess = {
+
+
+            navController.navigate(
+                "pklist_screen"
+            )
+        }, onError = {
+
+            navController.navigate(
+                "errorlist_screen"
+
+            )
+
+        })
     }
+}
+}
+}
 }
 
 
