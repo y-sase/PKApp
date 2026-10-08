@@ -1,5 +1,4 @@
 package com.example.pkapp.feature.pklist
-
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,7 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 import androidx.navigation.NavController
-import com.example.pkapp.pklist.components.PKThumbnail
+import com.example.pkapp.feature.pklist.components.PKThumbnail
+
 
 import com.example.pkapp.viewmodel.PKViewModel
 
@@ -82,13 +82,7 @@ fun PKListScreen(
 
 
 
-                            id = pokemon.id,
-                            name = pokemon.name,
-                           pokemonImageInList = pokemon,
 
-                            viewModel = viewModel
-
-                        )
                     }
 
                 } else {
@@ -109,13 +103,12 @@ fun PKListScreen(
                         ) {
                             PKThumbnail(
 
-                                id = pokemon.id, name = pokemon.name, pokemonimageinList = pokemon,
+                                id = pokemon.id, name = pokemon.name, pokemonImageInList = pokemon,
 
                                 viewModel = viewModel,
 
                                 onClick = {//画面遷移
 
-                                    Log.d("TEST", "pokemonId=${pokemon.id}")
                                     navController.navigate(
                                         "loading_detail/${pokemon.id}")
 

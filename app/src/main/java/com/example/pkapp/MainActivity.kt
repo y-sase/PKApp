@@ -13,12 +13,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.pkapp.Error.ErrorScreen
-import com.example.pkapp.api.RetrofitInstance
 import com.example.pkapp.loading.LoadingMode
 import com.example.pkapp.loading.LoadingScreen
-import com.example.pkapp.pkdetail.PKDetailScreen
-import com.example.pkapp.pklist.PKListScreen
-import com.example.pkapp.repository.PKRepositoryImpl
+
 import com.example.pkapp.ui.theme.PKAppTheme
 import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel

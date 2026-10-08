@@ -1,5 +1,6 @@
 package com.example.pkapp.feature.pklist.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +28,7 @@ fun PKThumbnail(
     id: Int,
     name: String,
 
-
+    onClick: () -> Unit,
     viewModel: PKViewModel,
     pokemonImageInList: PokemonListItem,
 
@@ -36,9 +37,13 @@ fun PKThumbnail(
 
     Box(
         modifier = Modifier.fillMaxSize()
+            .clickable {
+                onClick()
+            }
     ) {
         Favorite(
             viewModel = viewModel,
+            pokemonId = id,
             modifier = Modifier.align(Alignment.TopEnd),
         )
 

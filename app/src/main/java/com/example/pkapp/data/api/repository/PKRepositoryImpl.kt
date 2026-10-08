@@ -1,18 +1,12 @@
 package com.example.pkapp.data.api.repository
 
-import com.example.pkapp.api.PKApi
-import com.example.pkapp.api.PokemonDetailResponse
-import com.example.pkapp.api.PokemonJpNameResponse
-import com.example.pkapp.api.PokemonJpTypeResponse
-import com.example.pkapp.api.PokemonListResponse
+
 import com.example.pkapp.common.NetworkResponse
-=======
 import com.example.pkapp.data.api.PKApi
 import com.example.pkapp.data.api.PokemonDetailResponse
 import com.example.pkapp.data.api.PokemonJpNameResponse
 import com.example.pkapp.data.api.PokemonJpTypeResponse
 import com.example.pkapp.data.api.PokemonListResponse
->>>>>>> main:app/src/main/java/com/example/pkapp/data/api/repository/PKRepositoryImpl.kt
 
 class PKRepositoryImpl(
     private val api: PKApi    //api を受け取る
@@ -23,7 +17,6 @@ class PKRepositoryImpl(
         return api.getPokemonDetail(id)//APIを呼ぶ
     }
 
-<<<<<<< HEAD:app/src/main/java/com/example/pkapp/repository/PKRepositoryImpl.kt
     override suspend fun getPokemonList(): NetworkResponse<PokemonListResponse> {
         return try {
 
@@ -37,10 +30,6 @@ class PKRepositoryImpl(
                 e.message ?: "通信エラー"
             )
         }
-=======
-    override suspend fun getPokemonList(): PokemonListResponse {//Interfaceで約束した getAdvice を実装します
-        return api.getPokemonList()//APIを呼ぶ
->>>>>>> main:app/src/main/java/com/example/pkapp/data/api/repository/PKRepositoryImpl.kt
     }
 
     //詳細画面部分

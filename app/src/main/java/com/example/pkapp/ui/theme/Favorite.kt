@@ -35,7 +35,7 @@ fun Favorite(
                 viewModel.toggleFavorite(viewModel.pokemonId)
             }
         ) {
-            val isFavorite = viewModel.pokemonId in viewModel.favoriteIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
+            val isFavorite = pokemonId in viewModel.favoriteIds//今のポケモンIDが、お気に入り一覧の中に含まれているか？
 
         Icon(
             modifier = Modifier.size(34.dp),

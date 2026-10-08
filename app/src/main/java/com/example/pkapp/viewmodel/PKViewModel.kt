@@ -16,7 +16,7 @@ import com.example.pkapp.model.ChangeLanguageType
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
 import com.example.pkapp.pklist.PKListState
-import com.example.pkapp.repository.PKRepository
+import com.example.pkapp.data.api.repository.PKRepository
 
 import kotlinx.coroutines.launch
 
@@ -92,7 +92,6 @@ class PKViewModel(
             try {//エラーが起きるかもしれない処理を開始。
 
 
-
                 val responsedetail = repository.getPokemonDetail(id)
                 val responsejpname = repository.getPokemonJpName(responsedetail.name)
                 val typeNames = responsedetail.types.map { typeInfo ->//typeInfoは今処理中の1件
@@ -105,7 +104,7 @@ class PKViewModel(
                         responsedetail, responsejptype
                     ).first()
                 }
-                PKId = responsedetail.id
+                pokemonId = responsedetail.id
                 //PKName = responsejpname.name
                 PKSprites = responsedetail.sprites
                 PKHeight = responsedetail.height
@@ -119,6 +118,7 @@ class PKViewModel(
 
                 onError()
 
+            }
         }
     }
 
