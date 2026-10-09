@@ -1,4 +1,4 @@
-package com.example.pkapp.api
+package com.example.pkapp.data.api
 
 
 import com.example.pkapp.SearchBar.TypeListItem

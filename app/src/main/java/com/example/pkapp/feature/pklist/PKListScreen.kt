@@ -1,5 +1,9 @@
-package com.example.pkapp.pklist
+package com.example.pkapp.feature.pklist
 
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.pkapp.SearchBar.SimpleSearchBar
+import com.example.pkapp.SearchBar.TypeFilterBar
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -31,14 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.example.pkapp.SearchBar.SimpleSearchBar
-import com.example.pkapp.SearchBar.TypeFilterBar
-import com.example.pkapp.pklist.components.PKThumbnail
+import com.example.pkapp.feature.pklist.components.PKThumbnail
 import com.example.pkapp.viewmodel.PKViewModel
-import androidx.compose.runtime.getValue
 import androidx.compose.foundation.lazy.rememberLazyListState
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -244,11 +244,7 @@ fun PKListScreen(
 
         }) { paddingValues ->
         Column {
-
-            Text(
-                text = "size=${viewModel.pokemonList.size}"
-            )
-            LazyColumn(
+       LazyColumn(
                 state = listState,
                 modifier = Modifier.padding(paddingValues)
             ) {
@@ -269,8 +265,6 @@ fun PKListScreen(
                             )
 
                              */
-
-
                         ) {
                             //ローディング
                             CircularProgressIndicator(modifier = Modifier.align(androidx.compose.ui.Alignment.Center))
@@ -311,11 +305,12 @@ fun PKListScreen(
                             PKThumbnail(
 
                                 id = pokemon.id, //name = pokemon.name,
-                                pokemonimageinList = pokemon,
-
+                                pokemonImageInList =  pokemon,
+                                name = pokemon.listJpName,
                                 viewModel = viewModel,
 
                                 onClick = {//画面遷移
+
 
                                     viewModel.PKId = pokemon.id
                                     navController.navigate(
@@ -325,8 +320,7 @@ fun PKListScreen(
                         }
                     }
                 }
-
-            }
+        }
         }
     }
 

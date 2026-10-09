@@ -1,13 +1,14 @@
-package com.example.pkapp.repository
+package com.example.pkapp.data.api.repository
 
-import com.example.pkapp.api.PKApi
-import com.example.pkapp.api.PokemonDetailResponse
-import com.example.pkapp.api.PokemonJpNameResponse
-import com.example.pkapp.api.PokemonJpTypeResponse
-import com.example.pkapp.api.PokemonListResponse
-import com.example.pkapp.api.PokemonListbyTypeResponse
-import com.example.pkapp.api.TypeListResponse
+import com.example.pkapp.data.api.PokemonListbyTypeResponse
+import com.example.pkapp.data.api.TypeListResponse
 import com.example.pkapp.common.NetworkResponse
+
+import com.example.pkapp.data.api.PKApi
+import com.example.pkapp.data.api.PokemonDetailResponse
+import com.example.pkapp.data.api.PokemonJpNameResponse
+import com.example.pkapp.data.api.PokemonJpTypeResponse
+import com.example.pkapp.data.api.PokemonListResponse
 
 class PKRepositoryImpl(
     private val api: PKApi    //api を受け取る

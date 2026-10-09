@@ -1,6 +1,10 @@
 package com.example.pkapp
 
+
+
+
 import android.annotation.SuppressLint
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,19 +13,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.pkapp.Error.ErrorScreen
-import com.example.pkapp.api.RetrofitInstance
+
 import com.example.pkapp.loading.LoadingMode
 import com.example.pkapp.loading.LoadingScreen
-import com.example.pkapp.pkdetail.PKDetailScreen
-import com.example.pkapp.pklist.PKListScreen
-import com.example.pkapp.repository.PKRepositoryImpl
+
+
+
 import com.example.pkapp.ui.theme.PKAppTheme
 import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
+
+
+
+import com.example.pkapp.data.api.repository.PKRepositoryImpl
+import com.example.pkapp.data.api.RetrofitInstance
+import com.example.pkapp.feature.pklist.pkdetail.PKDetailScreen
+
+import com.example.pkapp.feature.pklist.PKListScreen
+
+
+
 
 
 class MainActivity : ComponentActivity() {
@@ -38,7 +54,6 @@ class MainActivity : ComponentActivity() {
                     val api = RetrofitInstance.providePKApi()
                     val repository = PKRepositoryImpl(api)
                     val viewModel = PKViewModel(repository)
-
 
                     val navController =
                         rememberNavController()//navControllerをインスタンスで保持できる。画面遷移を管理するオブジェクト

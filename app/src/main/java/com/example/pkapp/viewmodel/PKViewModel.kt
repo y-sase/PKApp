@@ -1,35 +1,38 @@
 package com.example.pkapp.viewmodel
 
-
 import android.util.Log
 import androidx.compose.runtime.State
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
 import androidx.room.util.copy
 import com.example.pkapp.SearchBar.TypeListItem
 import com.example.pkapp.common.NetworkResponse
-import com.example.pkapp.model.ChangeLanguageName
-import com.example.pkapp.model.ChangeLanguageType
+
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
 import com.example.pkapp.pklist.PKListState
-import com.example.pkapp.repository.PKRepository
+import com.example.pkapp.data.api.repository.PKRepository
+import com.example.pkapp.model.ChangeLanguageName
+import com.example.pkapp.model.ChangeLanguageType
 import kotlinx.coroutines.launch
 
 class PKViewModel(
     private val repository: PKRepository,
 ) : ViewModel() {
-    init {
-        Log.d("VM_CREATE", "created")
-    }
+
 
 
 
     var PKListJpName by mutableStateOf("")
     var PKId by mutableStateOf(0)
+
+    var pokemonId by mutableStateOf(0)
+
     var PKName by mutableStateOf("")
     var PKHeight by mutableStateOf(0)
     var PKWeight by mutableStateOf(0)
@@ -47,6 +50,7 @@ class PKViewModel(
     var pokemonList by mutableStateOf<List<PokemonListItem>>(//<List<PokemonDetailResponse>>はPokemonDetailResponseをたくさん入れられるリスト型
         emptyList()//空っぽのリストを作る関数
     )
+
 
     private val _state = mutableStateOf(PKListState())//mutableStateOfとvalueはセットで値が随時変わるときに使う
     val state: State<PKListState> = _state
@@ -181,11 +185,13 @@ class PKViewModel(
                 }
             }catch (e: Exception) {
                 onError()
+
             }
 
 
         }
     }
+
 
 
     fun loadPokemonDetail(
@@ -204,7 +210,7 @@ class PKViewModel(
 
                     val responsejptype = repository.getPokemonJpType(typeId)
                     ChangeLanguageType(
-                        responsedetail, responsejptype
+                        responsejptype
                     ).first()
                 }
                 PKId = responsedetail.id
@@ -222,6 +228,7 @@ class PKViewModel(
 
             } catch (e: Exception) {
                 onError()
+
             }
         }
     }
@@ -366,6 +373,7 @@ class PKViewModel(
         }
     }
 
+
     //
     fun searchPokemon(
         id: Int?, name: String, onSuccess: () -> Unit, onError: () -> Unit
@@ -418,4 +426,8 @@ class PKViewModel(
 
 
     }
+
+
+
+
 }

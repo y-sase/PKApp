@@ -1,10 +1,10 @@
-package com.example.pkapp.pkdetail
+
+package com.example.pkapp.feature.pklist.pkdetail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
+import androidx.compose.foundation.layout.Row
 
 //詳細画面部分
 
@@ -328,7 +329,7 @@ fun PKDetailScreen(
                     }
                 }
 
-                Text(
+              Text(
                     text = "高さ：${viewModel.PKHeight / 10.0}m\n" + "重さ：${viewModel.PKWeight / 10.0}kg\n" + "タイプ：${viewModel.PKTypes}",
                     color = Color.Black,
                     fontSize = 20.sp,
@@ -375,6 +376,10 @@ fun PKDetailScreen(
                 }
 
             }
+
+            Text(
+                text = viewModel.errorMessage, color = Color.Red
+            )
 
 
     }
