@@ -1,5 +1,7 @@
 package com.example.pkapp.data.api.repository
 
+
+import com.example.pkapp.common.NetworkResponse
 import com.example.pkapp.data.api.PKApi
 import com.example.pkapp.data.api.PokemonDetailResponse
 import com.example.pkapp.data.api.PokemonJpNameResponse
@@ -15,8 +17,19 @@ class PKRepositoryImpl(
         return api.getPokemonDetail(id)//APIを呼ぶ
     }
 
-    override suspend fun getPokemonList(): PokemonListResponse {//Interfaceで約束した getAdvice を実装します
-        return api.getPokemonList()//APIを呼ぶ
+    override suspend fun getPokemonList(): NetworkResponse<PokemonListResponse> {
+        return try {
+
+            val response = api.getPokemonList()
+
+            NetworkResponse.Success(response)
+
+        } catch (e: Exception) {
+
+            NetworkResponse.Failure(
+                e.message ?: "通信エラー"
+            )
+        }
     }
 
     //詳細画面部分
