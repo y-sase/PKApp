@@ -307,11 +307,15 @@ fun PKListScreen(
                                 id = pokemon.id, //name = pokemon.name,
                                 pokemonImageInList =  pokemon,
                                 name = pokemon.listJpName,
+                                form = pokemon.formName,
                                 viewModel = viewModel,
 
                                 onClick = {//画面遷移
 
-
+                                    Log.d(
+                                        "CLICK",
+                                        "id=${pokemon.id} name=${pokemon.name}"
+                                    )
                                     viewModel.PKId = pokemon.id
                                     navController.navigate(
                                         "loading_detail"

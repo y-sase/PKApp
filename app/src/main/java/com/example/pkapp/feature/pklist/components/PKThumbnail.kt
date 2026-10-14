@@ -21,11 +21,12 @@ import coil.compose.AsyncImage
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
-
+import androidx.compose.foundation.clickable
 @Composable
 fun PKThumbnail(
     id: Int,
     name: String,
+    form: String,
     onClick: () -> Unit,
 
     viewModel: PKViewModel,
@@ -35,19 +36,17 @@ fun PKThumbnail(
 
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Favorite(
-            pokemonId = id,
-            viewModel = viewModel,
-            modifier = Modifier.align(Alignment.TopEnd),
-        )
 
-    }
+
+
 
     Row(
         verticalAlignment = Alignment.CenterVertically,//左寄せ(Rowの時)
         modifier = Modifier.fillMaxWidth()
+            .clickable {
+                onClick()}
     ) {
 
         AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
@@ -66,19 +65,33 @@ fun PKThumbnail(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
+
             Text(
                 text = "No.$id",
                 color = Color.Black,
                 fontSize = 16.sp,
             )
             Text(
-                text = name,
+                text = name +
+                       if(form == "")
+                            ""
+                else
+                    "($form)",
+
+
                 color = Color.Black,
                 fontSize = 26.sp,
             )
         }
 
 
+    }
+        Favorite(
+
+            pokemonId = id,
+            viewModel = viewModel,
+            modifier = Modifier.align(Alignment.TopEnd),
+        )
     }
 }
 

@@ -18,6 +18,7 @@ mediationTestSuite = "3.0.0"
 roomKtx = "2.8.5"
 
 remoteCreationCore = "1.0.0-alpha19"
+foundation = "1.12.1"
 
 
 [libraries]
@@ -45,6 +46,7 @@ mediation-test-suite = { group = "com.google.android.ads", name = "mediation-tes
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 androidx-compose-remote-creation-core = { group = "androidx.compose.remote", name = "remote-creation-core", version.ref = "remoteCreationCore" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
 
 [plugins]

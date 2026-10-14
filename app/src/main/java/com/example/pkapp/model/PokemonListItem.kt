@@ -6,6 +6,7 @@ data class PokemonListItem(
     val name: String,
     val url: String,
     val listJpName: String = "",
+    val formName: String = ""
     ) {
     val id: Int
         get() = url//URL取りだす

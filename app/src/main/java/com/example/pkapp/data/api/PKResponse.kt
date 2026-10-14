@@ -13,7 +13,12 @@ data class PokemonDetailResponse(
     val height: Int,
     val weight: Int,
     val sprites: Sprites,
-    val types: List<TypeSlot>
+    val types: List<TypeSlot>,
+    val species: Species,
+)
+data class Species(
+    val name: String,
+    val url: String
 )
 data class PokemonListResponse(
     val count: Int,//総件数

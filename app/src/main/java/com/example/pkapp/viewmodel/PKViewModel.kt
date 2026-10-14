@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,6 +52,7 @@ class PKViewModel(
         emptyList()//空っぽのリストを作る関数
     )
 
+   // var formName by mutableStateOf("")
 
     private val _state = mutableStateOf(PKListState())//mutableStateOfとvalueはセットで値が随時変わるときに使う
     val state: State<PKListState> = _state
@@ -61,6 +63,8 @@ class PKViewModel(
     )
 
 
+    var memo by mutableStateOf("")
+
     fun loadPokemonList(
         onSuccess: () -> Unit, onError: () -> Unit
     ) {
@@ -68,6 +72,7 @@ class PKViewModel(
         Log.d("LOAD_LIST", "pokemonList=${pokemonList.size}")
         if (pokemonList.isNotEmpty()) {
             Log.d("LOAD_LIST", "return")
+            onSuccess()
             return
         }
 
@@ -105,32 +110,55 @@ class PKViewModel(
                         pokemonList = emptyList()
 
                         for ((index, pokemon) in list.withIndex()) {
-
+/*
                             val speciesName =
                                 if (pokemon.name.startsWith("nidoran-"))
                                     pokemon.name
                                 else
                                     pokemon.name.substringBefore("-")
+ */
+                           // val detail = repository.getPokemonDetail(pokemon.id)
 
+                            var formName =
+
+                                    ""
+
+
+
+
+                            val speciesName = pokemon.name
                             val responsejpname = try {
                                 repository.getPokemonJpName(speciesName)
                             } catch (e: Exception) {
+                                try {
+                                    val detail = repository.getPokemonDetail(pokemon.id)
+
+                                    formName =
+                                        pokemon.name.removePrefix("${detail.species.name}-")
+
+                                    repository.getPokemonJpName(
+                                        detail.species.name
+                                    )
+                                } catch (e: Exception) {
+
 
                                 pokemonList = pokemonList + PokemonListItem(
                                     name = pokemon.name,
                                     url = pokemon.url,
-                                    listJpName = pokemon.name
+                                    listJpName = pokemon.name,
+                                    formName = formName
                                 )
 
                                 continue
-                            }
+                            }}
 
                             val jpName = ChangeLanguageName(responsejpname)
 
                             pokemonList = pokemonList + PokemonListItem(
                                 name = pokemon.name,
                                 url = pokemon.url,
-                                listJpName = jpName
+                                listJpName = jpName,
+                                formName = formName
                             )
 
                             // 最初の1件でロード終了
@@ -200,18 +228,50 @@ class PKViewModel(
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
 
-
+                Log.d("DETAIL", "id=$id")
                 val responsedetail = repository.getPokemonDetail(id)
-                val responsejpname = repository.getPokemonJpName(responsedetail.name)
+                Log.d(
+                    "SPECIES",
+                    responsedetail.species.name
+                )
+                Log.d(
+                    "DETAIL_STEP1",
+                    "detail ok name=${responsedetail.name}"
+                )
+                Log.d(
+                    "DETAIL_STEP2",
+                    "jpname target=${responsedetail.name}"
+                )
+
+                Log.d(
+                    "DETAIL_STEP2",
+                    "jpname ok"
+                )
+                Log.d(
+                    "DETAIL_STEP2",
+                    "before jpname"
+                )
+                val responsejpname = repository.getPokemonJpName(responsedetail.species.name)
+                Log.d(
+                    "DETAIL_STEP3",
+                    "jpname success"
+                )
                 val typeNames = responsedetail.types.map { typeInfo ->//typeInfoは今処理中の1件
                     val typeId =
                         typeInfo.type.url.trimEnd('/').substringAfterLast('/')//最後の / より後ろだけ取得
                             .toInt()//文字列を数値に変換 String->Int
-
+                    Log.d(
+                        "TYPE_CHECK",
+                        "typeId=$typeId"
+                    )
                     val responsejptype = repository.getPokemonJpType(typeId)
+                    Log.d(
+                        "TYPE_OK",
+                        "typeId=$typeId"
+                    )
                     ChangeLanguageType(
                         responsejptype
-                    ).first()
+                    )
                 }
                 PKId = responsedetail.id
                 //PKName = responsejpname.name
@@ -228,17 +288,20 @@ class PKViewModel(
 
             } catch (e: Exception) {
                 onError()
+                Log.e("DETAIL_ERROR", "id=$id", e)
 
             }
         }
     }
 
     fun toggleFavorite(id: Int) {
+        Log.d("FAVORITE", "click=$id")
         favoriteIds = if (id in favoriteIds) {
             favoriteIds - id
         } else {
             favoriteIds + id
         }
+        Log.d("FAVORITE", "list=$favoriteIds")
     }
 
     //APIで取得したタイプ一覧リスト
