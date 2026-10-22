@@ -15,7 +15,35 @@ data class PokemonDetailResponse(
     val sprites: Sprites,
     val types: List<TypeSlot>,
     val species: Species,
+    /*
+    val hp:Int,
+    val attack:Int,
+    val defense:Int,
+    val specialAttack:Int,
+    val specialDefense:Int,
+    val speed:Int
+
+     */
+    val stats: List<StatsListItem>
 )
+
+data class StatsListItem(
+    /*
+    val hp:Int,
+    val attack:Int,
+    val defense:Int,
+    val specialAttack:Int,
+    val specialDefense:Int,
+    val speed:Int
+     */
+    val base_stat:Int,
+    val stat: Stat
+)
+data class Stat(
+    val name: String
+)
+
+
 data class Species(
     val name: String,
     val url: String

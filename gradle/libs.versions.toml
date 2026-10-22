@@ -52,4 +52,4 @@ androidx-compose-foundation = { group = "androidx.compose.foundation", name = "f
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }

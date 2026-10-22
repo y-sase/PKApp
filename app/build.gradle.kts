@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
     //id("org.jetbrains.kotlin.plugin.serialization")
 }
 
@@ -76,4 +77,18 @@ dependencies {
     //NavController
     //implementation("androidx.navigation:navigation-compose:2.10.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    //MPAndroidChart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    //vico
+    //implementation("com.patrykandpatrick.vico:compose:2.2.0")
+
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.4")
+
+    //Room
+    implementation("androidx.room:room-runtime:2.8.5")
+    implementation("androidx.room:room-ktx:2.8.5")
+    ksp("androidx.room:room-compiler:2.8.5")
 }

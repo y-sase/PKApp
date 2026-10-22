@@ -48,7 +48,7 @@ fun ErrorScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Error;("
+            text = "通信エラー;("
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -76,7 +76,7 @@ fun ErrorScreen(
                 )
             ) {
                 Text(
-                    text = "Retry",
+                    text = "再読み込み",
                     color = Color.White,
                     fontSize = 23.sp,
                     fontWeight = FontWeight.Bold,
@@ -105,7 +105,7 @@ fun ErrorScreen(
                 )
             ) {
                 Text(
-                    text = "Home",
+                    text = "ホームへ",
                     color = Color.White,
                     fontSize = 23.sp,
                     fontWeight = FontWeight.Bold,

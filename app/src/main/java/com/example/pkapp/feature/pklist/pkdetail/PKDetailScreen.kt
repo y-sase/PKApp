@@ -1,12 +1,12 @@
 package com.example.pkapp.feature.pklist.pkdetail
 
 
+import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,8 +43,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.XXX.RadarGraph
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
+import androidx.compose.ui.graphics.Brush
+import com.example.pkapp.feature.pklist.components.getTypeColor
+
 
 
 
@@ -62,8 +66,13 @@ fun PKDetailScreen(
         viewModel.loadPokemonDetail(viewModel.PKId, onSuccess = {}, onError = {})
 
     }
+    val mainType = viewModel.PKTypes
+        .split(" / ")
+        .firstOrNull() ?: ""
     Scaffold(
-        containerColor = Color(0xFF9E9E9E),
+        containerColor = getTypeColor(
+            mainType
+        ),//Color(0xFF9E9E9E),
 
 
         ) { innerPadding -> //Scaffoldとセット
@@ -71,325 +80,370 @@ fun PKDetailScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-        ){
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            getTypeColor(mainType),
+                            Color(0xFFF5F5F5)
+                        )
+                    )
+                )
+        ) {
 
 
             Column(
-            modifier = Modifier
-                   // .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-        ) {
+                modifier = Modifier
+                    // .fillMaxSize()
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState())
+            ) {
                 Favorite(
                     viewModel = viewModel, pokemonId = viewModel.PKId, modifier = Modifier
                         //.align(Alignment.TopEnd)
                         .padding(vertical = 30.dp)
                         .padding(horizontal = 16.dp)
                 )
-            Box(
-                modifier = Modifier//.fillMaxWidth()
-                    .padding(top = 30.dp)
-                   // .offset(y = (-140).dp)
-            ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                        .padding(
-                            //top = 200.dp,
-                            bottom = 0.dp
-                            )
-                        .clip(
-                            RoundedCornerShape(
-                                70.dp//topStart = 70.dp, topEnd = 70.dp
-                            )
-                        )
-                        .background(Color.LightGray)
-                        .height(700.dp)
-
-
-                        /*
-                .border(
-                    width = 3.dp, color = Color(0xFF90A4AE), shape = RoundedCornerShape(30.dp)
-                )
-
-                 */.padding(innerPadding)
-
-                )
-                //Spacer(modifier = Modifier.height(200.dp))
-
-
-                Column(
-                    modifier = Modifier
-                        // .verticalScroll(rememberScrollState())
-                        .fillMaxWidth()
-                        .padding(top = 0.dp)
-                        .offset(y = (-150).dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-
+                    modifier = Modifier//.fillMaxWidth()
+                        .padding(top = 30.dp)
+                    // .offset(y = (-140).dp)
                 ) {
-                    //Spacer(modifier = Modifier.height(50.dp))
-
-                    AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                        model = viewModel.PKSprites.frontDefault,
-                        contentDescription = "ポケモン",
-                        modifier = Modifier.size(300.dp),
-                        contentScale = ContentScale.Crop//枠いっぱいに表示
-                    )
-                    Spacer(modifier = Modifier.height(50.dp))
-                    Row(
+                    Box(
                         modifier = Modifier
-                            .offset(y = (-70).dp)
                             .fillMaxWidth()
-                            .padding(start = 25.dp),
-                        //horizontalArrangement = Arrangement.End
+                            .padding(horizontal = 10.dp)
+                            .padding(
+                                //top = 200.dp,
+                                bottom = 0.dp
+                            )
+                            .clip(
+                                RoundedCornerShape(
+                                    70.dp//topStart = 70.dp, topEnd = 70.dp
+                                )
+                            )
+                            .background(Color(0xFFF5F5F5))
+                            .height(1150.dp)
+
+
+                            /*
+                    .border(
+                        width = 3.dp, color = Color(0xFF90A4AE), shape = RoundedCornerShape(30.dp)
+                    )
+
+                     */.padding(innerPadding)
+
+                    )
+                    //Spacer(modifier = Modifier.height(200.dp))
+
+
+                    Column(
+                        modifier = Modifier
+                            // .verticalScroll(rememberScrollState())
+                            .fillMaxWidth()
+                            .padding(top = 0.dp)
+                            .offset(y = (-150).dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
 
                     ) {
-                        Text(
-                            text = "No.${viewModel.PKId}",
-                            color = Color.White,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
+                        //Spacer(modifier = Modifier.height(50.dp))
+
+                        AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
+                            model = viewModel.PKSprites.frontDefault,
+                            contentDescription = "ポケモン",
+                            modifier = Modifier.size(300.dp),
+                            contentScale = ContentScale.Crop//枠いっぱいに表示
                         )
-                        Spacer(modifier = Modifier.width(20.dp))
-                        Text(
-                            text = viewModel.PKName,
-                            color = Color.White,
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-
-                    }
-
-
-                    Row(
-                        modifier = Modifier.offset(y = (-40).dp)
-
-                    ) {
-                        //高さ
-                        Box(
+                        Spacer(modifier = Modifier.height(50.dp))
+                        Row(
                             modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(Color.White)
-                                .size(width = 160.dp, height = 80.dp)
+                                .offset(y = (-70).dp)
+                                .fillMaxWidth()
+                                .padding(start = 25.dp),
+                            //horizontalArrangement = Arrangement.End
 
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.CenterVertically
+                            Text(
+                                text = "No.${viewModel.PKId}",
+                                color = Color(0xFF37474F),
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp
+                            )
+                            Spacer(modifier = Modifier.width(20.dp))
+                            Text(
+                                text = viewModel.PKName,
+                                color = Color(0xFF37474F),
+                                fontSize = 30.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp
+                            )
+
+                        }
+
+
+                        Row(
+                            modifier = Modifier.offset(y = (-40).dp)
+
+                        ) {
+                            //高さ
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(Color.White)
+                                    .size(width = 160.dp, height = 80.dp)
+
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+                                    Icon(
+                                        modifier = Modifier.size(60.dp),
+                                        imageVector = Icons.Default.Height,
+                                        contentDescription = "Height",
+                                        tint = Color(0xFFF48FB1)
+                                    )
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Column {
+                                        Text(
+                                            text = "高さ",
+                                            color = Color.Black,
+                                            fontSize = 15.sp,
+                                            lineHeight = 43.sp
+
+                                        )
+                                        Text(
+                                            modifier = Modifier.offset(y = (-10).dp),
+                                            text = "${viewModel.PKHeight / 10.0}m",
+                                            color = Color.Black,
+                                            fontSize = 18.sp,
+                                            // lineHeight = 50.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            letterSpacing = 4.sp
+
+                                        )
+                                    }
+
+                                }
+                            }
+                            //重さ
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(Color.White)
+                                    .size(width = 160.dp, height = 80.dp)
                             ) {
 
-                                Icon(
-                                    modifier = Modifier.size(60.dp),
-                                    imageVector = Icons.Default.Height,
-                                    contentDescription = "Height",
-                                    tint = Color(0xFFF48FB1)
-                                )
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
 
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Column {
+
+                                    Icon(
+                                        modifier = Modifier
+                                            .size(58.dp)
+                                            .padding(horizontal = 10.dp),
+                                        imageVector = Icons.Default.Scale,
+                                        contentDescription = "Weight",
+                                        tint = Color(0xFF90CAF9)
+                                    )
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Column {
+                                        Text(
+                                            text = "重さ",
+                                            color = Color.Black,
+                                            fontSize = 15.sp,
+                                            lineHeight = 43.sp
+
+                                        )
+                                        Text(
+                                            modifier = Modifier.offset(y = (-10).dp),
+                                            text = "${viewModel.PKWeight / 10.0}kg",
+                                            color = Color.Black,
+                                            fontSize = 18.sp,
+                                            // lineHeight = 50.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            letterSpacing = 5.sp
+
+                                        )
+
+                                    }
+
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(-30.dp))
+                        Row(
+
+                            modifier = Modifier.offset(y = (-20).dp)
+
+                        ) {
+                            //タイプ
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(Color.White)
+                                    .size(width = 350.dp, height = 80.dp)
+
+                            ) {
+
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+
+                                    Icon(
+                                        modifier = Modifier.size(60.dp),
+                                        imageVector = Icons.Default.MergeType,
+                                        contentDescription = "Type",
+                                        tint = Color(0xFF1DE9B6)
+                                    )
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+
                                     Text(
-                                        text = "高さ",
+                                        text = "タイプ",
                                         color = Color.Black,
                                         fontSize = 15.sp,
                                         lineHeight = 43.sp
 
                                     )
+                                    Spacer(modifier = Modifier.width(15.dp))
                                     Text(
-                                        modifier = Modifier.offset(y = (-10).dp),
-                                        text = "${viewModel.PKHeight / 10.0}m",
+
+                                        text = "${viewModel.PKTypes}",
                                         color = Color.Black,
-                                        fontSize = 28.sp,
+                                        fontSize = 22.sp,
                                         // lineHeight = 50.sp,
                                         fontWeight = FontWeight.Bold,
                                         letterSpacing = 4.sp
 
                                     )
-                                }
 
-                            }
-                        }
-                        //重さ
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(Color.White)
-                                .size(width = 160.dp, height = 80.dp)
-                        ) {
-
-                            Row(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-
-
-                                Icon(
-                                    modifier = Modifier
-                                        .size(58.dp)
-                                        .padding(horizontal = 10.dp),
-                                    imageVector = Icons.Default.Scale,
-                                    contentDescription = "Weight",
-                                    tint = Color(0xFF90CAF9)
-                                )
-
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Column {
-                                    Text(
-                                        text = "重さ",
-                                        color = Color.Black,
-                                        fontSize = 15.sp,
-                                        lineHeight = 43.sp
-
-                                    )
-                                    Text(
-                                        modifier = Modifier.offset(y = (-10).dp),
-                                        text = "${viewModel.PKWeight / 10.0}kg",
-                                        color = Color.Black,
-                                        fontSize = 20.sp,
-                                        // lineHeight = 50.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 5.sp
-
-                                    )
 
                                 }
-
                             }
+
                         }
-                    }
-                    Spacer(modifier = Modifier.height(-30.dp))
-                    Row(
 
-                        modifier = Modifier.offset(y = (-20).dp)
-
-                    ) {
-                        //タイプ
+                        //チャート
                         Box(
                             modifier = Modifier
                                 .padding(horizontal = 10.dp)
                                 .clip(RoundedCornerShape(10.dp))
                                 .background(Color.White)
-                                .size(width = 350.dp, height = 80.dp)
+                                .size(width = 350.dp, height = 350.dp)
 
                         ) {
+                            val resultMap = mapOf(
+                                "HP ${viewModel.PKHp}" to viewModel.PKHp.toFloat(),//MPAndroidChartは基本的に Float を使う
+                                "こうげき ${viewModel.PKAttack}" to viewModel.PKAttack.toFloat(),
+                                "ぼうぎょ ${viewModel.PKDefense}" to viewModel.PKDefense.toFloat(),
+                                "とくこう ${viewModel.PKSpecialAttack}" to viewModel.PKSpecialAttack.toFloat(),
+                                "とくぼう ${viewModel.PKSpecialDefense}" to viewModel.PKSpecialDefense.toFloat(),
+                                "すばやさ ${viewModel.PKSpeed}" to viewModel.PKSpeed.toFloat()
+                            )
 
-                            Row(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                            RadarGraph(resultMap)
 
-
-                                Icon(
-                                    modifier = Modifier.size(60.dp),
-                                    imageVector = Icons.Default.MergeType,
-                                    contentDescription = "Type",
-                                    tint = Color(0xFF1DE9B6)
-                                )
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Text(
-                                    text = "タイプ",
-                                    color = Color.Black,
-                                    fontSize = 15.sp,
-                                    lineHeight = 43.sp
-
-                                )
-                                Spacer(modifier = Modifier.width(15.dp))
-                                Text(
-
-                                    text = "${viewModel.PKTypes}",
-                                    color = Color.Black,
-                                    fontSize = 22.sp,
-                                    // lineHeight = 50.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 4.sp
-
-                                )
-
-
-                            }
                         }
 
-                    }
-
-                    //Spacer(modifier = Modifier.height(30.dp))
-                    Row {
-                        //Note機能
-                        //var memo by rememberSaveable { mutableStateOf("") }
-                        val focusManager = LocalFocusManager.current
-
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(Color.White)
-                                .size(width = 350.dp, height = 200.dp)
-
-                        ) {
+                        Spacer(modifier = Modifier.height(30.dp))
+                        Row {
                             //Note機能
-                            //noteFumction()
+                            //var memo by rememberSaveable { mutableStateOf("") }
+                            val focusManager = LocalFocusManager.current
 
-                            OutlinedTextField(
-                                value = viewModel.memo,
-                                onValueChange = {
-                                    viewModel.memo = it
-                                },
-                                label = { Text("メモ") },
+                            Box(
                                 modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .size(width = 320.dp, height = 170.dp),
-                                // .fillMaxWidth()
-                                keyboardOptions = KeyboardOptions.Default.copy(
-                                    imeAction = ImeAction.Done // キーボードの「完了」ボタン
-                                ),
-                                keyboardActions = KeyboardActions(
-                                    onDone = {
-                                        focusManager.clearFocus()
-                                    })
+                                    .padding(horizontal = 10.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(Color.White)
+                                    .size(width = 350.dp, height = 270.dp),
+                                contentAlignment = Alignment.Center
+
+                            ) {
+                                Column {
+                                    //Note機能
+                                    //noteFumction()
+
+                                    OutlinedTextField(
+                                        value = viewModel.memo,
+                                        onValueChange = {
+                                            viewModel.memo = it
+                                        },
+                                        label = { Text("メモ") },
+                                        modifier = Modifier
+                                            .align(Alignment.CenterHorizontally)
+                                            .size(width = 320.dp, height = 170.dp),
+                                        // .fillMaxWidth()
+                                        keyboardOptions = KeyboardOptions.Default.copy(
+                                            imeAction = ImeAction.Done // キーボードの「完了」ボタン
+                                        ),
+                                        keyboardActions = KeyboardActions(
+                                            onDone = {
+                                                focusManager.clearFocus()
+                                            })
+                                    )
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    Button(
+
+                                        onClick = {
+                                            viewModel.saveMemo()
+                                        },
+                                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                                    ) {
+                                        Text("保存")
+                                    }
+                                }
+                            }
+
+                        }
+
+
+                        Spacer(modifier = Modifier.height(30.dp))
+                        Button(
+
+                            onClick = {
+                                navController.navigate("pklist_screen") {
+                                    popUpTo("pklist_screen") {
+                                        inclusive = false
+                                    }
+                                }
+
+
+                            },
+
+
+                            modifier = Modifier
+
+                                .height(50.dp)
+                                .width(150.dp)
+                                .clip(RoundedCornerShape(10.dp)),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFB3E5FC)
+                            )
+                        ) {
+                            Text(
+                                text = "← 戻る",
+                                color = Color.White,
+                                fontSize = 23.sp,
+                                fontWeight = FontWeight.Bold,
                             )
                         }
 
                     }
 
-                    Spacer(modifier = Modifier.height(30.dp))
-                    Button(
-
-                        onClick = {
-                            navController.navigate("pklist_screen") {
-                                popUpTo("pklist_screen") {
-                                    inclusive = false
-                                }
-                            }
-
-
-                        },
-
-
-                        modifier = Modifier
-                            .height(50.dp)
-                            .width(150.dp)
-                            .clip(RoundedCornerShape(10.dp)),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFB3E5FC)
-                        )
-                    ) {
-                        Text(
-                            text = "← 戻る",
-                            color = Color.White,
-                            fontSize = 23.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-
                 }
-
             }
-        }
 
         }
     }

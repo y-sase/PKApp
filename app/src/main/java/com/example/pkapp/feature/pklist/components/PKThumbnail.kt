@@ -22,6 +22,9 @@ import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.text.font.FontWeight
+
 @Composable
 fun PKThumbnail(
     id: Int,
@@ -72,14 +75,20 @@ fun PKThumbnail(
                 fontSize = 16.sp,
             )
             Text(
-                text = name +
+                text = name ,
+                        /*
+                        +
+
                        if(form == "")
                             ""
                 else
                     "($form)",
 
+                         */
 
-                color = Color.Black,
+                color = Color(0xFF37474F),
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
                 fontSize = 26.sp,
             )
         }
@@ -90,7 +99,10 @@ fun PKThumbnail(
 
             pokemonId = id,
             viewModel = viewModel,
-            modifier = Modifier.align(Alignment.TopEnd),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(y = (-10).dp)
+            ,
         )
     }
 }

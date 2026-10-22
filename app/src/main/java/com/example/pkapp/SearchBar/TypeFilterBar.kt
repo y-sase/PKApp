@@ -2,23 +2,20 @@ package com.example.pkapp.SearchBar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CropSquare
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,32 +26,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.pkapp.feature.pklist.components.TypeMark
+import com.example.pkapp.feature.pklist.components.changeTypeName
+import com.example.pkapp.feature.pklist.components.getTypeColor
 import com.example.pkapp.viewmodel.PKViewModel
 
-fun changeTypeName(typeName: String): String {
-    return when (typeName) {
-        "normal" -> "ノーマル"
-        "fighting" -> "かくとう"
-        "flying" -> "ひこう"
-        "poison" -> "どく"
-        "ground" -> "じめん"
-        "rock" -> "いわ"
-        "bug" -> "むし"
-        "ghost" -> "ゴースト"
-        "steel" -> "はがね"
-        "fire" -> "ほのお"
-        "water" -> "みず"
-        "grass" -> "くさ"
-        "electric" -> "でんき"
-        "psychic" -> "エスパー"
-        "ice" -> "こおり"
-        "dragon" -> "ドラゴン"
-        "dark" -> "あく"
-        "fairy" -> "フェアリー"
-        "stellar" -> "ステラー"
-        else -> typeName
-    }
-}
 
 @Composable
 fun TypeFilterBar(
@@ -85,46 +61,75 @@ fun TypeFilterBar(
                 repeat(10) {
                     typeid++
                     val currentTypeId = typeid
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Box(contentAlignment = Alignment.Center) {
-                            IconButton(
-                                onClick = {
-                                    viewModel.toggletype(currentTypeId)
-                                }) {
-                                val TypeSet =
-                                    currentTypeId in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
-
-                                Icon(
-                                    modifier = Modifier.size(20.dp),
-                                    imageVector = Icons.Default.Done,
-                                    contentDescription = "TypeFilter",
-                                    tint = if (TypeSet) Color.Black
-                                    else Color.White
 
 
+                    Box(contentAlignment = Alignment.Center) {
+
+                        Box(
+                            modifier = Modifier
+                                .width(150.dp)
+                                .height(45.dp)
+                                .background(Color.White)
+                                .clip(RoundedCornerShape(10.dp))
+                                .border(
+                                    width = 2.dp,
+                                    color = Color.Gray,
+                                    shape = RoundedCornerShape(10.dp)
                                 )
+                                .clickable {
+                                    viewModel.toggletype(currentTypeId)
+                                }, contentAlignment = Alignment.Center
+                        ) {
+                            val TypeSet =
+                                currentTypeId in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
 
-                            }
-                            Icon(
-                                imageVector = Icons.Default.CropSquare,
-                                modifier = Modifier.size(25.dp),
-                                contentDescription = "TypeFilter",
-                                tint = Color.Black
-                            )
-                        }
-                        Text(
-                            text = changeTypeName(
+                            val typeName = changeTypeName(
                                 viewModel.typeList[currentTypeId - 1].name
-                            ),
-                            color = Color.Black,
-                            fontSize = 20.sp,
-                        )
+                            )
+
+
+                            Box(
+                                modifier = Modifier
+                                    .width(140.dp)
+                                    .height(35.dp)
+                                    .background(
+                                        if (TypeSet) getTypeColor(typeName)
+                                        else Color.White, shape = RoundedCornerShape(10.dp)
+                                    )
+                                    .clip(RoundedCornerShape(10.dp)),
+                                contentAlignment = Alignment.Center
+
+                            ) {
+
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+
+                                    TypeMark(
+                                        typeName = viewModel.typeList[currentTypeId - 1].name,
+                                        isSelected = TypeSet
+                                    )
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    Text(
+                                        text = changeTypeName(
+                                            viewModel.typeList[currentTypeId - 1].name
+                                        ),
+                                        color = if (TypeSet) Color.White
+                                        else Color.Black,
+                                        fontSize = 18.sp,
+                                    )
+                                }
+                            }
+
+
+                        }
+
                     }
 
-
+                    Spacer(modifier = Modifier.height(15.dp))
                 }
             }
 
@@ -139,51 +144,80 @@ fun TypeFilterBar(
                     typeid2++
 
                     val currentTypeId2 = typeid2
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+
+
+
+                    Box(contentAlignment = Alignment.Center) {
+
                         Box(
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            IconButton(
-                                onClick = {
-                                    viewModel.toggletype(currentTypeId2)
-                                }) {
-                                val TypeSet =
-                                    currentTypeId2 in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
-                                Icon(
-                                    modifier = Modifier.size(20.dp),
-                                    imageVector = Icons.Default.Done,
-                                    contentDescription = "TypeFilter",
-                                    tint = if (TypeSet) Color.Black
-                                    else Color.White
-
-
+                            modifier = Modifier
+                                .width(150.dp)
+                                .height(45.dp)
+                                .background(Color.White)
+                                .clip(RoundedCornerShape(10.dp))
+                                .border(
+                                    width = 2.dp,
+                                    color = Color.Gray,
+                                    shape = RoundedCornerShape(10.dp)
                                 )
+                                .clickable {
+                                    viewModel.toggletype(currentTypeId2)
+                                }, contentAlignment = Alignment.Center
+                        ) {
+                            val TypeSet =
+                                currentTypeId2 in viewModel.typeIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
+
+                            val typeName = changeTypeName(
+                                viewModel.typeList[currentTypeId2 - 1].name
+                            )
+
+
+                            Box(
+                                modifier = Modifier
+                                    .width(140.dp)
+                                    .height(
+                                        35.dp
+                                    )
+                                    .background(
+                                        if (TypeSet) getTypeColor(typeName)
+                                        else Color.White, shape = RoundedCornerShape(10.dp)
+                                    )
+                                    .clip(RoundedCornerShape(10.dp)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+
+                                    TypeMark(
+                                        typeName = viewModel.typeList[currentTypeId2 - 1].name,
+                                        isSelected = TypeSet
+                                    )
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = changeTypeName(
+                                            viewModel.typeList[currentTypeId2 - 1].name
+                                        ),
+                                        color = if (TypeSet) Color.White
+                                        else Color.Black,
+                                        fontSize = 18.sp,
+                                    )
+                                }
+
 
                             }
 
-                            Icon(
-                                imageVector = Icons.Default.CropSquare,
-                                modifier = Modifier.size(25.dp),
-                                contentDescription = "TypeFilter",
-                                tint = Color.Black
-                            )
                         }
-                        Text(
-                            text = changeTypeName(
-                                viewModel.typeList[currentTypeId2 - 1].name
-                            ),
-                            color = Color.Black,
-                            fontSize = 20.sp,
-                        )
+
                     }
-
-
+                    Spacer(modifier = Modifier.height(15.dp))
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Row {
+                Row(
+                    modifier = Modifier.offset(x = -30.dp)
+                ) {
                     Button(
                         onClick = {
                             viewModel.resettype()
@@ -237,7 +271,7 @@ fun TypeFilterBar(
 
 
             }
-
         }
     }
 }
+

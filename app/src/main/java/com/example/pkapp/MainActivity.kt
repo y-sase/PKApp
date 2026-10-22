@@ -1,10 +1,7 @@
 package com.example.pkapp
 
 
-
-
 import android.annotation.SuppressLint
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,36 +11,42 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.pkapp.Error.ErrorScreen
-
+import com.example.pkapp.data.api.OfflinePokemonMemoRepository
+import com.example.pkapp.data.api.RetrofitInstance
+import com.example.pkapp.data.api.repository.PKRepositoryImpl
+import com.example.pkapp.feature.pklist.PKListScreen
+import com.example.pkapp.feature.pklist.pkdetail.PKDetailScreen
 import com.example.pkapp.loading.LoadingMode
 import com.example.pkapp.loading.LoadingScreen
-
-
-
 import com.example.pkapp.ui.theme.PKAppTheme
 import com.example.pkapp.ui.theme.ScreenRoute
 import com.example.pkapp.viewmodel.PKViewModel
 
 
-
-import com.example.pkapp.data.api.repository.PKRepositoryImpl
-import com.example.pkapp.data.api.RetrofitInstance
-import com.example.pkapp.feature.pklist.pkdetail.PKDetailScreen
-
-import com.example.pkapp.feature.pklist.PKListScreen
-
-
-
-
-
 class MainActivity : ComponentActivity() {
     @SuppressLint("ViewModelConstructorInComposable")
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        /*
+                val api = RetrofitInstance.providePKApi()
+                val repository = PKRepositoryImpl(api)
+
+
+                val dataStoreManager = DataStoreManager(this)
+
+
+                val viewModel = PKViewModel(
+                    repository = repository,
+                    dataStoreManager = dataStoreManager
+                )
+
+
+
+         */
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -51,12 +54,27 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .navigationBarsPadding(), color = MaterialTheme.colorScheme.background
+                        .navigationBarsPadding(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
 
                     val api = RetrofitInstance.providePKApi()
                     val repository = PKRepositoryImpl(api)
-                    val viewModel = PKViewModel(repository)
+                    //val viewModel = PKViewModel(repository)
+                    val dataStoreManager = DataStoreManager(this)
+
+                    val pokemonMemoRepository =
+                        OfflinePokemonMemoRepository(
+                            PokemonDatabase
+                                .getDatabase(this)
+                                .pokemonMemoDao()
+                        )
+
+                    val viewModel = PKViewModel(
+                        repository = repository, dataStoreManager = dataStoreManager,pokemonMemoRepository = pokemonMemoRepository
+                    )
+
+
 
                     val navController =
                         rememberNavController()//navControllerをインスタンスで保持できる。画面遷移を管理するオブジェクト

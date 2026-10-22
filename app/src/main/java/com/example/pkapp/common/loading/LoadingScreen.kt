@@ -31,7 +31,7 @@ fun LoadingScreen(
         CircularProgressIndicator()//ぐるぐる回るローディングマーク
 
         Text(
-            text = "Loading..."
+            text = "読み込み中..."
         )
 
         LaunchedEffect(Unit) {//画面が表示された瞬間に中の処理を1回だけ実行
