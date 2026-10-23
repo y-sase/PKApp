@@ -11,6 +11,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.pkapp.loading.LoadingScreen
 import com.example.pkapp.ui.theme.PKAppTheme
+import com.example.pkapp.ui.theme.PKAppTheme
+import com.example.pkapp.viewmodel.PKViewModel
+
+import com.example.pkapp.data.api.repository.PKRepositoryImpl
+import com.example.pkapp.data.api.RetrofitInstance
+import com.example.pkapp.feature.pklist.pkdetail.PKDetailScreen
+
+import com.example.pkapp.feature.pklist.PKListScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -27,10 +35,12 @@ class MainActivity : ComponentActivity() {
                     val api = RetrofitInstance.providePKApi()
                     val repository = PKRepositoryImpl(api)
                     val viewModel = PKViewModel(repository)
+
+                    /*
                     PKListScreen(
                         viewModel = viewModel
-                    )
 
+                    //詳細画面部分
                     PKDetailScreen(
                         viewModel = viewModel,
 

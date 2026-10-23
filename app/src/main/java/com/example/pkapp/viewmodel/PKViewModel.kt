@@ -1,24 +1,22 @@
 package com.example.pkapp.viewmodel
 
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pkapp.model.ChangeLanguageName
-import com.example.pkapp.model.ChangeLanguageType
+import com.example.pkapp.data.api.repository.PKRepository
 import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.model.Sprites
-
-import com.example.pkapp.repository.PKRepository
+import com.example.pkapp.model.getJapaneseName
+import com.example.pkapp.model.getTypeList
 import kotlinx.coroutines.launch
 
 class PKViewModel(
     private val repository: PKRepository,
 ) : ViewModel() {
-    var PKId by mutableStateOf(0)
+    var pokemonId by mutableStateOf(0)
     var PKName by mutableStateOf("")
     var PKHeight by mutableStateOf(0)
     var PKWeight by mutableStateOf(0)
@@ -71,17 +69,6 @@ class PKViewModel(
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
 
-                //isLoading = true
-                /*
-                                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
-                                for (limit) {
-                                    list.add(
-                                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
-                                    )
-                                }
-                                pokemonList = list
-
-                 */
 
                 val responselist = repository.getPokemonList()
                 pokemonList = responselist.results
@@ -90,8 +77,6 @@ class PKViewModel(
                 //errorMessage = "エラー: ${e.message}"
                 errorMessage = e.toString()
             }
-
-
 
 
         }
@@ -103,21 +88,8 @@ class PKViewModel(
 
 
     fun loadPokemonDetail(id: Int) {
-        //errorMessage = "開始"
         viewModelScope.launch {//コルーチン(時間のかかる処理を、画面を固めずに実行する仕組み)開始。
             try {//エラーが起きるかもしれない処理を開始。
-
-                //isLoading = true
-                /*
-                                val list = mutableListOf<PokemonDetailResponse>()//空のリストを作る。
-                                for (limit) {
-                                    list.add(
-                                        repository.getPokemonList()//Repository経由でAPIからポケモンを取得。
-                                    )
-                                }
-                                pokemonList = list
-
-                 */
 
                 val responsedetail = repository.getPokemonDetail(id)
                 val responsejpname = repository.getPokemonJpName(responsedetail.name)
@@ -137,34 +109,30 @@ class PKViewModel(
                 //println(responsejpname.names)
                 PKId = responsedetail.id
                 //PKName = responsejpname.name
+
+                pokemonId = responsedetail.id
                 PKSprites = responsedetail.sprites
                 PKHeight = responsedetail.height
                 PKWeight = responsedetail.weight
-                /*
-                PKTypes = responsejptype.names.joinToString(", ") {
-                    it.name
-                }
-                 */
-                PKName = ChangeLanguageName(responsedetail,responsejpname)
-                PKTypes = typeNames.joinToString(" / ")
-                //errorMessage = "成功 ${pokemonList.size}"
+                PKName = getJapaneseName(responsejpname)
+                PKTypes = getTypeList(repository, responsedetail).joinToString(" / ")
+
 
             } catch (e: Exception) {
-                //errorMessage = "エラー: ${e.message}"
-
                 errorMessage = e.toString()
             }
 
         }
     }
 
-    fun toggleFavorite(id: Int) {
-        favoriteIds =
-            if (id in favoriteIds) {
-                favoriteIds - id
-            } else {
-                favoriteIds + id
-            }
-    }
      */
+
+    fun toggleFavorite(id: Int) {
+        favoriteIds = if (id in favoriteIds) {
+            favoriteIds - id
+        } else {
+            favoriteIds + id
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.example.pkapp.pkdetail
+package com.example.pkapp.feature.pklist.pkdetail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -67,7 +67,7 @@ fun PKDetailScreen(
             Spacer(modifier = Modifier.height(100.dp))
 
             Text(
-                text = "No.${viewModel.PKId}",
+                text = "No.${viewModel.pokemonId}",
                 color = Color.Black,
                 fontSize = 30.sp,
             )
@@ -78,7 +78,7 @@ fun PKDetailScreen(
             )
 
             AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-                model = viewModel.PKSprites.front_default,
+                model = viewModel.PKSprites.frontDefault,
                 contentDescription = "ポケモン",
                 modifier = Modifier.size(300.dp),
                 contentScale = ContentScale.Crop//枠いっぱいに表示
