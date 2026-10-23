@@ -39,8 +39,10 @@ import androidx.navigation.NavController
 import com.example.pkapp.SearchBar.SimpleSearchBar
 import com.example.pkapp.SearchBar.TypeFilterBar
 import com.example.pkapp.feature.pklist.components.PKThumbnail
+import com.example.pkapp.feature.pklist.components.getTypeColor
 import com.example.pkapp.pklist.components.EmptyScreen
 import com.example.pkapp.viewmodel.PKViewModel
+import kotlin.collections.listOf
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -287,27 +289,23 @@ fun PKListScreen(
                                 items = displayList, key = { it.id }) { pokemon ->
 
 
-                                Box(
-
-                                    modifier = Modifier
-                                        .padding(horizontal = 16.dp)
-                                        .padding(vertical = 5.dp)
-                                        .clip(RoundedCornerShape(20.dp))
-                                        .background(Color.White)
-                                        .heightIn(100.dp)/*
+                                /*
                             .border(
                                 width = 3.dp, Color(0xFF90A4AE), shape = RoundedCornerShape(20.dp)
                             )
 
                              */
 
-                                ) {
-                                    PKThumbnail(
+                                println("typeName=${pokemon.typeName}")
+
+
+                                PKThumbnail(
 
                                         id = pokemon.id, //name = pokemon.name,
                                         pokemonImageInList = pokemon,
                                         name = pokemon.listJpName,
                                         form = pokemon.formName,
+                                        type = pokemon.typeName?.type?.name?: "",
                                         viewModel = viewModel,
 
                                         onClick = {//画面遷移
@@ -318,7 +316,7 @@ fun PKListScreen(
                                                 "loading_detail"
                                             )
                                         })
-                                }
+
                             }
                         }
                     }

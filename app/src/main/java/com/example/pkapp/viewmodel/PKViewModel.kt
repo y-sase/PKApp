@@ -131,6 +131,12 @@ class PKViewModel(
                             } catch (e: Exception) {
                                 try {
                                     val detail = repository.getPokemonDetail(pokemon.id)
+                                    val firstType = detail.types.firstOrNull()
+
+                                    Log.d(
+                                        "PKAPP",
+                                        detail.types.firstOrNull()?.type?.name ?: "NO_TYPE"
+                                    )
 
                                     formName = pokemon.name.removePrefix("${detail.species.name}-")
 
@@ -138,12 +144,14 @@ class PKViewModel(
                                         detail.species.name
                                     )
                                 } catch (e: Exception) {
+                                    Log.e("PKAPP", "jpname error", e)
 
 
                                     pokemonList = pokemonList + PokemonListItem(
                                         name = pokemon.name,
                                         url = pokemon.url,
                                         listJpName = pokemon.name,
+                                        typeName = pokemon.typeName,
                                         formName = formName
                                     )
 
@@ -157,6 +165,7 @@ class PKViewModel(
                                 name = pokemon.name,
                                 url = pokemon.url,
                                 listJpName = jpName,
+                                typeName = pokemon.typeName,
                                 formName = formName
                             )
 
@@ -205,6 +214,7 @@ class PKViewModel(
                     }
                 }
             } catch (e: Exception) {
+                Log.e("PKAPP", "loadPokemonList error", e)
                 onError()
 
             }

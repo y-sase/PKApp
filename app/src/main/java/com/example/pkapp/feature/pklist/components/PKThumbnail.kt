@@ -1,5 +1,6 @@
 package com.example.pkapp.feature.pklist.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,10 @@ import com.example.pkapp.model.PokemonListItem
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
@@ -30,81 +34,86 @@ fun PKThumbnail(
     id: Int,
     name: String,
     form: String,
+    type: String,
     onClick: () -> Unit,
 
     viewModel: PKViewModel,
     pokemonImageInList: PokemonListItem,
 
     ) {
-
-
+    val mainType = type
+        .split(" / ")
+        .firstOrNull() ?: ""
     Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(vertical = 5.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .heightIn(100.dp)
+            .background(getTypeColor(mainType))
+    ){
 
 
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
 
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,//左寄せ(Rowの時)
-        modifier = Modifier.fillMaxWidth()
-            .clickable {
-                onClick()}
-    ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,//左寄せ(Rowの時)
+                        modifier = Modifier.fillMaxWidth()
+                            .clickable {
+                                onClick()
+                            }
+                    ) {
 
-        AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
-            //model = pokemonImageInList.imageUrl,
-            model = pokemonImageInList.imageUrl,
-            contentDescription = "ポケモン",
-            modifier = Modifier
-                .size(100.dp)
-                .padding(start = 16.dp),
-            contentScale = ContentScale.Crop//枠いっぱいに表示
-        )
-
-
-        Spacer(modifier = Modifier.width(50.dp))
-
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-
-            Text(
-                text = "No.$id",
-                color = Color.Black,
-                fontSize = 16.sp,
-            )
-            Text(
-                text = name ,
-                        /*
-                        +
-
-                       if(form == "")
-                            ""
-                else
-                    "($form)",
-
-                         */
-
-                color = Color(0xFF37474F),
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-                fontSize = 26.sp,
-            )
-        }
+                        AsyncImage(//AsyncImage がURLから画像をダウンロードして表示
+                            //model = pokemonImageInList.imageUrl,
+                            model = pokemonImageInList.imageUrl,
+                            contentDescription = "ポケモン",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .padding(start = 16.dp),
+                            contentScale = ContentScale.Crop//枠いっぱいに表示
+                        )
 
 
-    }
-        Favorite(
+                        Spacer(modifier = Modifier.width(50.dp))
 
-            pokemonId = id,
-            viewModel = viewModel,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .offset(y = (-10).dp)
-            ,
-        )
-    }
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+
+                            Text(
+                                text = "No.$id",
+                                color = Color.Black,
+                                fontSize = 16.sp,
+                            )
+                            Text(
+                                text = name,
+
+
+                                color = Color(0xFF37474F),
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp,
+                                fontSize = 26.sp,
+                            )
+                            Text(text = "type=[$type]")
+                        }
+
+
+                    }
+                    Favorite(
+
+                        pokemonId = id,
+                        viewModel = viewModel,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(y = (-10).dp),
+                    )
+                }
+            }
 }
 
 
