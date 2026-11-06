@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CatchingPokemon
 import androidx.compose.material.icons.filled.Height
 import androidx.compose.material.icons.filled.MergeType
 import androidx.compose.material.icons.filled.Scale
@@ -91,23 +92,39 @@ fun PKDetailScreen(
         ) {
 
 
-            Column(
+
+            Box(
                 modifier = Modifier
                     // .fillMaxSize()
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
             ) {
-                Favorite(
-                    viewModel = viewModel, pokemonId = viewModel.PKId, modifier = Modifier
-                        //.align(Alignment.TopEnd)
-                        .padding(vertical = 30.dp)
-                        .padding(horizontal = 16.dp)
-                )
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    Favorite(
+                        viewModel = viewModel, pokemonId = viewModel.PKId, modifier = Modifier
+                            //.align(Alignment.TopEnd)
+                            .padding(vertical = 30.dp)
+                            .padding(horizontal = 16.dp)
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .size(300.dp)
+                            .padding(top = 40.dp),
+                        imageVector = Icons.Default.CatchingPokemon,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+
                 Box(
                     modifier = Modifier//.fillMaxWidth()
-                        .padding(top = 30.dp)
+                        .padding(top = 200.dp)
                     // .offset(y = (-140).dp)
                 ) {
+
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -444,6 +461,7 @@ fun PKDetailScreen(
 
                 }
             }
+
 
         }
     }

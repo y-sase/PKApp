@@ -82,6 +82,7 @@ class PKViewModel(
     var PKSpecialAttack by mutableStateOf(0)
     var PKSpecialDefense by mutableStateOf(0)
     var PKSpeed by mutableStateOf(0)
+    var totalCount by mutableStateOf(0)
 
 
     fun loadPokemonList(
@@ -115,11 +116,13 @@ class PKViewModel(
 
 
                         val list = result.data?.results ?: emptyList()
+                        totalCount = result.data?.count ?: 0
 
                         pokemonList = emptyList()
 
                         for ((index, pokemon) in list.withIndex()) {
-
+                            //val detail = repository.getPokemonDetail(pokemon.id)
+                            //val firstType = detail.types.firstOrNull()
                             var formName =
 
                                 ""
@@ -130,29 +133,28 @@ class PKViewModel(
                                 repository.getPokemonJpName(speciesName)
                             } catch (e: Exception) {
                                 try {
-                                    val detail = repository.getPokemonDetail(pokemon.id)
-                                    val firstType = detail.types.firstOrNull()
 
-                                    Log.d(
-                                        "PKAPP",
-                                        detail.types.firstOrNull()?.type?.name ?: "NO_TYPE"
-                                    )
 
+
+/*
                                     formName = pokemon.name.removePrefix("${detail.species.name}-")
 
                                     repository.getPokemonJpName(
                                         detail.species.name
                                     )
-                                } catch (e: Exception) {
-                                    Log.e("PKAPP", "jpname error", e)
 
+ */repository.getPokemonJpName(speciesName)
+                                } catch (e: Exception) {
+
+                                    println("add pokemon = ${pokemon.name}")
 
                                     pokemonList = pokemonList + PokemonListItem(
                                         name = pokemon.name,
                                         url = pokemon.url,
                                         listJpName = pokemon.name,
-                                        typeName = pokemon.typeName,
-                                        formName = formName
+                                        typeName = "",
+                                        formName = formName,
+
                                     )
 
                                     continue
@@ -165,7 +167,7 @@ class PKViewModel(
                                 name = pokemon.name,
                                 url = pokemon.url,
                                 listJpName = jpName,
-                                typeName = pokemon.typeName,
+                                typeName =  "",
                                 formName = formName
                             )
 
@@ -205,7 +207,7 @@ class PKViewModel(
 
                     is NetworkResponse.Failure -> {
                         isLoading = false
-                        Log.d("LOADING", "finish")
+
                         _state.value = PKListState(
                             error = result.error, isLoading = false
                         )
@@ -214,7 +216,7 @@ class PKViewModel(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("PKAPP", "loadPokemonList error", e)
+
                 onError()
 
             }
@@ -415,6 +417,60 @@ class PKViewModel(
 
             }
             onSuccess()
+        }
+    }
+    fun loadTypesForRange(
+        pokemons: List<PokemonListItem>
+    ) {
+        println("loadTypesForRange : ${pokemons.size}"+
+                "first=${pokemons.firstOrNull()?.id}")
+        viewModelScope.launch {
+            println(
+                "取得対象=" +
+                        pokemons.count {
+                            it.typeName.isEmpty()
+                        }
+            )
+
+            pokemons.forEach { pokemon ->
+
+                if (
+                    //pokemon.typeName.isNotEmpty()
+                 pokemonList.any {
+                        it.id == pokemon.id &&
+                        it.typeName.isNotEmpty()}) {
+                    return@forEach
+                }
+
+                try {
+
+                    val detail =
+                        repository.getPokemonDetail(pokemon.id)
+
+                    val firstType =
+                        detail.types.firstOrNull()?.type?.name ?: ""
+
+                    pokemonList = pokemonList.map {
+                        if (it.id == pokemon.id) {
+                            it.copy(typeName = firstType)
+                        } else {
+                            it
+                        }
+                    }
+/*
+                    allPokemonList = allPokemonList.map {
+                        if (it.id == pokemon.id) {
+                            it.copy(typeName = firstType)
+                        } else {
+                            it
+                        }
+                    }
+
+ */
+
+                } catch (_: Exception) {
+                }
+            }
         }
     }
 

@@ -1,26 +1,38 @@
 package com.example.pkapp.feature.pklist
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CatchingPokemon
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,20 +41,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.pkapp.SearchBar.SimpleSearchBar
 import com.example.pkapp.SearchBar.TypeFilterBar
 import com.example.pkapp.feature.pklist.components.PKThumbnail
-import com.example.pkapp.feature.pklist.components.getTypeColor
 import com.example.pkapp.pklist.components.EmptyScreen
 import com.example.pkapp.viewmodel.PKViewModel
-import kotlin.collections.listOf
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,23 +65,59 @@ fun PKListScreen(
     viewModel: PKViewModel, navController: NavController, onClick: () -> Unit
 ) {
     var visibleCount by remember {
-        mutableStateOf(100)
+        mutableStateOf(20)
     }
-    val displayList = if (viewModel.query.isNotBlank()) {
-        viewModel.pokemonList
-    } else {
-        viewModel.pokemonList.take(visibleCount)
+    var selectedRange by remember {
+        //mutableStateOf<IntRange?>(null)
+        mutableStateOf(1..20)
     }
+    var unlockedRangeEnd by remember {
+        mutableStateOf(20)
+    }
+    var showFavoriteOnly by remember {
+        mutableStateOf(false)
+    }
+    val displayList = when {
+        showFavoriteOnly -> {
+            viewModel.pokemonList
+        }
+        selectedRange != null -> {
+            viewModel.pokemonList.filter {
+                it.id in selectedRange!!
+            }
+        }
 
+        viewModel.query.isNotBlank() -> {
+            viewModel.pokemonList
+        }
+
+        else -> {
+            viewModel.pokemonList
+        }
+    }
+    LaunchedEffect(selectedRange) {
+        viewModel.loadTypesForRange(displayList)
+
+    }
+   // val displayList = viewModel.pokemonList.take(visibleCount)
     val listState = rememberLazyListState()
     //val state = viewModel.state.value
     val state by viewModel.state
     var showTypeFilter by remember {
         mutableStateOf(false)
     }
-    var showFavoriteOnly by remember {
-        mutableStateOf(true)
+
+    var showLoadingBox by remember {
+        mutableStateOf(false)
     }
+    val maxId = viewModel.allPokemonList.size
+    val ranges = (1..1351 step 20).map { start ->
+        start..minOf(start + 19, 1351)
+    }
+    val count = viewModel.pokemonList.size
+    val percent = (count * 100) / 1351
+
+
 
     LaunchedEffect(
         listState.firstVisibleItemIndex, viewModel.pokemonList.size
@@ -76,7 +126,7 @@ fun PKListScreen(
         val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
 
         if (lastVisible >= totalItems - 10 && visibleCount < viewModel.pokemonList.size) {
-            visibleCount += 100
+            visibleCount += 20
         }
     }
     LaunchedEffect(Unit) {
@@ -87,8 +137,14 @@ fun PKListScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.loadTypesList()
-    }
 
+    }
+    LaunchedEffect(showLoadingBox) {
+        if (showLoadingBox) {
+            delay(2000)
+            showLoadingBox = false
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -101,20 +157,48 @@ fun PKListScreen(
             )
     ) {
         Scaffold(
-            containerColor = Color.LightGray, topBar = {
+            containerColor = Color(0xFFF5F5F5), topBar = {
                 Column(
                     modifier = Modifier.statusBarsPadding()//上開ける
                 ) {
 
                     Row {
 
+                        Text(
+                            text = "Pokemon App",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color(0xFF37474F),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Icon(
+
+                            imageVector = Icons.Default.CatchingPokemon,
+                            contentDescription = null,
+                            tint = Color.Red.copy(alpha = 0.7f),
+                            modifier = Modifier
+                                .requiredSize(40.dp)
+                                .offset(x = (-80).dp)
+
+
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.offset(x = (14).dp)
+                    ) {
+
 
                         Button(
-                            enabled = viewModel.allPokemonList.isNotEmpty(),
+
+                            //enabled = viewModel.allPokemonList.isNotEmpty(),
                             onClick = {
 
-
-                                showTypeFilter = !showTypeFilter
+                                if (viewModel.allPokemonList.isNotEmpty()) {
+                                    showTypeFilter = !showTypeFilter
+                                } else {
+                                    showLoadingBox = true
+                                }
                             },
                             shape = RoundedCornerShape(0.dp),
                             colors = ButtonDefaults.buttonColors(
@@ -128,16 +212,14 @@ fun PKListScreen(
                             //.border(1.dp, Color(0xFF90A4AE))
 
                         ) {
-                            if (viewModel.allPokemonList.isNotEmpty()) {
-                                Text(
-                                    text = "タイプ",
-                                    color = Color(0xFF546E7A),
-                                )
-                            } else {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(20.dp), strokeWidth = 1.5.dp
-                                )//(modifier = Modifier.align(androidx.compose.ui.Alignment.Center)
-                            }
+                            //if (viewModel.allPokemonList.isNotEmpty()) {
+                            Text(
+                                text = "タイプ",
+                                color = Color(0xFF546E7A),
+                            )
+                            // } else { showLoadingBox = true
+                            //CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 1.5.dp)//(modifier = Modifier.align(androidx.compose.ui.Alignment.Center)
+                            //}
                         }
 
 
@@ -149,7 +231,8 @@ fun PKListScreen(
                                 viewModel.query = it
                             }, onDone = {
                                 if (viewModel.allPokemonList.isEmpty()) {
-                                    viewModel.errorMessage = "データ読込中です"
+                                    showLoadingBox = true
+                                    //viewModel.errorMessage = "データ読込中です"
                                     return@SimpleSearchBar
                                 }
                                 viewModel.errorMessage = ""
@@ -181,57 +264,58 @@ fun PKListScreen(
                     }
                     var count = viewModel.pokemonList.size
                     Row {
-                        Text(
 
-                            text = "総件数：${count}匹",
-                            modifier = Modifier
-                                .padding(vertical = 1.dp)
-                                .padding(horizontal = 16.dp),
-                        )
-
-                        Spacer(modifier = Modifier.weight(1f))
-                        Button(
-                            enabled = viewModel.allPokemonList.isNotEmpty(),
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .height(35.dp)
-                                .width(130.dp)
-                                .clip(RoundedCornerShape(10.dp)),
-                            onClick = {
-                                showFavoriteOnly = !showFavoriteOnly
-                                if (showFavoriteOnly) {
-                                    viewModel.pokemonList = viewModel.allPokemonList
-
-                                } else {
-                                    viewModel.favoritePokemon(onSuccess = {}, onError = {})
-
-                                }
-
-
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (showFavoriteOnly) {
-                                    Color.White
-                                } else {
-                                    Color(0xFFE57373)
-                                }
+                        if (viewModel.allPokemonList.isNotEmpty()) {
+                            Text(
+                                text =""
                             )
-                        ) {
-                            if (viewModel.allPokemonList.isNotEmpty()) {
-                                Text(
-                                    text = "お気に入りのみ表示",
-                                    color = Color.Black,
-                                    fontSize = 11.sp,
-                                    //fontSize = 20.sp,
-                                    //lineHeight = 43.sp
-                                )
-                            } else {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(16.dp), strokeWidth = 1.5.dp
-                                )//(modifier = Modifier.align(androidx.compose.ui.Alignment.Center)
-                            }
+                        } else {
+                            Text(
+                                text = "読込中：$count / ${viewModel.totalCount}匹 ($percent%)",
+                                modifier = Modifier
+                                    .padding(vertical = 1.dp)
+                                    .padding(horizontal = 16.dp),
+                            )
                         }
+
+
                     }
+                    if (!showFavoriteOnly) {
+                    LazyRow {
+                        items(ranges) { range ->
+                            Button(
+                                enabled = range.last <= viewModel.pokemonList.size,
+                                onClick = {
+                                        selectedRange = range
+
+
+                                },
+                                modifier = Modifier
+                                    .height(35.dp)
+                                    .width(95.dp)
+                                    //.border(2.dp, Color.Black,shape = RoundedCornerShape(3.dp))
+                                    .clip(RoundedCornerShape(3.dp)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = // if (/*TODO*/) Color.LightGray else
+                                        Color.White
+                                ),
+
+                                ) {
+                                Text(
+                                    text = "${range.first}~",//${range.last}",
+                                    color = Color(0xFF37474F),
+                                    fontSize = 15.sp,
+                                    //fontWeight = FontWeight.Bold,
+                                )
+                            }
+
+
+                        }
+                    }}
+
+                    //Spacer(modifier = Modifier.weight(1f))
+
+
                     Text(
                         text = viewModel.errorMessage,
                         color = Color.Red,
@@ -256,12 +340,21 @@ fun PKListScreen(
                 }
 
             }) { paddingValues ->
-            Column {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(paddingValues)
+            ) {
+
                 if (!state.isLoading && viewModel.allPokemonList.isNotEmpty() && displayList.isEmpty()) {
                     EmptyScreen()
                 } else {
+
                     LazyColumn(
-                        state = listState, modifier = Modifier.padding(paddingValues)
+                        state = listState,
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(
+                            bottom = 120.dp
+                        )
+                       // contentPadding = PaddingValues(top = 250.dp, bottom = 120.dp)
                     ) {
 
                         if (state.isLoading) {
@@ -277,7 +370,8 @@ fun PKListScreen(
                                         .fillMaxWidth()
                                 ) {
                                     //ローディング
-                                    CircularProgressIndicator(modifier = Modifier.align(androidx.compose.ui.Alignment.Center))
+                                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+
                                 }
 
                             }
@@ -296,37 +390,119 @@ fun PKListScreen(
 
                              */
 
-                                println("typeName=${pokemon.typeName}")
+
 
 
                                 PKThumbnail(
 
-                                        id = pokemon.id, //name = pokemon.name,
-                                        pokemonImageInList = pokemon,
-                                        name = pokemon.listJpName,
-                                        form = pokemon.formName,
-                                        type = pokemon.typeName?.type?.name?: "",
-                                        viewModel = viewModel,
+                                    id = pokemon.id, //name = pokemon.name,
+                                    pokemonImageInList = pokemon,
+                                    name = pokemon.listJpName,
+                                    form = pokemon.formName,
+                                    type = pokemon.typeName,
+                                    viewModel = viewModel,
 
-                                        onClick = {//画面遷移
+                                    onClick = {//画面遷移
 
 
-                                            viewModel.PKId = pokemon.id
-                                            navController.navigate(
-                                                "loading_detail"
-                                            )
-                                        })
+                                        viewModel.PKId = pokemon.id
+                                        navController.navigate(
+                                            "loading_detail"
+                                        )
+                                    })
+
 
                             }
+
                         }
                     }
                 }
 
             }
         }
+        Box(
 
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .background(Color(0xFFF5F5F5))
+                .align(Alignment.BottomCenter)
+        ) {
+            Row(
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+
+                IconButton(
+                    onClick = {
+                        showFavoriteOnly = false
+                        viewModel.pokemonList = viewModel.allPokemonList
+                    },
+                ) {
+                    Icon(
+
+                        modifier = Modifier.size(200.dp),
+                        imageVector = Icons.Default.List,
+                        contentDescription = "List",
+                        tint = Color.Gray
+
+                    )
+                }
+
+                Spacer(
+                    modifier = Modifier.padding(30.dp)
+                )
+                IconButton(
+                    //enabled = viewModel.allPokemonList.isNotEmpty(),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .height(35.dp)
+                        .width(130.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    onClick = {
+
+                        if (viewModel.allPokemonList.isNotEmpty()) {
+                            showFavoriteOnly = true
+                            viewModel.favoritePokemon(onSuccess = {}, onError = {})
+                        } else {
+                            showLoadingBox = true
+                        }
+
+
+                    },
+                ) {
+                    Icon(
+
+                        modifier = Modifier.size(200.dp),
+                        imageVector = Icons.Outlined.FavoriteBorder,
+                        contentDescription = "Favorite",
+                        tint = Color.Gray
+
+                    )
+
+
+                }
+            }
+
+        }
+        AnimatedVisibility(
+            visible = showLoadingBox, modifier = Modifier.align(Alignment.Center), exit = fadeOut()
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(220.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Color.White), contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "データ読込中です", color = Color.Black, fontSize = 18.sp
+                )
+            }
+        }
     }
+
 }
+
+
 
 
 
