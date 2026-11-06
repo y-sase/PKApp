@@ -1,7 +1,7 @@
 package com.example.pkapp.viewmodel
 
+//import com.example.pkapp.data.api.StatsListItem
 import PokemonMemoRepository
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.pkapp.DataStoreManager
 import com.example.pkapp.SearchBar.TypeListItem
 import com.example.pkapp.common.NetworkResponse
-//import com.example.pkapp.data.api.StatsListItem
 import com.example.pkapp.data.api.repository.PKRepository
 import com.example.pkapp.model.ChangeLanguageName
 import com.example.pkapp.model.ChangeLanguageType
@@ -25,8 +24,9 @@ import kotlinx.coroutines.launch
 class PKViewModel(
     private val repository: PKRepository,
     private val dataStoreManager: DataStoreManager,
-    private val pokemonMemoRepository: PokemonMemoRepository
-) : ViewModel() {
+    private val pokemonMemoRepository: PokemonMemoRepository,
+
+    ) : ViewModel() {
 
 
     var PKListJpName by mutableStateOf("")
@@ -44,6 +44,8 @@ class PKViewModel(
 
     //var favoriteIds by mutableStateOf<List<Int>>(emptyList())
     val favoriteIds = MutableStateFlow<Set<String>>(emptySet())
+    var isFavoriteMode by mutableStateOf(false)
+
     init {
         viewModelScope.launch {
             dataStoreManager.getFavorites().collect {
@@ -51,6 +53,7 @@ class PKViewModel(
             }
         }
     }
+
     //private val dataStoreManager = DataStoreManager(context)
     var typeIds by mutableStateOf<List<Int>>(emptyList())
     var typeList by mutableStateOf<List<TypeListItem>>(emptyList())
@@ -84,13 +87,13 @@ class PKViewModel(
     var PKSpeed by mutableStateOf(0)
     var totalCount by mutableStateOf(0)
 
+    private var isInitialTypeLoaded = false
+
 
     fun loadPokemonList(
         onSuccess: () -> Unit, onError: () -> Unit
     ) {
-
         if (pokemonList.isNotEmpty()) {
-
             onSuccess()
             return
         }
@@ -135,18 +138,15 @@ class PKViewModel(
                                 try {
 
 
+                                    /*
+                                                                        formName = pokemon.name.removePrefix("${detail.species.name}-")
 
-/*
-                                    formName = pokemon.name.removePrefix("${detail.species.name}-")
+                                                                        repository.getPokemonJpName(
+                                                                            detail.species.name
+                                                                        )
 
-                                    repository.getPokemonJpName(
-                                        detail.species.name
-                                    )
-
- */repository.getPokemonJpName(speciesName)
+                                     */repository.getPokemonJpName(speciesName)
                                 } catch (e: Exception) {
-
-                                    println("add pokemon = ${pokemon.name}")
 
                                     pokemonList = pokemonList + PokemonListItem(
                                         name = pokemon.name,
@@ -155,7 +155,7 @@ class PKViewModel(
                                         typeName = "",
                                         formName = formName,
 
-                                    )
+                                        )
 
                                     continue
                                 }
@@ -167,7 +167,7 @@ class PKViewModel(
                                 name = pokemon.name,
                                 url = pokemon.url,
                                 listJpName = jpName,
-                                typeName =  "",
+                                typeName = "",
                                 formName = formName
                             )
 
@@ -180,13 +180,6 @@ class PKViewModel(
 
 
                         }
-
-                        isLoading = false
-
-                        _state.value = PKListState(
-                            isLoading = false
-                        )
-
 
 
 
@@ -260,30 +253,28 @@ class PKViewModel(
                 PKTypes = typeNames.joinToString(" / ")
 
 
-                PKHp = responsedetail.stats.find{
+                PKHp = responsedetail.stats.find {
                     it.stat.name == "hp"//statsListの中からnameがhpのデータを探して
-                }?.base_stat?: 0//見つかったらbase_statを取り出す、もし見つからなかったら０を返す
-                PKAttack = responsedetail.stats.find{
+                }?.base_stat ?: 0//見つかったらbase_statを取り出す、もし見つからなかったら０を返す
+                PKAttack = responsedetail.stats.find {
                     it.stat.name == "attack"
-                }?.base_stat?: 0
-                PKDefense = responsedetail.stats.find{
+                }?.base_stat ?: 0
+                PKDefense = responsedetail.stats.find {
                     it.stat.name == "defense"
-                }?.base_stat?: 0
-                PKSpecialAttack = responsedetail.stats.find{
+                }?.base_stat ?: 0
+                PKSpecialAttack = responsedetail.stats.find {
                     it.stat.name == "special-attack"
-                }?.base_stat?: 0
-                PKSpecialDefense = responsedetail.stats.find{
+                }?.base_stat ?: 0
+                PKSpecialDefense = responsedetail.stats.find {
                     it.stat.name == "special-defense"
-                }?.base_stat?: 0
-                PKSpeed = responsedetail.stats.find{
+                }?.base_stat ?: 0
+                PKSpeed = responsedetail.stats.find {
                     it.stat.name == "speed"
-                }?.base_stat?: 0
-
+                }?.base_stat ?: 0
 
 
                 //PKStatsList = responsedetail.stats
-                val memoData =
-                    pokemonMemoRepository.getMemo(PKId)
+                val memoData = pokemonMemoRepository.getMemo(PKId)
 
                 memo = memoData?.memo ?: ""
 
@@ -296,18 +287,19 @@ class PKViewModel(
             }
         }
     }
-/*
-    fun toggleFavorite(id: Int) {
 
-        favoriteIds = if (id in favoriteIds) {
-            favoriteIds - id
-        } else {
-            favoriteIds + id
+    /*
+        fun toggleFavorite(id: Int) {
+
+            favoriteIds = if (id in favoriteIds) {
+                favoriteIds - id
+            } else {
+                favoriteIds + id
+            }
+
         }
 
-    }
-
- */
+     */
     fun toggleFavorite(id: Int) {
         viewModelScope.launch {
 
@@ -320,22 +312,22 @@ class PKViewModel(
             }
         }
     }
+
     fun saveMemo() {
         viewModelScope.launch {
 
             pokemonMemoRepository.saveMemo(
                 PokemonMemo(
-                    pokemonId = PKId,
-                    memo = memo
+                    pokemonId = PKId, memo = memo
                 )
             )
         }
     }
+
     fun loadMemo() {
         viewModelScope.launch {
 
-            val memoData =
-                pokemonMemoRepository.getMemo(PKId)
+            val memoData = pokemonMemoRepository.getMemo(PKId)
 
             memo = memoData?.memo ?: ""
         }
@@ -419,36 +411,31 @@ class PKViewModel(
             onSuccess()
         }
     }
+
     fun loadTypesForRange(
         pokemons: List<PokemonListItem>
     ) {
-        println("loadTypesForRange : ${pokemons.size}"+
-                "first=${pokemons.firstOrNull()?.id}")
         viewModelScope.launch {
-            println(
-                "取得対象=" +
-                        pokemons.count {
-                            it.typeName.isEmpty()
-                        }
-            )
+
 
             pokemons.forEach { pokemon ->
 
-                if (
-                    //pokemon.typeName.isNotEmpty()
+                if (pokemon.typeName.isNotEmpty()) {/*
                  pokemonList.any {
                         it.id == pokemon.id &&
                         it.typeName.isNotEmpty()}) {
+
+                     */
                     return@forEach
                 }
 
                 try {
 
-                    val detail =
-                        repository.getPokemonDetail(pokemon.id)
+                    val start = System.currentTimeMillis()
+                    val detail = repository.getPokemonDetail(pokemon.id)
 
-                    val firstType =
-                        detail.types.firstOrNull()?.type?.name ?: ""
+
+                    val firstType = detail.types.firstOrNull()?.type?.name ?: ""
 
                     pokemonList = pokemonList.map {
                         if (it.id == pokemon.id) {
@@ -457,16 +444,17 @@ class PKViewModel(
                             it
                         }
                     }
-/*
-                    allPokemonList = allPokemonList.map {
-                        if (it.id == pokemon.id) {
-                            it.copy(typeName = firstType)
-                        } else {
-                            it
-                        }
-                    }
 
- */
+                    /*
+                                        allPokemonList = allPokemonList.map {
+                                            if (it.id == pokemon.id) {
+                                                it.copy(typeName = firstType)
+                                            } else {
+                                                it
+                                            }
+                                        }
+
+                     */
 
                 } catch (_: Exception) {
                 }
@@ -538,7 +526,14 @@ class PKViewModel(
 
             name != "" -> {
 
-                pokemonList = allPokemonList.filter { pokemon ->
+                val targetList = when {
+                    isFavoriteMode -> pokemonList
+                    typeIds.isNotEmpty() -> pokemonList
+                    else -> allPokemonList
+                }
+
+
+                pokemonList = targetList.filter { pokemon ->
                     //nameのポケモン入れる処理
                     pokemon.listJpName.contains(
                         name, ignoreCase = true

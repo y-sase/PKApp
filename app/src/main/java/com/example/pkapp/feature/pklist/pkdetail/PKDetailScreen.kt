@@ -1,7 +1,6 @@
 package com.example.pkapp.feature.pklist.pkdetail
 
 
-import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -45,12 +45,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.XXX.RadarGraph
+import com.example.pkapp.feature.pklist.components.getTypeColor
 import com.example.pkapp.ui.theme.Favorite
 import com.example.pkapp.viewmodel.PKViewModel
-import androidx.compose.ui.graphics.Brush
-import com.example.pkapp.feature.pklist.components.getTypeColor
-
-
 
 
 //詳細画面部分
@@ -67,16 +64,14 @@ fun PKDetailScreen(
         viewModel.loadPokemonDetail(viewModel.PKId, onSuccess = {}, onError = {})
 
     }
-    val mainType = viewModel.PKTypes
-        .split(" / ")
-        .firstOrNull() ?: ""
+    val mainType = viewModel.PKTypes.split(" / ").firstOrNull() ?: ""
     Scaffold(
         containerColor = getTypeColor(
             mainType
         ),//Color(0xFF9E9E9E),
 
 
-        ) { innerPadding -> //Scaffoldとセット
+    ) { innerPadding -> //Scaffoldとセット
 
         Box(
             modifier = Modifier
@@ -84,13 +79,11 @@ fun PKDetailScreen(
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            getTypeColor(mainType),
-                            Color(0xFFF5F5F5)
+                            getTypeColor(mainType), Color(0xFFF5F5F5)
                         )
                     )
                 )
         ) {
-
 
 
             Box(
@@ -101,7 +94,7 @@ fun PKDetailScreen(
             ) {
                 Box(
                     modifier = Modifier.fillMaxWidth()
-                ){
+                ) {
                     Favorite(
                         viewModel = viewModel, pokemonId = viewModel.PKId, modifier = Modifier
                             //.align(Alignment.TopEnd)
@@ -415,8 +408,7 @@ fun PKDetailScreen(
 
                                         onClick = {
                                             viewModel.saveMemo()
-                                        },
-                                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                                        }, modifier = Modifier.align(Alignment.CenterHorizontally)
                                     ) {
                                         Text("保存")
                                     }

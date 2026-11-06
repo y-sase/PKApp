@@ -78,7 +78,7 @@ fun ErrorScreen(
                 Text(
                     text = "再読み込み",
                     color = Color.White,
-                    fontSize = 23.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                 )
             }
@@ -107,7 +107,7 @@ fun ErrorScreen(
                 Text(
                     text = "ホームへ",
                     color = Color.White,
-                    fontSize = 23.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                 )
             }

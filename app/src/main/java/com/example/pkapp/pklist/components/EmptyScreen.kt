@@ -24,11 +24,7 @@ fun EmptyScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                top = 200.dp,
-            start  =16.dp,
-                end=16.dp,
-                bottom = 16.dp)
+            .padding(start = 16.dp,end =16.dp,bottom = 70.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Color.White),
         contentAlignment = Alignment.Center

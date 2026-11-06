@@ -1,6 +1,7 @@
 package com.example.pkapp
 
 
+import PokemonDatabase
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -63,17 +64,15 @@ class MainActivity : ComponentActivity() {
                     //val viewModel = PKViewModel(repository)
                     val dataStoreManager = DataStoreManager(this)
 
-                    val pokemonMemoRepository =
-                        OfflinePokemonMemoRepository(
-                            PokemonDatabase
-                                .getDatabase(this)
-                                .pokemonMemoDao()
-                        )
-
-                    val viewModel = PKViewModel(
-                        repository = repository, dataStoreManager = dataStoreManager,pokemonMemoRepository = pokemonMemoRepository
+                    val pokemonMemoRepository = OfflinePokemonMemoRepository(
+                        PokemonDatabase.getDatabase(this).pokemonMemoDao()
                     )
 
+                    val viewModel = PKViewModel(
+                        repository = repository,
+                        dataStoreManager = dataStoreManager,
+                        pokemonMemoRepository = pokemonMemoRepository
+                    )
 
 
                     val navController =

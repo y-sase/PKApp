@@ -1,7 +1,6 @@
 package com.example.pkapp.SearchBar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,10 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -36,7 +36,7 @@ import com.example.pkapp.viewmodel.PKViewModel
 fun TypeFilterBar(
     viewModel: PKViewModel, navController: NavController, onClose: () -> Unit
 ) {
-
+    val scrollState = rememberScrollState()
 
     Box(
 
@@ -45,10 +45,13 @@ fun TypeFilterBar(
             .padding(vertical = 5.dp)
             .fillMaxWidth()
             .background(Color.White)
-            .border(2.dp, Color(0xFF90A4AE))
+            //.border(2.dp, Color(0xFF90A4AE))
             .padding(horizontal = 15.dp)
             .padding(vertical = 15.dp)
             .background(Color.White)
+            .clip(RoundedCornerShape(20.dp))
+            .verticalScroll(scrollState)
+
         //.heightIn(100.dp)
     ) {
         Row {
@@ -70,13 +73,14 @@ fun TypeFilterBar(
                                 .width(150.dp)
                                 .height(45.dp)
                                 .background(Color.White)
-                                .clip(RoundedCornerShape(10.dp))
+                                .clip(RoundedCornerShape(10.dp))/*
                                 .border(
                                     width = 2.dp,
                                     color = Color.Gray,
                                     shape = RoundedCornerShape(10.dp)
                                 )
-                                .clickable {
+
+                                 */.clickable {
                                     viewModel.toggletype(currentTypeId)
                                 }, contentAlignment = Alignment.Center
                         ) {
@@ -94,7 +98,7 @@ fun TypeFilterBar(
                                     .height(35.dp)
                                     .background(
                                         if (TypeSet) getTypeColor(typeName)
-                                        else Color.White, shape = RoundedCornerShape(10.dp)
+                                        else Color(0xFFF5F5F5), shape = RoundedCornerShape(10.dp)
                                     )
                                     .clip(RoundedCornerShape(10.dp)),
                                 contentAlignment = Alignment.Center
@@ -154,13 +158,14 @@ fun TypeFilterBar(
                                 .width(150.dp)
                                 .height(45.dp)
                                 .background(Color.White)
-                                .clip(RoundedCornerShape(10.dp))
+                                .clip(RoundedCornerShape(10.dp))/*
                                 .border(
                                     width = 2.dp,
                                     color = Color.Gray,
                                     shape = RoundedCornerShape(10.dp)
                                 )
-                                .clickable {
+
+                                 */.clickable {
                                     viewModel.toggletype(currentTypeId2)
                                 }, contentAlignment = Alignment.Center
                         ) {
@@ -180,7 +185,7 @@ fun TypeFilterBar(
                                     )
                                     .background(
                                         if (TypeSet) getTypeColor(typeName)
-                                        else Color.White, shape = RoundedCornerShape(10.dp)
+                                        else Color(0xFFF5F5F5), shape = RoundedCornerShape(10.dp)
                                     )
                                     .clip(RoundedCornerShape(10.dp)),
                                 contentAlignment = Alignment.Center
@@ -215,58 +220,55 @@ fun TypeFilterBar(
                     Spacer(modifier = Modifier.height(15.dp))
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Row(
-                    modifier = Modifier.offset(x = -30.dp)
-                ) {
-                    Button(
-                        onClick = {
-                            viewModel.resettype()
-                        },
-                        modifier = Modifier
-                            .height(35.dp)
-                            .width(95.dp)
-                            //.border(2.dp, Color.Black,shape = RoundedCornerShape(3.dp))
-                            .clip(RoundedCornerShape(3.dp)),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFB3E5FC)
-                        ),
+                Button(
+                    onClick = {
+                        viewModel.resettype()
+                    },
+                    modifier = Modifier
+                        .height(35.dp)
+                        .width(150.dp)
+                        //.border(2.dp, Color.Black,shape = RoundedCornerShape(3.dp))
+                        .clip(RoundedCornerShape(3.dp)),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB3E5FC)
+                    ),
 
-                        ) {
-                        Text(
-                            text = "リセット",
-                            color = Color.White,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(5.dp))
+                    ) {
+                    Text(
+                        text = "リセット",
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
 
-                    Button(
-                        onClick = {
+                }
+                Spacer(modifier = Modifier.height(15.dp))
 
-                            viewModel.loadPokemonByTypes(
-                                onSuccess = {},
-                                onError = { navController.navigate("error_screen") })
+                Button(
+                    onClick = {
 
-                            onClose()
-                        },
-                        modifier = Modifier
-                            .height(35.dp)
-                            .width(95.dp)
-                            //.border(2.dp, Color.Black,shape = RoundedCornerShape(3.dp))
-                            .clip(RoundedCornerShape(3.dp)),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFE57373)
-                        ),
+                        viewModel.loadPokemonByTypes(
+                            onSuccess = {},
+                            onError = { navController.navigate("error_screen") })
 
-                        ) {
-                        Text(
-                            text = "検索",
-                            color = Color.White,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
+                        onClose()
+                    },
+                    modifier = Modifier
+                        .height(35.dp)
+                        .width(150.dp)
+                        //.border(2.dp, Color.Black,shape = RoundedCornerShape(3.dp))
+                        .clip(RoundedCornerShape(3.dp)),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFE57373)
+                    ),
+
+                    ) {
+                    Text(
+                        text = "検索",
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
 
 

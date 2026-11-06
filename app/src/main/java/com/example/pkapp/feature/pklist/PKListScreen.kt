@@ -33,6 +33,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -77,35 +78,53 @@ fun PKListScreen(
     var showFavoriteOnly by remember {
         mutableStateOf(false)
     }
+    var showTypeFilter by remember {
+        mutableStateOf(false)
+    }
     val displayList = when {
         showFavoriteOnly -> {
             viewModel.pokemonList
-        }
-        selectedRange != null -> {
-            viewModel.pokemonList.filter {
-                it.id in selectedRange!!
-            }
         }
 
         viewModel.query.isNotBlank() -> {
             viewModel.pokemonList
         }
 
+        viewModel.typeIds.isNotEmpty() -> {
+
+            viewModel.pokemonList
+
+        }
+
+        selectedRange != null -> {
+            viewModel.pokemonList.filter {
+                it.id in selectedRange!!
+            }
+        }
+
+
         else -> {
             viewModel.pokemonList
         }
-    }
+    }/*
     LaunchedEffect(selectedRange) {
         viewModel.loadTypesForRange(displayList)
 
     }
-   // val displayList = viewModel.pokemonList.take(visibleCount)
+
+     */
+    LaunchedEffect(
+        selectedRange, viewModel.pokemonList.size
+    ) {
+        if (displayList.isNotEmpty()) {
+            viewModel.loadTypesForRange(displayList)
+        }
+    }
+    // val displayList = viewModel.pokemonList.take(visibleCount)
     val listState = rememberLazyListState()
     //val state = viewModel.state.value
     val state by viewModel.state
-    var showTypeFilter by remember {
-        mutableStateOf(false)
-    }
+
 
     var showLoadingBox by remember {
         mutableStateOf(false)
@@ -165,7 +184,7 @@ fun PKListScreen(
                     Row {
 
                         Text(
-                            text = "Pokemon App",
+                            text = "Pokemon Apk",
                             fontSize = 30.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = Color(0xFF37474F),
@@ -263,55 +282,67 @@ fun PKListScreen(
 
                     }
                     var count = viewModel.pokemonList.size
-                    Row {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
 
-                        if (viewModel.allPokemonList.isNotEmpty()) {
-                            Text(
-                                text =""
+                        if (!viewModel.allPokemonList.isNotEmpty()) {
+
+
+                            LinearProgressIndicator(
+                                progress = { count.toFloat() / viewModel.totalCount.toFloat() },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(10.dp))
                             )
-                        } else {
                             Text(
                                 text = "読込中：$count / ${viewModel.totalCount}匹 ($percent%)",
                                 modifier = Modifier
                                     .padding(vertical = 1.dp)
                                     .padding(horizontal = 16.dp),
                             )
+
                         }
 
 
                     }
-                    if (!showFavoriteOnly) {
-                    LazyRow {
-                        items(ranges) { range ->
-                            Button(
-                                enabled = range.last <= viewModel.pokemonList.size,
-                                onClick = {
+                    if (!showFavoriteOnly && !showTypeFilter && viewModel.typeIds.isEmpty()) {
+                        LazyRow {
+                            items(ranges) { range ->
+                                Spacer(modifier = Modifier.width(10.dp))
+
+                                Button(
+                                    enabled = range.last <= viewModel.pokemonList.size,
+                                    onClick = {
                                         selectedRange = range
 
 
-                                },
-                                modifier = Modifier
-                                    .height(35.dp)
-                                    .width(95.dp)
-                                    //.border(2.dp, Color.Black,shape = RoundedCornerShape(3.dp))
-                                    .clip(RoundedCornerShape(3.dp)),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = // if (/*TODO*/) Color.LightGray else
-                                        Color.White
-                                ),
+                                    },
+                                    modifier = Modifier
+                                        .height(35.dp)
+                                        .width(95.dp)
+                                        //.border(2.dp, Color.Black,shape = RoundedCornerShape(3.dp))
+                                        .clip(RoundedCornerShape(3.dp)),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = // if (/*TODO*/) Color.LightGray else
+                                            Color.White
+                                    ),
 
-                                ) {
-                                Text(
-                                    text = "${range.first}~",//${range.last}",
-                                    color = Color(0xFF37474F),
-                                    fontSize = 15.sp,
-                                    //fontWeight = FontWeight.Bold,
-                                )
+                                    ) {
+                                    Text(
+                                        text = "${range.first}~",//${range.last}",
+                                        color = Color(0xFF37474F),
+                                        fontSize = 15.sp,
+                                        //fontWeight = FontWeight.Bold,
+                                    )
+                                }
+
+
                             }
-
-
                         }
-                    }}
+                    }
 
                     //Spacer(modifier = Modifier.weight(1f))
 
@@ -341,7 +372,9 @@ fun PKListScreen(
 
             }) { paddingValues ->
             Column(
-                modifier = Modifier.fillMaxSize().padding(paddingValues)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
             ) {
 
                 if (!state.isLoading && viewModel.allPokemonList.isNotEmpty() && displayList.isEmpty()) {
@@ -354,7 +387,7 @@ fun PKListScreen(
                         contentPadding = PaddingValues(
                             bottom = 120.dp
                         )
-                       // contentPadding = PaddingValues(top = 250.dp, bottom = 120.dp)
+                        // contentPadding = PaddingValues(top = 250.dp, bottom = 120.dp)
                     ) {
 
                         if (state.isLoading) {
@@ -420,69 +453,136 @@ fun PKListScreen(
 
             }
         }
-        Box(
+        if (!showTypeFilter) {
+            Box(
 
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .background(Color(0xFFF5F5F5))
-                .align(Alignment.BottomCenter)
-        ) {
-            Row(
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(Color(0xFFF5F5F5))
+                    .align(Alignment.BottomCenter)
             ) {
-
-                IconButton(
-                    onClick = {
-                        showFavoriteOnly = false
-                        viewModel.pokemonList = viewModel.allPokemonList
-                    },
-                ) {
-                    Icon(
-
-                        modifier = Modifier.size(200.dp),
-                        imageVector = Icons.Default.List,
-                        contentDescription = "List",
-                        tint = Color.Gray
-
-                    )
-                }
-
-                Spacer(
-                    modifier = Modifier.padding(30.dp)
-                )
-                IconButton(
-                    //enabled = viewModel.allPokemonList.isNotEmpty(),
+                Row(
                     modifier = Modifier
-                        .padding(end = 8.dp)
-                        .height(35.dp)
-                        .width(130.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    onClick = {
+                        .fillMaxWidth()
 
-                        if (viewModel.allPokemonList.isNotEmpty()) {
-                            showFavoriteOnly = true
-                            viewModel.favoritePokemon(onSuccess = {}, onError = {})
-                        } else {
-                            showLoadingBox = true
-                        }
+                        .align(Alignment.Center),
 
-
-                    },
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
+                    //Spacer(modifier = Modifier.weight(1f))
+                    Box(
 
-                        modifier = Modifier.size(200.dp),
-                        imageVector = Icons.Outlined.FavoriteBorder,
-                        contentDescription = "Favorite",
-                        tint = Color.Gray
+                        modifier = Modifier.weight(1f),
 
-                    )
+
+                        )
+
+
+
+                    Box(
+
+                        modifier = Modifier.weight(1f),
+
+                        contentAlignment = Alignment.Center
+
+                    ) {
+                        IconButton(
+                            onClick = {
+
+
+                                if (viewModel.allPokemonList.isEmpty()) {
+                                    showLoadingBox = true
+                                    return@IconButton
+                                }
+                                showFavoriteOnly = false
+                                viewModel.isFavoriteMode = false
+                                //viewModel.query = ""
+                                //viewModel.resettype()
+                                //viewModel.pokemonList = viewModel.allPokemonList
+                                viewModel.pokemonList = viewModel.allPokemonList
+                                if (viewModel.typeIds.isNotEmpty()) {
+                                    viewModel.loadPokemonByTypes(onSuccess = {
+                                        if (viewModel.query.isNotBlank()) {
+                                            viewModel.searchPokemon(
+
+                                                id = viewModel.query.toIntOrNull(),
+
+                                                name = viewModel.query,
+                                                onSuccess = {},
+                                                onError = {})
+                                        }
+
+                                    }, onError = {}
+
+                                    )
+
+                                } else if (viewModel.query.isNotBlank()) {
+                                    viewModel.searchPokemon(
+                                        id = viewModel.query.toIntOrNull(),
+                                        name = viewModel.query,
+                                        onSuccess = {},
+                                        onError = {})
+                                }
+                            }) {
+                            Icon(
+
+                                modifier = Modifier.size(40.dp),
+                                imageVector = Icons.Default.List,
+                                contentDescription = "List",
+                                tint = Color.Gray
+
+                            )
+                        }
+                    }
+                    Box(
+
+                        modifier = Modifier.weight(1f),
+
+
+                        )
+                    Box(
+
+                        modifier = Modifier.weight(1f),
+
+                        contentAlignment = Alignment.Center
+
+                    ) {
+                        IconButton(
+                            //enabled = viewModel.allPokemonList.isNotEmpty(),
+
+                            onClick = {
+
+
+                                if (viewModel.allPokemonList.isNotEmpty()) {
+                                    showFavoriteOnly = true
+                                    viewModel.isFavoriteMode = true
+                                    viewModel.favoritePokemon(onSuccess = {}, onError = {})
+                                } else {
+                                    showLoadingBox = true
+                                }
+
+
+                            },
+                        ) {
+                            Icon(
+
+                                modifier = Modifier.size(40.dp),
+                                imageVector = Icons.Outlined.FavoriteBorder,
+                                contentDescription = "Favorite",
+                                tint = Color.Gray
+
+                            )
+
+
+                        }
+                    }
+                    Box(modifier = Modifier.weight(1f))
+                    //    Spacer(modifier = Modifier.weight(1f))
 
 
                 }
             }
-
         }
         AnimatedVisibility(
             visible = showLoadingBox, modifier = Modifier.align(Alignment.Center), exit = fadeOut()

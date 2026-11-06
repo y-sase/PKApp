@@ -45,7 +45,6 @@ fun PKThumbnail(
     pokemonImageInList: PokemonListItem,
 
     ) {
-    println("thumbnail = $name")
     val mainType = type.split(" / ").firstOrNull() ?: ""
     Box(
 
