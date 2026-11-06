@@ -589,12 +589,13 @@ fun PKListScreen(
         ) {
             Box(
                 modifier = Modifier
-                    .size(220.dp)
+                    .height(150.dp)
+                    .width(300.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .background(Color.White), contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "データ読込中です", color = Color.Black, fontSize = 18.sp
+                    text = "データ読込中です\n読込終了後再度お試しください", color = Color.Black, fontSize = 15.sp
                 )
             }
         }
