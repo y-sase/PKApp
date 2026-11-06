@@ -1,49 +1,54 @@
 package com.example.pkapp.ui.theme
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.IconButton
 import com.example.pkapp.viewmodel.PKViewModel
-
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 @Composable
 fun Favorite(
-    viewModel: PKViewModel,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
 
-            .padding(
-                top = 16.dp, end = 16.dp
-            ), contentAlignment = Alignment.Center
+    viewModel: PKViewModel, pokemonId: Int, modifier: Modifier = Modifier
+) {
+
+    Box(
+        modifier = modifier.padding(
+            top = 16.dp, end = 16.dp
+        ), contentAlignment = Alignment.Center
     ) {
 
         IconButton(
             onClick = {
-                viewModel.toggleFavorite(viewModel.pokemonId)
-            }
-        ) {
-            val isFavorite = viewModel.pokemonId in viewModel.favoriteIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
-        Icon(
-            modifier = Modifier.size(34.dp),
-            imageVector = Icons.Default.Favorite,
-            contentDescription = "Favorite",
-            tint =
-                if (isFavorite)Color(0xFFFF4081)
+
+
+                viewModel.toggleFavorite(pokemonId)
+            }) {
+            //val isFavorite = pokemonId in viewModel.favoriteIds //今のポケモンIDが、お気に入り一覧の中に含まれているか？
+            val favoriteIds by viewModel.favoriteIds.collectAsState()
+
+            val isFavorite =
+                pokemonId.toString() in favoriteIds
+
+            Icon(
+                modifier = Modifier.size(34.dp),
+                imageVector = Icons.Default.Favorite,
+                contentDescription = "Favorite",
+                tint = if (isFavorite) Color(0xFFFF80AB)
                 else Color.White
 
 
-        )
+            )
 
         }
         Icon(
